@@ -1,0 +1,42 @@
+// 定义变量
+$namespace: 'yz' !default; // 命名 xm开头
+$block-sel: "-" !default; //
+$elem-sel: "__" !default; // element
+$mod-sel: "--" !default; // modify
+
+@mixin bfc {
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+// 混入 block
+@mixin b($block) {// 接收参数
+  // 定义变量 例如 <div class="yz-block">
+  $B:#{$namespace + $block-sel + $block};
+  // 初始化
+  .#{$B} {
+    @content; // 占位符
+  }
+}
+
+// element
+@mixin e($el) {
+  $selector: &;
+  // 跳出嵌套
+  @at-root {
+    #{$selector + $elem-sel + $el} {
+      @content;
+    }
+  }
+}
+
+// modify
+@mixin m($m) {
+  $selector: &;
+  // 跳出嵌套
+  @at-root {
+    #{$selector + $mod-sel + $m} {
+      @content;
+    }
+  }
+}
