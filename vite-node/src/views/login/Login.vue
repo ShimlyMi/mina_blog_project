@@ -1,39 +1,37 @@
 <template>
     <div class="login-box">
         <div class="main-box">
-            <div
-                    :class="['container', 'container-login', { 'is-txl is-z200': isLogin }]"
-            >
-                <el-form
-                        :model="ruleForm"
-                        status-icon
-                        class="formContent"
-                        label-position="left"
+            <div :class="['container', 'container-login', { 'is-txl is-z200': isLogin }]">
+                <a-form
+                    :model="ruleForm"
+                    name="normal_login"
+                    class="formContent"
+                    laba-position="left"
                 >
-                    <el-form-item>
+                    <a-form-item>
                         <h1 class="loginTitle">{{ isLogin ? "LOGIN" : "REGISTER" }}</h1>
-                    </el-form-item>
-                    <el-form-item label="username:">
-                        <el-input
+                    </a-form-item>
+                    <a-form-item label="username:">
+                        <a-input
                                 v-model="ruleForm.username"
                                 placeholder="username"
                                 size="large"
                         />
-                    </el-form-item>
-                    <el-form-item label="password:">
-                        <el-input
+                    </a-form-item>
+                    <a-form-item label="password:">
+                        <a-input
                                 v-model="ruleForm.password"
                                 type="password"
                                 placeholder="password"
                                 size="large"
                         />
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button class="registerBtn">{{
+                    </a-form-item>
+                    <a-form-item>
+                        <a-button class="registerBtn">{{
                             isLogin ? "登录" : "注册"
-                            }}</el-button>
-                    </el-form-item>
-                </el-form>
+                            }}</a-button>
+                    </a-form-item>
+                </a-form>
             </div>
             <!-- 登陆面板 -->
             <div :class="['switch', { 'is-login': isLogin }]">
@@ -46,9 +44,9 @@
                             : "如果您已经注册过账号，请点击下方立即登录按钮进行登录"
                         }}
                     </p>
-                    <el-button class="formBtn signup" @click="isLogin = !isLogin">{{
+                    <a-button class="formBtn signup" @click="isLogin = !isLogin">{{
                         isLogin ? "立即注册" : "立即登录"
-                        }}</el-button>
+                        }}</a-button>
                 </div>
             </div>
         </div>
@@ -79,7 +77,7 @@ export default {
     box-sizing: border-box;
     user-select: none;
 }
-.el-form-item {
+.a-form-item {
     margin-top: 15px;
     &:last-child {
         margin-top: 20px;
@@ -88,7 +86,7 @@ export default {
     &:first-child {
         margin-top: 0;
     }
-    .el-button {
+    .a-button {
         width: 150px;
         height: 30px;
         color: white; /* 按钮字体颜色 */
@@ -105,7 +103,7 @@ export default {
             #ee609c 100%
         ); /* 按钮颜色 */
     }
-    /deep/.el-form-item__content {
+    /deep/.a-form-item__content {
         justify-content: center;
     }
 }

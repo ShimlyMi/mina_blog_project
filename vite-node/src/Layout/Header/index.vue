@@ -90,6 +90,7 @@ const items = ref<MenuProps['items']>([
     margin-right: 20px;
     @include m(switch) {
       //line-height: 70px;
+      margin-top: -1px;
       margin-left: 5px;
     }
   }

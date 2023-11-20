@@ -24,3 +24,7 @@
 /*    border: none;*/
 /*}*/
 
+/* 修改 form-item 的 label 字体大小 */
+.ant-form-item-label > label {
+    font-size: 16px !important;
+}
