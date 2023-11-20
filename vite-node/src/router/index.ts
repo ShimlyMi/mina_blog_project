@@ -7,8 +7,22 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      name: 'Layout',
+      meta: {
+        name: 'Layout',
+      },
       component: Layout,
-
+      redirect: '/home',
+      children: [
+        {
+          path: '/home',
+          name: 'home',
+          meta: {
+            name: '首页',
+          },
+          component: () => import('../views/home/home.vue')
+        }
+      ]
     },
     {
       component: () => import('../views/login/Login.vue'),

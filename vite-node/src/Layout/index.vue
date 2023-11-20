@@ -14,7 +14,10 @@ import Footer from './Footer/index.vue';
 <style scoped lang="scss">
 @include b(box){
     @include bfc;
+  width: 100vw;
+    position: relative;
     display: flex;
     flex-direction: column;
+
 }
 </style>
