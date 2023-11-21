@@ -26,6 +26,12 @@ const User = seq.define('yz_user', {
         allowNull: false,
         defaultValue: 0,
         comment: "是否为管理员,0:不是管理员(默认),1:是管理员",
+    },
+    nick_name: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: '',
+        comment: "用户昵称",
     }
 })
 
