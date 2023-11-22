@@ -15,8 +15,7 @@
           <a-form-item>
             <h1 class="loginTitle">LOGIN</h1>
           </a-form-item>
-          <a-form-item
-              name="user_name">
+          <a-form-item ref="user_name" name="user_name">
             <a-input v-model:value="loginForm.user_name" size="large" placeholder="Username" autocomplete="false" >
               <template #prefix>
                 <UserOutlined class="site-form-item-icon"/>
@@ -41,7 +40,7 @@
           </a-form-item>
 
           <a-form-item>
-            <a-button :disabled="disabled" type="primary" html-type="submit" class="formBtn login-register-form-button">登录</a-button>
+            <a-button type="primary" html-type="submit" class="formBtn login-register-form-button" @click="submit">登录</a-button>
           </a-form-item>
         </a-form>
 
@@ -86,7 +85,7 @@
             </a-input>
           </a-form-item>
           <a-form-item>
-            <a-button :disabled="disabled" type="primary" html-type="submit" class="formBtn login-register-form-button">注册</a-button>
+            <a-button type="primary" html-type="submit" class="formBtn login-register-form-button" @click="submit">注册</a-button>
           </a-form-item>
         </a-form>
 
@@ -103,8 +102,11 @@
                   : "如果您已经注册过账号，请点击下方立即登录按钮进行登录"
             }}
           </p>
-          <a-button v-if="route.name == 'login'" class="formBtn" @click="goTo('/register')">立即注册</a-button>
-          <a-button v-if="route.name == 'register'" class="formBtn" @click="goTo('/login')">立即登录</a-button>
+         <div class="yz-login--btn" >
+           <a-button v-if="route.name == 'login'" class="formBtn" @click="goTo('/register')">立即注册</a-button>
+           <a-button v-if="route.name == 'register'" class="formBtn" @click="goTo('/login')">立即登录</a-button>
+           <a-button class="formBtn" @click="goTo('/home')">返回首页</a-button>
+         </div>
         </div>
       </div>
     </div>
@@ -112,12 +114,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, computed } from 'vue';
+import {ref, reactive, computed, UnwrapRef,toRaw} from 'vue';
 import { useRoute, useRouter } from "vue-router";
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 
 /** 引入API 接口函数 */
-import { reqRegister,reqLogin } from '@/api/user';
+import { reqRegister,reqLogin} from '@/api/user';
 
 import { userStore } from "@/stores";
 import type {RuleObject} from "ant-design-vue/es/form";
@@ -127,18 +129,19 @@ const route = useRoute();
 const router = useRouter();
 const userStroe = userStore();
 
-const isLogin = ref(true)
-const loginFormRef = ref()
-const registerFormRef = ref()
+const isLogin = ref(true);
+
+const registerFormRef = ref();
 
 /** 定义登录表单数据类型 */
 interface loginFormState {
   user_name: string;
   password: string;
   remember: boolean;
-}
+};
 /** 登录表单 */
-const loginForm = reactive<loginFormState>({
+const loginFormRef = ref();
+const loginForm: UnwrapRef<loginFormState> = reactive({
   user_name: '',
   password: '',
   remember: true,
@@ -151,9 +154,9 @@ interface registerFormState {
   password: string;
   check_password: string;
   nick_name: string;
-}
+};
 /** 注册表单 */
-const registerForm = reactive<registerFormState>({
+const registerForm : UnwrapRef<registerFormState> = reactive({
   user_name: '',
   password: '',
   check_password: '',
@@ -165,47 +168,47 @@ const primaryRegisterForm = reactive({...registerForm});
 /** 验证用户名 */
 let checkUsername = async (rule: RuleObject, value: string) => {
   if (!value) {
-    return Promise.reject("请输入用户账号")
+    return Promise.reject("请输入用户账号");
   } else if (value.length > 16 || value.length < 5) {
     return Promise.reject("用户账户长度在5-16位之间");
-  } return Promise.resolve()
-}
+  } return Promise.resolve();
+};
 
 /** 验证输入的密码 */
 const REGEXP_PWD = /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)]|[()])+$)(?!^.*[\u4E00-\u9FA5].*$)([^(0-9a-zA-Z)]|[()]|[a-z]|[A-Z]|[0-9]){6,18}$/;
 /** 第一次输入密码 */
 let validatePwd = async (rule: RuleObject, value: string) => {
   if (value === '') {
-    return Promise.reject("请输入密码")
+    return Promise.reject("请输入密码");
   } else if (registerForm.check_password !== '') {
     await loginFormRef.value.validateFields("check_password")
   } else if (!REGEXP_PWD.test(value)) {
     return Promise.reject("密码格式应为8-18位英文、数字或字母任意两种组合")
   }
-  return Promise.resolve()
+  return Promise.resolve();
 }
 
 /** 第二次输入密码 */
 let validatePwd2 = (rule: RuleObject, value: string) => {
   if (!value) {
-    return Promise.reject("请输入二次确认密码")
+    return Promise.reject("请输入二次确认密码");
   } else if (value !== registerForm.password) {
-    return Promise.reject("两次密码不一致，请重新输入")
+    return Promise.reject("两次密码不一致，请重新输入");
   }
-  return Promise.resolve()
+  return Promise.resolve();
 }
 
 /** 登录接单验证规则 */
 const loginRules = {
   user_name: [{ required: true, message: '用户名不得为空', trigger: 'blur' }],
   password: [{ required: true, message: '密码不得为空', trigger: 'blur' }]
-}
+};
 /** 注册表单验证郭泽 */
 const registerRules = {
   user_name: [{ required: true, validator: checkUsername, message: '用户名不得为空', trigger: 'blur' },],
   password: [{ required: true, validator: validatePwd, message: '密码不得为空', trigger: 'blur' }],
   check_password: [{ required: true, validator: validatePwd2, message: '再次输入确认密码', trigger: 'blur' }],
-}
+};
 const handleFinish = (values: loginFormState) => {
   console.log(values, loginForm);
 };
@@ -213,27 +216,45 @@ const handleFinishFailed = (errors: ValidateErrorEntity<loginFormState>) => {
   console.log(errors);
 };
 /** 注册接口 发送注册请求 */
-const userRegister = async () => {
-  
+const userRegister = () => {
+
 }
 
-userRegister();
+
 
 
 /** 登录接口 */
+const userLogin  = async () => {
+
+};
 
 
 
 
-
-const disabled = computed(() => {
-  return !(loginForm.user_name && loginForm.password);
-});
+// const disabled = computed(() => {
+//   return !(loginForm.user_name && loginForm.password);
+// });
 
 /** 按钮根据路由跳转 登录或注册页面 */
 const goTo = (path:string) => {
   router.push(path);
   isLogin.value = !isLogin.value;
+};
+
+/** 登录注册按钮 */
+const submit = () => {
+  if (route.name == 'login;') {
+    userLogin();
+  } else {
+    registerFormRef.value
+        .validate()
+        .then(() => {
+          console.log('values', registerForm, toRaw(registerForm));
+        })
+        .catch((error: ValidateErrorEntity<registerFormState>) => {
+          console.log('error', error);
+        });
+  }
 };
 
 
@@ -317,6 +338,12 @@ const goTo = (path:string) => {
       letter-spacing: 0.25px;
       text-align: center;
       line-height: 1.6;
+    }
+  }
+  @include m(btn) {
+    display: flex;
+    .formBtn:first-child {
+      margin-right: 5px;
     }
   }
 
