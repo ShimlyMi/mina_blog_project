@@ -28,3 +28,10 @@
 .ant-form-item-label > label {
     font-size: 16px !important;
 }
+/*.ant-menu-submenu > .ant-menu-submenu-title {*/
+/*    height: 100%;*/
+/*    line-height: 70px;*/
+/*}*/
+.ant-menu-submenu-title .ant-menu-item-icon {
+    vertical-align: -0.8em!important;
+}

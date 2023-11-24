@@ -117,13 +117,15 @@
 import {ref, reactive, computed, UnwrapRef,toRaw} from 'vue';
 import { useRoute, useRouter } from "vue-router";
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
+import type {RuleObject} from "ant-design-vue/es/form";
+import type {ValidateErrorEntity} from "ant-design-vue/es/form/interface";
 
 /** 引入API 接口函数 */
 import { reqRegister,reqLogin} from '@/api/user';
-
 import { userStore } from "@/stores";
-import type {RuleObject} from "ant-design-vue/es/form";
-import type {ValidateErrorEntity} from "ant-design-vue/es/form/interface";
+/** 本地数据加密文件 */
+import { __encrypt, _decrypt } from "@/utils/encryption"
+
 
 const route = useRoute();
 const router = useRouter();

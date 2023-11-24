@@ -1,6 +1,6 @@
 <template>
     <div class="yz-content">
-        <div >111</div>
+        <div class="yz-content__container" >111</div>
     </div>
 </template>
 <script setup lang="ts">
@@ -21,5 +21,9 @@
           rgba(238,96,156,.5) 100%,
   );
   //min-height: calc(100vh - 80px);
+  @include e(container) {
+    max-width: 1200px;
+    margin: 80px auto 0;
+  }
 }
 </style>
