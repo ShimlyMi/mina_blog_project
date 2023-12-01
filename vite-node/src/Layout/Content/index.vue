@@ -1,11 +1,13 @@
 <template>
     <div class="yz-content">
-        <div class="yz-content__container" >111</div>
+        <router-view v-slot="{ Component }">
+          <keep-alive>
+            <component :is="Component" v-if="$route.meta.keepAlive" :key="$route.fullPath"></component>
+          </keep-alive>
+          <component :is="Component" v-if="!$route.meta.keepAlive" :key="$route.fullPath"></component>
+        </router-view>
     </div>
 </template>
-<script setup lang="ts">
-
-</script>
 
 <style scoped lang="scss">
 @include b(content) {

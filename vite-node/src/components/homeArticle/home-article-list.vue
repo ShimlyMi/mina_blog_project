@@ -3,9 +3,7 @@
 </script>
 
 <template>
-<div class="yz-home">
 
-</div>
 </template>
 
 <style scoped lang="scss">

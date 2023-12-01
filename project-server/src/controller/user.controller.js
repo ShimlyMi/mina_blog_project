@@ -47,7 +47,7 @@ class UserController {
                     * 第二个参数：加密的密钥
                     * 第三个参数：配置对象，配置token有效期
                     * */
-                    token: jwt.sign(res,JWT_SECRET,{ expiresIn: '1d' })
+                    token: jwt.sign(res,JWT_SECRET,{ expiresIn: '10' })
                 }
             }
 

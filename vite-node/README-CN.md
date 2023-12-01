@@ -3,7 +3,7 @@
 ### 1.  创建项目
 
 ```
-pnpm init vue@latest
+npm init vite@latest
 ```
 ### 2. 安装依赖
 (1) 安装 sass

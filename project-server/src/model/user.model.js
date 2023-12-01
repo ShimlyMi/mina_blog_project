@@ -32,6 +32,12 @@ const User = seq.define('yz_user', {
         allowNull: true,
         defaultValue: '',
         comment: "用户昵称",
+    },
+    avatar: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: '',
+        comment: '用户头像'
     }
 })
 
