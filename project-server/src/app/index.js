@@ -3,13 +3,15 @@ const Koa = require('koa');
 const { koaBody } = require("koa-body");
 
 const errorHandle = require("./errorHandle")
-const userRouter = require("../router/user.route")
+
+const router = require("../router")
 
 const app = new Koa();
 app.use(koaBody());
-app.use(userRouter.routes())
+app.use(router.routes()).use(router.allowedMethods())
+
 
 /* 监听 app.on */
-app.on("error",errorHandle);
+app.on("error", errorHandle);
 // 向外暴露 app 接口
 module.exports = app;

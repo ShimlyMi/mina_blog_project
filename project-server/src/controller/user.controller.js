@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const { JWT_SECRET } = require("../config/config.default")
 
-const { createUser,getUserInfo } = require("../service/user.service")
+const { createUser, getUserInfo } = require("../service/user.service")
 
 const { userRegisterError } = require("../constant/err.type")
 
@@ -12,7 +12,7 @@ class UserController {
         // 1. 获取数据
         // console.log(ctx.request.body);
         const { user_name, password } = ctx.request.body
-        // 2. 操作数据库
+            // 2. 操作数据库
         try {
             const res = await createUser(user_name, password);
             // 3. 返回数据
@@ -26,7 +26,7 @@ class UserController {
             };
         } catch (err) {
             console.log(err);
-            ctx.app.emit('userRegisterError',userRegisterError,ctx);
+            ctx.app.emit('userRegisterError', userRegisterError, ctx);
         }
         // console.log(res);
 
@@ -43,16 +43,16 @@ class UserController {
                 message: '用户登录成功',
                 result: {
                     /* 调用 jwt.sign() 方法生成 JWT 字符串
-                    * 第一个参数：用户信息对象
-                    * 第二个参数：加密的密钥
-                    * 第三个参数：配置对象，配置token有效期
-                    * */
-                    token: jwt.sign(res,JWT_SECRET,{ expiresIn: '10' })
+                     * 第一个参数：用户信息对象
+                     * 第二个参数：加密的密钥
+                     * 第三个参数：配置对象，配置token有效期
+                     * */
+                    token: jwt.sign(res, JWT_SECRET, { expiresIn: '1d' })
                 }
             }
 
         } catch (err) {
-            console.error("用户登录失败",err);
+            console.error("用户登录失败", err);
         }
     }
 }

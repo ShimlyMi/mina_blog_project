@@ -1060,3 +1060,121 @@ async login(ctx, next) {
 JWT_SECRET=yezi
 ```
 
+# 十三、修改密码
+## 1.  编写中间件
+创建 `src/middleware/auth.middleware.js` 文件
+```javascript
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config/config.default");
+const { tokenExpiredError,invalidToken} = require("../constant/err.type")
+const auth = async (ctx,next) => {
+    /** 将 authorization 从 headers里面 去解构出来 */
+    const { authorization } = ctx.request.headers;
+    /** 拿到 token 并去掉 token前面的 “Bearer ” */
+    const token = authorization.replace("Bearer ","");
+    // console.log(token);
+
+    try {
+        /** user 包含了 payload 的信息(id,user_name,is_admin) */
+        const user = jwt.verify(token,JWT_SECRET);
+        ctx.state.user = user;
+        return ;
+    } catch (err) {
+        switch (err.name) {
+            case "TokenExpiredError":
+                console.error("token 已过期",err)
+                return ctx.app.emit("tokenExpiredError",tokenExpiredError,ctx)
+            case "JsonWebTokenError":
+                console.error("token无效",err)
+                return ctx.app.emit("jsonWebTokenError",invalidToken,ctx)
+        }
+    }
+    await next();
+};
+
+
+module.exports = {
+    auth,
+}
+
+```
+
+## 2. 在 路由使用
+`src/router/user.router.js`
+```javascript
+const { auth } = require("../middleware/auth.middleware");
+
+// 修改密码接口
+router.patch("/", auth, (ctx,next) => {
+    ctx.body = "修改密码成功"
+})
+
+```
+# 十四、 路由自动加载
+创建 `src/router/goods.route.js` 文件
+```javascript
+const Router = require('koa-router');
+
+const {upload} = require("../controller/goods.controller")
+
+const router = new Router({ prefix: '/goods' });
+
+router.post('/upload',upload);
+
+module.exports = router;
+
+```
+创建文件 `src/controller/goods.controller.js`
+```javascript
+class GoodsController {
+    async upload(ctx,next)  {
+        ctx.body = '商品图片上传成功';
+    }
+}
+
+module.exports = new GoodsController();
+
+```
+创建路由文件 `src/router/index.js`
+```javascript
+const fs = require('fs');
+
+const Router = require('koa-router');
+const router = new Router();
+
+fs.readdirSync(__dirname).forEach(file => {
+    // console.log(file)
+    /** 判断文件名是否为 index.js  */
+    if (file !== 'index.js') {
+        /** 不是 访问 当前目录下的所有文件 */
+        let r = require("./" + file);
+        /** 加载路由 */
+        router.use(r.routes());
+    }
+})
+
+module.exports = router;
+
+```
+修改 `app/index.js`
+```javascript
+const Koa = require('koa');
+// 注册中间件，要在所有路由请求之前
+const { koaBody } = require("koa-body");
+
+const errorHandle = require("./errorHandle")
+
+const router = require("../router")
+
+const app = new Koa();
+app.use(koaBody());
+/** router.allowedMethods() 是判断 http */
+app.use(router.routes()).use(router.allowedMethods())
+
+
+/* 监听 app.on */
+app.on("error",errorHandle);
+// 向外暴露 app 接口
+module.exports = app;
+
+```
