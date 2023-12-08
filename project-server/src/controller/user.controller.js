@@ -1,11 +1,13 @@
+const path = require("path");
 // 导入 JWT
 const jwt = require('jsonwebtoken');
 
 const { JWT_SECRET } = require("../config/config.default")
 
-const { createUser, getUserInfo } = require("../service/user.service")
+const { createUser, getUserInfo, updateById } = require("../service/user.service")
 
-const { userRegisterError } = require("../constant/err.type")
+const { userRegisterError, unSupportedFileType, fileUploadError } = require("../constant/err.type")
+
 
 class UserController {
     async register(ctx, next) {
@@ -47,12 +49,58 @@ class UserController {
                      * 第二个参数：加密的密钥
                      * 第三个参数：配置对象，配置token有效期
                      * */
-                    token: jwt.sign(res, JWT_SECRET, { expiresIn: '1d' })
+                    token: jwt.sign(res, JWT_SECRET, { expiresIn: '1h' })
                 }
             }
 
         } catch (err) {
             console.error("用户登录失败", err);
+        }
+    }
+
+    /** 修改密码 */
+    async changePassword(ctx, next) {
+        /** 获取数据 */
+        const id = ctx.stale.user.id;
+        const password = ctx.request.body.password;
+
+        /** 操作数据库 */
+        if (await updateById({ id, password })) {
+            ctx.body = {
+                code: 0,
+                message: '修改密码成功',
+                result: '',
+            }
+        } else {
+            ctx.body = {
+                code: '10007',
+                message: '修改密码失败',
+                result: '',
+            }
+        }
+    }
+
+    /** 头像上传 */
+    async uploadAvatar(ctx, next) {
+        const { avatarfile } = ctx.request.files;
+
+        const fileTypes = ['image/jpeg', 'image/png']
+
+        if (avatarfile) {
+            // if (!fileTypes.includes(file.type)) {
+            //     console.log(ctx.request.files.file.type)
+            //     return ctx.app.emit('error', unSupportedFileType, ctx)
+            // }
+            ctx.body = {
+                code: 0,
+                message: '商品图片上传成功',
+                result: {
+                    avatar: path.basename(avatarfile.path),
+                },
+            }
+            console.log("头像上传成功");
+        } else {
+            return ctx.app.emit('error', fileUploadError, ctx)
         }
     }
 }

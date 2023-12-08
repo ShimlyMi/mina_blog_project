@@ -2,8 +2,8 @@ const Router = require('koa-router')
 
 // 导入 UserController 对象
 const { userValidator, verifyUser, crpytPassword, verifyLogin } = require("../middleware/user.middleware")
-const { auth } = require("../middleware/auth.middleware")
-const { register, login } = require("../controller/user.controller")
+const { auth, hadAdminPermission } = require("../middleware/auth.middleware")
+const { register, login, uploadAvatar } = require("../controller/user.controller")
 
 const router = new Router({ prefix: '/users' })
 
@@ -17,5 +17,8 @@ router.post("/login", userValidator,verifyLogin, login);
 router.patch("/", auth, (ctx,next) => {
    ctx.body = "修改密码成功"
 })
+
+// 上传头像图片
+router.post("/upload", auth, uploadAvatar)
 
 module.exports = router;
