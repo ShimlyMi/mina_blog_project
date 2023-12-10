@@ -13,10 +13,10 @@ class UserController {
     async register(ctx, next) {
         // 1. 获取数据
         // console.log(ctx.request.body);
-        const { user_name, password } = ctx.request.body
+        // const { user_name, password } = ctx.request.body
             // 2. 操作数据库
         try {
-            const res = await createUser(user_name, password);
+            const res = await createUser(ctx.request.body);
             // 3. 返回数据
             ctx.body = {
                 code: 0,
@@ -80,27 +80,24 @@ class UserController {
         }
     }
 
-    /** 头像上传 */
-    async uploadAvatar(ctx, next) {
-        const { avatarfile } = ctx.request.files;
-
-        const fileTypes = ['image/jpeg', 'image/png']
-
-        if (avatarfile) {
-            // if (!fileTypes.includes(file.type)) {
-            //     console.log(ctx.request.files.file.type)
-            //     return ctx.app.emit('error', unSupportedFileType, ctx)
-            // }
+    /** 获取个人信息 */
+    async getUserInfo(ctx) {
+        try {
+            const { user_name } = ctx.request.query;
+            let { password, ...res } = await getUserInfo({ user_name });
+            const role = res.role === 2 ? "普通用户" : "管理员";
+            console.log(res.role)
             ctx.body = {
-                code: 0,
-                message: '商品图片上传成功',
+               code: 0,
+                message: '查询用户成功',
                 result: {
-                    avatar: path.basename(avatarfile.path),
-                },
+                    user_name: res.user_name,
+                    nick_name: res.nick_name,
+                    role: role
+                }
             }
-            console.log("头像上传成功");
-        } else {
-            return ctx.app.emit('error', fileUploadError, ctx)
+        } catch (err) {
+            console.error(err)
         }
     }
 }

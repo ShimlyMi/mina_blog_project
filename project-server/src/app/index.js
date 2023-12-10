@@ -3,6 +3,7 @@ const path = require('path');
 const Koa = require('koa');
 const { koaBody } = require('koa-body');
 const KoaStatic = require('koa-static');
+const parameter = require('koa-parameter');
 
 const errorHandle = require("./errorHandle")
 const router = require("../router")
@@ -14,12 +15,14 @@ app.use(
         formidable: {
             // 在配制选项option里, 不推荐使用相对路径
             // 在option里的相对路径, 不是相对的当前文件. 相对process.cwd()
-            uploadDir: path.join(__dirname, '../upload'),
+            uploadDir: path.join(__dirname, '../upload/online'),
             keepExtensions: true,
         },
+        parsedMethods: ['POST','PUT','PATCH','DELETE']
     })
 );
-app.use(KoaStatic(path.join(__dirname, '../upload')))
+app.use(KoaStatic(path.join(__dirname, '../upload/online')))
+app.use(parameter(app))
 app.use(router.routes()).use(router.allowedMethods())
 
 

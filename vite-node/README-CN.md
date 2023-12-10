@@ -489,7 +489,7 @@ export default http;
 VITE_APP_BASE_URL='http://127.0.0.1:8888'
 ```
 ### 7. 编写 API
-创建 `src/api/user.js`
+创建 `src/api/user_copy.js`
 ```javascript
 import http from "@/config/request";
 import { userStore } from "@/stores";

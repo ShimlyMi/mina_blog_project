@@ -21,11 +21,11 @@ const User = seq.define('yz_user', {
         allowNull: false,
         comment: "密码",
     },
-    is_admin: {
-        type: DataTypes.BOOLEAN,
+    role: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 0,
-        comment: "是否为管理员,0:不是管理员(默认),1:是管理员",
+        defaultValue: 2,
+        comment: "用户角色 1 管理员 2 普通用户",
     },
     nick_name: {
         type: DataTypes.STRING,
@@ -36,7 +36,7 @@ const User = seq.define('yz_user', {
     avatar: {
         type: DataTypes.STRING,
         allowNull: true,
-        defaultValue: '',
+        defaultValue: 'http://localhost:8888/11d9bb8bf54125a26464b5c00.jpg',
         comment: '用户头像'
     }
 })

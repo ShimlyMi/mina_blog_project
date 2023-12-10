@@ -46,7 +46,7 @@ module.exports = {
     },
     fileUploadError: {
         code: '10201',
-        message: '商品图片上传失败',
+        message: '图片上传失败',
         result: ''
     },
     unSupportedFileType: {
@@ -54,19 +54,29 @@ module.exports = {
         message: '不支持文件格式',
         result: ''
     },
-    goodsFormatError: {
+    articleFormatError: {
         code: '10203',
-        message: '商品参数格式错误',
+        message: '文章参数格式错误',
         result: ''
     },
-    publishGoodsError: {
+    publishArticleError: {
         code: '10204',
-        message: '商品发布失败',
+        message: '文章发布失败',
         result: '',
     },
-    invalidGoods: {
+    invalidArticleID: {
         code: '10205',
-        message: '无效商品',
+        message: '待修改文章的ID不存在',
+        result: '',
+    },
+    invalidArticle: {
+        code: '10206',
+        message: '无效文章',
+        result: '',
+    },
+    listArticleError: {
+        code: '10207',
+        message: '查询列表文章失败',
         result: '',
     },
     cartFormatError: {
