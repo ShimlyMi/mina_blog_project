@@ -25,7 +25,7 @@
 
           <a-form-item
               name="password">
-            <a-input-password v-model:value="loginForm.password" size="large" placeholder="Password" autocomplete="false">
+            <a-input-password v-model:value="loginForm.password" size="large" placeholder="Username" autocomplete="false">
               <template #prefix>
                 <LockOutlined class="site-form-item-icon"/>
               </template>

@@ -17,5 +17,13 @@ export const TokenKey = "authorized-token";
 /** 获取 token */
 
 export function getToken(): DataInfo<any> {
+    return Cookie.get(TokenKey);
+}
 
+export function setToken(token: string): DataInfo<any> {
+    return Cookie.set(TokenKey, token)
+}
+
+export function removeToken(): DataInfo<any> {
+    return Cookie.remove(TokenKey)
 }
