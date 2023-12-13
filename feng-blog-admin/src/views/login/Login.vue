@@ -1,9 +1,9 @@
 <template>
   <div class="yz-login">
     <div class="yz-login__main">
-      <div :class="['yz-login--container', 'container-login', { 'is-txl is-z200': isLogin }]">
+      <div :class="['yz-user--container', 'container-login', { 'is-txl is-z200': isLogin }]">
         <a-form
-            v-if="route.name == 'login'"
+            v-if="route.name == 'user'"
             :model="loginForm"
             name="normal_login"
             ref="loginFormRef"
@@ -92,19 +92,19 @@
       </div>
 
       <!-- 登陆面板 -->
-      <div :class="['yz-login--switch', { 'is-login': isLogin }]">
+      <div :class="['yz-user--switch', { 'is-login': isLogin }]">
         <div class="yz-login--content">
-          <h1>{{ route.name == 'login' ? "欢迎回来！" : "您好，欢迎！" }}</h1>
+          <h1>{{ route.name == 'user' ? "欢迎回来！" : "您好，欢迎！" }}</h1>
           <p>
             {{
-              route.name == 'login'
+              route.name == 'user'
                   ? "如果您还没有账号，请点击下方立即注册按钮进行账号注册"
                   : "如果您已经注册过账号，请点击下方立即登录按钮进行登录"
             }}
           </p>
           <div class="yz-login--btn" >
-            <a-button v-if="route.name == 'login'" class="formBtn" @click="goTo('/register')">立即注册</a-button>
-            <a-button v-if="route.name == 'register'" class="formBtn" @click="goTo('/login')">立即登录</a-button>
+            <a-button v-if="route.name == 'user'" class="formBtn" @click="goTo('/register')">立即注册</a-button>
+            <a-button v-if="route.name == 'register'" class="formBtn" @click="goTo('/user')">立即登录</a-button>
             <a-button class="formBtn" @click="goTo('/home')">返回首页</a-button>
           </div>
         </div>
@@ -241,7 +241,7 @@ const goTo = (path:string) => {
 
 /** 登录注册按钮 */
 const submit = () => {
-  if (route.name == 'login;') {
+  if (route.name == 'user;') {
     userLogin();
   } else {
     registerFormRef.value

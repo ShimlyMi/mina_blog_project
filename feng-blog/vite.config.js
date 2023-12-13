@@ -41,4 +41,23 @@ export default defineConfig({
       }
     }
   },
+  server: {
+    port: 5627,
+    host: "0.0.0.0",
+    https: false,
+    open: true,
+    // 热更新
+    hmr: {
+      overlay: false,
+    },
+    proxy: {
+      //匹配规则
+      "/api": {
+        //要访问的跨域的域名
+        target: "http://localhost:8888",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
 })

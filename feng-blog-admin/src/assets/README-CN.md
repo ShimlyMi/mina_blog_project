@@ -84,8 +84,8 @@ $mod-sel: "--" !default; // modify  修饰
   <div class="yz-login">
     <div class="yz-login__main">
 <!--   动态类名 根据 登录或注册 isLogin = true|false 来判断 是否添加相对应的样式   -->
-<!--   'yz-login--container', 'container-login' 默认类名 默认整体样式   -->
-      <div :class="['yz-login--container', 'container-login', { 'is-txl is-z200': isLogin }]">
+<!--   'yz-user--container', 'container-user' 默认类名 默认整体样式   -->
+      <div :class="['yz-user--container', 'container-login', { 'is-txl is-z200': isLogin }]">
         <!-- 登录表 默认在右边 -->
         <!-- 在 form 上面 根据 路由的名字是 登录还是注册 来判断是登录表还是注册表 -->
         <a-form
@@ -133,7 +133,7 @@ $mod-sel: "--" !default; // modify  修饰
         </a-form>
       </div>
       <!-- 左边面板 默认 -->
-      <div :class="['yz-login--switch', { 'is-login': isLogin }]">
+      <div :class="['yz-user--switch', { 'is-login': isLogin }]">
         <div class="yz-login--content">
           <!-- 标题 根据 路由 的名字 是否为 登录或注册 进行动态更换 -->
           <h1>{{ route.name == 'login' ? "欢迎回来！" : "您好，欢迎！" }}</h1>
@@ -148,7 +148,7 @@ $mod-sel: "--" !default; // modify  修饰
           <div class="yz-login--btn" >
             <!-- 根据路由名字来显示对应的按钮，并且点击后到对应的界面 默认显示注册按钮，因为默认右边是登录界面 -->
             <a-button v-if="route.name == 'login'" class="formBtn" @click="goTo('/register')">立即注册</a-button>
-            <a-button v-if="route.name == 'register'" class="formBtn" @click="goTo('/login')">立即登录</a-button>
+            <a-button v-if="route.name == 'register'" class="formBtn" @click="goTo('/user')">立即登录</a-button>
             <!-- 默认显示的，点击回到首页 -->
             <a-button class="formBtn" @click="goTo('/home')">返回首页</a-button>
           </div>
@@ -163,7 +163,7 @@ $mod-sel: "--" !default; // modify  修饰
 <template>
   <div class="yz-login">
     <div class="yz-login__main">
-      <div :class="['yz-login--container', 'container-login', { 'is-txl is-z200': isLogin }]">
+      <div :class="['yz-user--container', 'container-login', { 'is-txl is-z200': isLogin }]">
         <!--  注册表  -->
         <a-form
             v-else

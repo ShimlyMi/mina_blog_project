@@ -22,7 +22,7 @@
 
   --text-hover-color: rgba(207,108,201,1.000);
   /* COLORS */
-  --white: #e9e9e9;
+  --white: #fff;
   --gray: #333;
   --blue: #0367a6;
   --lightblue: #008997;
@@ -31,8 +31,8 @@
   --button-radius: 0.7rem;
 
   /* SIZES */
-  --max-width: 758px;
-  --max-height: 420px;
+  --max-width: 1000px;
+  --max-height: 500px;
 
   font-size: 16px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,

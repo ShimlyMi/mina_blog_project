@@ -91,7 +91,7 @@ export const useUserStore = defineStore({
             removeToken();
             useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
             resetRouter();
-            router.push("/login");
+            router.push("/user");
         }
     }
 })

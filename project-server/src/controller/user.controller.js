@@ -30,7 +30,7 @@ class UserController {
             console.log(err);
             ctx.app.emit('userRegisterError', userRegisterError, ctx);
         }
-        // console.log(res);
+
 
     }
 
@@ -65,7 +65,7 @@ class UserController {
         const password = ctx.request.body.password;
 
         /** 操作数据库 */
-        if (await updateById({ id, password })) {
+        if (await updateById({ id, password, })) {
             ctx.body = {
                 code: 0,
                 message: '修改密码成功',
