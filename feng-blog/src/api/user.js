@@ -13,11 +13,14 @@ export const reqLogin = (data) => {
 
 /** 注册 */
 export const reqRegister = (data) => {
-    return new Promise((resolve) => {
-        http.post("/api/users/registern", data).then((res) => {
-            resolve(res);
-        });
-    });
+   return http({
+       url: '/api/usrs/register',
+       headers: {
+           isToken: false
+       },
+       method: 'post',
+       data: data
+   })
 };
 
 /** 获取当前登录人的信息 */

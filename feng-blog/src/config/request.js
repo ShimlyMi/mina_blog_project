@@ -12,7 +12,7 @@ const http = axios.create({
         "Content-Type": "application/json",
         "X-Requested-With": "XMLHttpRequest",
     },
-    baseURL: import.meta.env.VITE_APP_BASR_URL
+    baseURL: import.meta.env.BASE_URL
 });
 
 /** 请求拦截器 */

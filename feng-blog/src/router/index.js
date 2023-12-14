@@ -1,28 +1,25 @@
 import {createRouter, createWebHashHistory, } from 'vue-router'
+import Layout from '@/components/layout/index.vue'
 
-/*const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/login',
-      name: 'feng-user',
-      component: () => import('../views/user/index.vue')
-    },
-    {
-      path: '/register',
-      name: 'feng-register',
-      component: () => import('../views/user/index.vue')
-    },
-  ]
-})*/
 const routes = [
   {
     path: "/",
-    name: "home",
+    name: "Layout",
     meta: {
-      name: "博客首页",
+      name: "Layout",
     },
-    component: () => import("@/views/home/index.vue"),
+    component: Layout,
+    redirect: "/home",
+    children: [
+      {
+        path: "/home",
+        name: "home",
+        meta: {
+          name: "博客首页",
+        },
+        component: () => import("@/views/home/index.vue"),
+      }
+    ]
   },
   {
     path: "/login",

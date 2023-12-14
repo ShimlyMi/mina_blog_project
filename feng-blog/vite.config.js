@@ -37,7 +37,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "./src/bem.scss";`
+        additionalData: `@import "./src/styles/base.scss";`
       }
     }
   },
@@ -45,7 +45,7 @@ export default defineConfig({
     port: 5627,
     host: "0.0.0.0",
     https: false,
-    open: true,
+    open: false,
     // 热更新
     hmr: {
       overlay: false,

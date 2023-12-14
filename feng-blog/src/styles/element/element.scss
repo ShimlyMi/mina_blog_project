@@ -1,0 +1,27 @@
+
+.el-menu {
+  border-right: none;
+  background: transparent;
+  .el-menu-item {
+    border-bottom: none;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0 10px;
+    background-color: transparent;
+  }
+  :deep(.el-menu-item.is-active) {
+    border-bottom: none;
+    color: #f7a7f2 !important;
+  }
+  .el-menu-item:not(is-disabled):focus,
+  .el-menu-item:not(is-disabled):hover {
+    color: #f7a7f2;
+    background-color: transparent;
+  }
+  .el-sub-menu__title {
+    font-size: 1rem;
+    padding: 0 10px;
+    border-bottom: none;
+    font-weight: 600;
+  }
+}

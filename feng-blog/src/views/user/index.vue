@@ -1,18 +1,23 @@
 <script setup>
-import { ref, reactive, watch, h } from "vue";
+import { ref, reactive, watch, h, getCurrentInstance } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { ElNotification } from "element-plus";
+import { ElMessage } from "element-plus";
+
 
 import {getUserInfoById, reqLogin, reqRegister} from "@/api/user.js";
 import { useUserStore } from "@/stores/index.js";
 import { _encrypt, _decrypt } from "@/utils/encipher.js";
 import {_getLocalItem, _setLocalItem, _removeLocalItem, getWelcomeSay} from "@/utils/tool.js";
 
+
 const route = useRoute();
 const router = useRouter();
 const isLogin = ref(true);
 const isRemember = ref(false);
-const userStore = useUserStore()
+const userStore = useUserStore();
+const { proxy } = getCurrentInstance();
+const loading = ref(false);
+
 const usernameV = (rule, value, check) => {
   if (!value) {
     return check(new Error("请输入用户账号"));
@@ -57,157 +62,46 @@ const registerRules = {
 
 /** 用户注册 */
 const userRegister = async () => {
-  await registerFormRef.value.validate(async  (valid) => {
+  loading.value = true;
+  await registerFormRef.value.validate(async (valid) => {
     if (valid) {
       const register = {
         user_name: registerForm.username,
         password: registerForm.password,
         nick_name: registerForm.nick_name,
       };
-      const res = await reqRegister(register);
-      if (res && res.code == 0) {
-        ElNotification({
-          offset: 60,
-          title: '提示',
-          message: h("div", { style: "color: #7ec050; font-weight: 600;" }, "注册成功"),
-        });
-        // 自动登陆
-        await userLogin("register");
+      let res = await reqRegister(register);
+      console.log(res)
+      if (res.code == 0) {
+        const { nick_name, user_name } = res.result;
+        if (nick_name != null || nick_name != "" || nick_name != undefined) {
+          ElMessage({
+            showClose: true,
+            type: "success",
+            message: '用户' + nick_name + '注册成功，请牢记密码哦~'
+          });
+          await router.push({ path: "/login", query: { nick_name } });
+        } else {
+          ElMessage({
+            showClose: true,
+            type: "success",
+            message: '用户' + user_name + '注册成功，请牢记密码哦~'
+          });
+          await router.push({ path: "/login", query: { user_name } })
+        }
       } else {
-        ElNotification({
-          offset: 60,
-          title: '提示',
-          message: h("div", { style: "color: #f56c6c; font-weight: 600;" }, res.message),
-        });
+        loading.value = false;
       }
-    }
-  });
-};
-
-const welcome = (id, nick_name) => {
-  // 欢迎
-  let msg = getWelcomeSay(nick_name);
-  if (id == 3) {
-    msg = "小婷光临，真是三生有幸";
-  }
-  ElNotification({
-    offset: 60,
-    title: "欢迎～",
-    message: h("div", { style: "font-weight: 600;" }, msg),
-  });
-};
-
-/** 用户登录 */
-const userLogin = async (type) => {
-  if (type == 'register') {
-    const loginForm = {
-      user_name: registerForm.username,
-      password: registerForm.password,
-    };
-    const res = await reqLogin(loginForm);
-    if (res.code == 0) {
-      await userStore.setToken("登录成功");
-      await router.push("/home");
-      console.log(res.result.message)
     } else {
-      console.log('error', res.result.message)
+      loading.value = false;
+      ElMessage({
+        showClose: true,
+        type: "error",
+        message: '请求失败，请检查代码，重新发送请求！'
+      });
     }
-  }
-
+  })
 }
-/*const userLogin = async (type) => {
-  // 如果是用户注册以后进行登录的 参数需要整合一下
-  if (type == 'register') {
-    const loginForm = {
-      user_name: registerForm.username,
-      password: registerForm.password,
-    };
-    const res = await reqLogin(loginForm);
-    if (res && res.code == 0) {
-      await userStore.setToken(res.result.token);
-      // 记住密码
-      _setLocalItem("loginForm", _encrypt(loginForm));
-      ElNotification({
-        offset: 60,
-        title: "提示",
-        message: h("div", { style: "color: #7ec050; font-weight: 600;" }, "自动登录成功"),
-      });
-      // 获取并保存当前用户信息
-      const userRes = await getUserInfoById(res.result.id);
-      if (userRes.code == 0) {
-        await userStore.setUserInfo(userRes.result);
-        Object.assign(registerForm, primaryRegisterForm);
-        const { id, nick_name } = userRes.result;
-        await welcome(id, nick_name);
-        if (_getLocalItem("blogLastRouter")) {
-          router.push(_getLocalItem("blogLastRouter"));
-        } else {
-          router.go(-2);
-        }
-      } else {
-        ElNotification({
-          offset: 60,
-          title: "错误提示",
-          message: h("div", { style: "color: #f56c6c; font-weight: 600;" }, res.message),
-        });
-      }
-    } else {
-      ElNotification({
-        offset: 60,
-        title: "错误提示",
-        message: h("div", { style: "color: #f56c6c; font-weight: 600;" }, res.message),
-      });
-    }
-  } else {
-    await loginFormRef.value.validate(async (valid) => {
-      if (valid) {
-        const res = await reqLogin(loginForm);
-        const token = res.result.token;
-        if (res && res.code == 0) {
-          // 保存token
-          await userStore.setToken(token);
-          ElNotification({
-            offset: 60,
-            title: "提示",
-            message: h("div", { style: "color: #7ec050; font-weight: 600;" }, "登录成功"),
-          });
-          if (isRemember.value) {
-            // 记住密码
-            _setLocalItem("loginForm", _encrypt(loginForm));
-          } else {
-            _removeLocalItem("loginForm");
-          }
-          // 获取并保存当前用户信息
-          const userRes = await getUserInfoById(res.result.id);
-          if (userRes.code == 0) {
-            await userStore.setUserInfo(userRes.result);
-            Object.assign(loginForm, primaryLoginForm);
-            const { id, nick_name } = userRes.result;
-            await welcome(id, nick_name);
-            if (_getLocalItem("blogLastRouter")) {
-              router.push(_getLocalItem("blogLastRouter"));
-            } else {
-              router.go(-1);
-            }
-          } else {
-            ElNotification({
-              offset: 60,
-              title: "错误提示",
-              message: h("div", { style: "color: #f56c6c; font-weight: 600;" }, res.message),
-            });
-          }
-        } else {
-          ElNotification({
-            offset: 60,
-            title: "错误提示",
-            message: h("div", { style: "color: #f56c6c; font-weight: 600;" }, res.message),
-          });
-        }
-
-      }
-    });
-  }
-};*/
 
 /** 按钮根据路由跳转 登录或注册页面 */
 const goTo = (path) => {
@@ -269,7 +163,7 @@ const submit = () => {
             <el-input v-model="registerForm.nick_name" placeholder="Nickname" autocomplete="off" clearable></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button class="btn" @click="submit">立即注册</el-button>
+            <el-button class="btn" @click="userRegister">立即注册</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -301,13 +195,9 @@ const submit = () => {
 @include b(userform) {
   @include bfc;
   align-items: center;
-  background-color: var(--white);
-  background: url("../../assets/images/bgimg.jpg");
   /* 决定背景图像的位置是在视口内固定，或者随着包含它的区块滚动。 */
   /* https://developer.mozilla.org/zh-CN/docs/Web/CSS/background-attachment */
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: var(--white) url("../../assets/images/bgimg.jpg") no-repeat fixed center;
   background-size: cover;
   display: grid;
   height: 100vh;
