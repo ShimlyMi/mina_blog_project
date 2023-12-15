@@ -7,6 +7,7 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // 引入样式
 import "./assets/css/iconfont/iconfont.css";
 
+
 // animate
 import "animate.css";
 

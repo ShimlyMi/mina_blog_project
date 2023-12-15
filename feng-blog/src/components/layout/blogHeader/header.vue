@@ -16,13 +16,16 @@ const headerState = reactive({
   headerClass: "",
   activeIndex: 0,
 })
+const logoSrc = {
+  url: 'http://localhost:8888/cd933314a585d1a78f8d65100.jpg'
+}
 
 const getPath = computed(() => {
   return route.path;
 })
 
 // 导航固定
-const scroll = () => {
+/* const scroll = () => {
   let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
   const { startScrollTop } = headerState;
   if (scrollTop <= 50) {
@@ -36,15 +39,15 @@ const scroll = () => {
     headerState.headerClass = "hide-header";
   }
   headerState.startScrollTop = scrollTop;
-};
+}; */
 </script>
 
 <template>
 <div class="fy-header">
   <div class="fy-header--menu flex_r_between">
     <div class="sub-avatar">
-      <router-link v-if="getBlogAvatar" to="/">
-        <el-avatar class="el-avatar" :src="getBlogAvatar" />
+      <router-link to="/">
+        <el-avatar class="el-avatar" :src="logoSrc.url" />
       </router-link>
     </div>
     <div class="flex_r_around">
@@ -92,6 +95,7 @@ const scroll = () => {
 @include b(header) {
   .sub-avatar {
     padding: 5px 0 0 0;
+    margin-left: 10px;
     display: flex;
     align-items: center;
   }

@@ -1,380 +1,288 @@
-<template>
-  <div class="yz-login">
-    <div class="yz-login__main">
-      <div :class="['yz-user--container', 'container-login', { 'is-txl is-z200': isLogin }]">
-        <a-form
-            v-if="route.name == 'user'"
-            :model="loginForm"
-            name="normal_login"
-            ref="loginFormRef"
-            class="login-register--form"
-            @finish="handleFinish"
-            @finishFailed="handleFinishFailed"
-            :rules="loginRules"
-            layout="horizontal">
-          <a-form-item>
-            <h1 class="loginTitle">LOGIN</h1>
-          </a-form-item>
-          <a-form-item ref="user_name" name="user_name">
-            <a-input v-model:value="loginForm.user_name" size="large" placeholder="Username" autocomplete="false" >
-              <template #prefix>
-                <UserOutlined class="site-form-item-icon"/>
-              </template>
-            </a-input>
-          </a-form-item>
-
-          <a-form-item
-              name="password">
-            <a-input-password v-model:value="loginForm.password" size="large" placeholder="Username" autocomplete="false">
-              <template #prefix>
-                <LockOutlined class="site-form-item-icon"/>
-              </template>
-            </a-input-password>
-          </a-form-item>
-
-          <a-form-item>
-            <a-form-item name="remember" no-style>
-              <a-checkbox v-model:checked="loginForm.remember">记住密码</a-checkbox>
-            </a-form-item>
-            <a class="login-register-form-forgot" href="">忘记密码？</a>
-          </a-form-item>
-
-          <a-form-item>
-            <a-button type="primary" html-type="submit" class="formBtn login-register-form-button" @click="submit">登录</a-button>
-          </a-form-item>
-        </a-form>
-
-        <!--  注册表  -->
-        <a-form
-            v-else
-            :model="registerForm"
-            layout="horizontal" >
-          <a-form-item>
-            <h1 class="loginTitle">Register</h1>
-          </a-form-item>
-          <a-form-item
-              name="user_name">
-            <a-input v-model:value="registerForm.user_name"  placeholder="输入用户名" autocomplete="false" >
-              <template #prefix>
-                <UserOutlined class="site-form-item-icon"/>
-              </template>
-            </a-input>
-          </a-form-item>
-
-          <a-form-item
-              name="password">
-            <a-input-password v-model:value="registerForm.password"  placeholder="输入密码" autocomplete="false">
-              <template #prefix>
-                <LockOutlined class="site-form-item-icon"/>
-              </template>
-            </a-input-password>
-          </a-form-item>
-          <a-form-item
-              name="password2">
-            <a-input-password v-model:value="registerForm.check_password" placeholder="再次确认密码" autocomplete="off">
-              <template #prefix>
-                <LockOutlined class="site-form-item-icon"/>
-              </template>
-            </a-input-password>
-          </a-form-item>
-          <a-form-item name="nocl_name">
-            <a-input v-model:value="registerForm.nick_name"  placeholder="请输入昵称" autocomplete="off">
-              <template #prefix>
-                <UserOutlined class="site-form-item-icon"/>
-              </template>
-            </a-input>
-          </a-form-item>
-          <a-form-item>
-            <a-button type="primary" html-type="submit" class="formBtn login-register-form-button" @click="submit">注册</a-button>
-          </a-form-item>
-        </a-form>
-
-      </div>
-
-      <!-- 登陆面板 -->
-      <div :class="['yz-user--switch', { 'is-login': isLogin }]">
-        <div class="yz-login--content">
-          <h1>{{ route.name == 'user' ? "欢迎回来！" : "您好，欢迎！" }}</h1>
-          <p>
-            {{
-              route.name == 'user'
-                  ? "如果您还没有账号，请点击下方立即注册按钮进行账号注册"
-                  : "如果您已经注册过账号，请点击下方立即登录按钮进行登录"
-            }}
-          </p>
-          <div class="yz-login--btn" >
-            <a-button v-if="route.name == 'user'" class="formBtn" @click="goTo('/register')">立即注册</a-button>
-            <a-button v-if="route.name == 'register'" class="formBtn" @click="goTo('/user')">立即登录</a-button>
-            <a-button class="formBtn" @click="goTo('/home')">返回首页</a-button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script lang="ts" setup>
-import {ref, reactive, computed, UnwrapRef,toRaw} from 'vue';
+<script setup>
+import { reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
-import type {RuleObject} from "ant-design-vue/es/form";
-import type {ValidateErrorEntity} from "ant-design-vue/es/form/interface";
+import { reqRegister } from '@/api/user.js'
 
-/** 引入API 接口函数 */
-import { reqRegister,reqLogin} from '@/api/user';
-import { userStore } from "@/stores";
-/** 本地数据加密文件 */
-import { __encrypt, _decrypt } from "@/utils/encryption"
+const router = useRouter()
+const route = useRoute()
 
-
-const route = useRoute();
-const router = useRouter();
-const userStroe = userStore();
-
-const isLogin = ref(true);
-
-const registerFormRef = ref();
-
-/** 定义登录表单数据类型 */
-interface loginFormState {
-  user_name: string;
-  password: string;
-  remember: boolean;
-};
-/** 登录表单 */
 const loginFormRef = ref();
-const loginForm: UnwrapRef<loginFormState> = reactive({
-  user_name: '',
-  password: '',
-  remember: true,
-});
-const primaryLoginForm = reactive({...loginForm});
+const loginForm = reactive({
+  user_name: "",
+  password: "",
+})
 
-/** 定义注册表单数据类型 */
-interface registerFormState {
-  user_name: string;
-  password: string;
-  check_password: string;
-  nick_name: string;
-};
-/** 注册表单 */
-const registerForm : UnwrapRef<registerFormState> = reactive({
-  user_name: '',
-  password: '',
-  check_password: '',
-  nick_name:'',
-});
-const primaryRegisterForm = reactive({...registerForm});
-
-
+const registerForm = reactive({
+  user_name: "",
+  password: "",
+  nick_name: "",
+})
 /** 验证用户名 */
-let checkUsername = async (rule: RuleObject, value: string) => {
+const checkUsername = (rule, value, callback) => {
   if (!value) {
-    return Promise.reject("请输入用户账号");
+    return callback(new Error('请输入用户账号'))
   } else if (value.length > 16 || value.length < 5) {
-    return Promise.reject("用户账户长度在5-16位之间");
-  } return Promise.resolve();
-};
-
-/** 验证输入的密码 */
+    return callback(new Error("用户账号长度应该在5-16之间"));
+  }
+  return callback();
+}
+/** 定义密码验证 */
 const REGEXP_PWD = /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)]|[()])+$)(?!^.*[\u4E00-\u9FA5].*$)([^(0-9a-zA-Z)]|[()]|[a-z]|[A-Z]|[0-9]){6,18}$/;
-/** 第一次输入密码 */
-let validatePwd = async (rule: RuleObject, value: string) => {
-  if (value === '') {
-    return Promise.reject("请输入密码");
-  } else if (registerForm.check_password !== '') {
-    await loginFormRef.value.validateFields("check_password")
-  } else if (!REGEXP_PWD.test(value)) {
-    return Promise.reject("密码格式应为8-18位英文、数字或字母任意两种组合")
-  }
-  return Promise.resolve();
-}
-
-/** 第二次输入密码 */
-let validatePwd2 = (rule: RuleObject, value: string) => {
+/** 验证密码 */
+const checkPassword = (rule, value, callback) => {
   if (!value) {
-    return Promise.reject("请输入二次确认密码");
-  } else if (value !== registerForm.password) {
-    return Promise.reject("两次密码不一致，请重新输入");
+    return callback(new Error('请输入密码'))
+  } else if (!REGEXP_PWD.test(value)) {
+    return callback(new Error("密码格式应该为8-18位数字、字母、符号的任意两种组合"));
   }
-  return Promise.resolve();
+  return callback();
 }
-
-/** 登录接单验证规则 */
+/** 定义登录表单验证规则 */
 const loginRules = {
-  user_name: [{ required: true, message: '用户名不得为空', trigger: 'blur' }],
-  password: [{ required: true, message: '密码不得为空', trigger: 'blur' }]
-};
-/** 注册表单验证郭泽 */
+  user_name: [{ required: true, message: "请输入用户账号", trigger: 'blur' }],
+  password: [{ required: true, message: "请输入账号密码", trigger: 'blur' }],
+}
+/** 定义注册表单验证规则 */
 const registerRules = {
-  user_name: [{ required: true, validator: checkUsername, message: '用户名不得为空', trigger: 'blur' },],
-  password: [{ required: true, validator: validatePwd, message: '密码不得为空', trigger: 'blur' }],
-  check_password: [{ required: true, validator: validatePwd2, message: '再次输入确认密码', trigger: 'blur' }],
-};
-const handleFinish = (values: loginFormState) => {
-  console.log(values, loginForm);
-};
-const handleFinishFailed = (errors: ValidateErrorEntity<loginFormState>) => {
-  console.log(errors);
-};
-/** 注册接口 发送注册请求 */
-const userRegister = () => {
-
+  user_name: [{ required: true, validator: checkUsername, trigger: 'blur' }],
+  password: [{ required: true, validator: checkPassword, trigger: 'blur' }],
 }
 
+/** 用户注册 */
+const userRegister = async (registerForm) => {
+   let res = await reqRegister(registerForm);
+   console.log(res);
+}
 
-/** 登录接口 */
-const userLogin  = async () => {
-
-};
-
-
-// const disabled = computed(() => {
-//   return !(loginForm.user_name && loginForm.password);
-// });
-
-/** 按钮根据路由跳转 登录或注册页面 */
-const goTo = (path:string) => {
-  router.push(path);
-  isLogin.value = !isLogin.value;
-};
-
-/** 登录注册按钮 */
-const submit = () => {
-  if (route.name == 'user;') {
-    userLogin();
-  } else {
-    registerFormRef.value
-        .validate()
-        .then(() => {
-          console.log('values', registerForm, toRaw(registerForm));
-        })
-        .catch((error: ValidateErrorEntity<registerFormState>) => {
-          console.log('error', error);
-        });
-  }
-};
+const goTo = (path) => {
+  router.push(path)
+}
 
 
 </script>
 
-<style lang="scss" scoped>
-@include b(login) {
-  @include bfc;
-  display: flex;
-  justify-content: center;
+
+<template>
+  <div class="userForm">
+    <div class="userForm--container right-panel-active">
+      <div class="userForm--container__form container-login">
+        <!-- 登录表 -->
+        <el-form 
+        v-if="route.name === 'Login'"
+        :model="loginForm" 
+        class="loginForm" 
+        :rules="loginRules"
+        >
+          <el-form-item>
+            <h1 class="form__title">LOGIN</h1>
+          </el-form-item>
+          <el-form-item prop="user_name">
+            <el-input v-model="loginForm.user_name" placeholder="Username" autocomplete="off" clearable>
+              <template #prefix>
+                <el-icon><User /></el-icon>
+              </template>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input v-model="loginForm.password" placeholder="Password" autocomplete="off" show-password>
+              <template #prefix>
+                <el-icon><Lock /></el-icon>
+              </template>
+            </el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-checkbox>记住我</el-checkbox>
+          </el-form-item>
+          <el-form-item>
+            <el-button class="btn">立即登录</el-button>
+          </el-form-item>
+        </el-form>
+        <!-- 注册表 -->
+        <el-form 
+        :model="registerForm" 
+        class="registerForm" 
+        :rules="registerRules"
+        v-else>
+          <el-form-item>
+            <h1 class="form__title">RIGSTER</h1>
+          </el-form-item>
+          <el-form-item prop="user_name">
+            <el-input 
+            v-model="registerForm.user_name"
+            :style="{width:'100%'}"
+            placeholder="Username" 
+            clearable>
+              <template #prefix>
+                <el-icon><User /></el-icon>
+              </template>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input v-model="registerForm.password" placeholder="Password" autocomplete="off" show-password>
+              <template #prefix>
+                <el-icon><Lock /></el-icon>
+              </template>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="nick_name"> 
+            <el-input v-model="registerForm.nick_name" placeholder="Nickname" autocomplete="off">
+              <template #prefix>
+                <el-icon><User /></el-icon>
+              </template>
+            </el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button class="btn" @click="userRegister()">立即注册</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+
+      <div class="container__overlay">
+        <div class="overlay">
+          <div class="overlay__panel overlay--left" >
+            <h1 class="title">{{ route.name === 'Login' ? "欢迎回来！" : "您好，欢迎！" }}</h1>
+            <p class="tips">{{
+                route.name === 'Login'
+                    ? "如果您还没有账号，请点击下方立即注册按钮进行账号注册"
+                    : "如果您已经注册过账号，请点击下方立即登录按钮进行登录"
+              }}</p>
+            <div class="signUp">
+              <el-button class="formBtn" @click="goTo('/register')" v-show="route.name === 'Login'">立即注册</el-button>
+              <el-button class="formBtn" @click="goTo('/login')" v-show="route.name === 'Register'">立即登录</el-button>
+              <el-button class="formBtn">返回首页</el-button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+
+.userForm {
+  min-height: 100vh;
   align-items: center;
-  background-image: url("@/assets/images/bgimg.jpg"); /* 背景图片 */
+  /* 决定背景图像的位置是在视口内固定，或者随着包含它的区块滚动。 */
+  background:  url("../../assets/images/bgimg.jpg") no-repeat fixed center;
   background-size: cover;
-  background-repeat: no-repeat; /* 背景图片不重复 */
-  padding: 20px;
-  @include e(main) {
-    position: relative;
-    width: 1000px;
-    min-width: 1000px;
+  display: grid;
+  height: 100vh;
+  place-items: center;
+ .userForm--container {
+    //background-color: var(--white);
+    border-radius: 0.7rem;
+    box-shadow: 0 0.9rem 1.7rem rgba(0, 0, 0, 0.25),
+    0 0.7rem 0.7rem rgba(0, 0, 0, 0.22);
     height: 500px;
-    min-height: 500px;
-    padding: 25px;
-    // box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
+    max-width: 1000px;
     overflow: hidden;
-  }
-  @include m(container) {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    width: 50%;
-    height: 100%;
-    top: 0;
-    // left: calc(100% - 400px);
-    padding: 25px;
-    background-color: #fff;
-    transition: all 1.25s;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
-
-    .loginTitle {
-      text-align: center;
-    }
-  }
-  @include m(switch) {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    left: calc(100% - 500px);
-    height: 100%;
-    width: 50%;
-    // padding: 50px;
-    z-index: 200;
-    transition: 1.25s;
-    background: rgba(255, 255, 255, 0.1);
-    overflow: hidden;
-    // box-shadow: 4px 4px 10px #d1d9e6, -4px -4px 10px #f9f9f9;
-    color: #a0a5a8;
-  }
-  @include m(content) {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    position: absolute;
+    position: relative;
     width: 100%;
-    padding: 50px 55px;
-    transition: 1.25s;
 
-    h1 {
-      font-size: 26px;
-      font-weight: 700;
-      line-height: 3;
-      color: #fff;
+    &.right-panel-active {
+      .container-login {
+        transform: translateX(100%);
+      }
+      .container__overlay {
+        transform: translateX(-100%);
+      }
+      .overlay {
+        transform: translateX(0%);
+      }
+      .overlay--left {
+        transform: translateX(-20%);
+      }
+      
     }
-
-    p {
-      font-size: 14px;
-      letter-spacing: 0.25px;
-      text-align: center;
-      line-height: 1.6;
+    .userForm--container__form {
+      display: flex;
+      position: absolute;
+      top: 0;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+      transition: all 0.6s ease-in-out;
+      background-color: white;
+      .form__title {
+        width: 100%;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .loginForm {
+        margin: 10px auto;
+      }
+    }
+    .container__overlay {
+      height: 100%;
+      left: 50%;
+      overflow: hidden;
+      position: absolute;
+      top: 0;
+      animation: show 0.6s;
+      transition: transform 0.6s ease-in-out;
+      width: 50%;
+      color: var(--white);
+      z-index: 100;
+      .overlay {
+        height: 100%;
+        left: 20%;
+        position: relative;
+        transform: translateX(0);
+        transition: transform 0.6s ease-in-out;
+        width: 100%;
+      }
+      .overlay__panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        height: 100%;
+        // transform: translateX(0);
+        transition: transform 0.6s ease-in-out;
+        width: 100%;
+        .title {
+          color: #fff;
+          font-weight: 700;
+          margin-bottom: 10px;
+        }
+        .tips {
+          color: #fff;
+          margin-bottom: 30px;
+        }
+      }
     }
   }
-  @include m(btn) {
-    display: flex;
-    .formBtn:first-child {
-      margin-right: 5px;
-    }
-  }
-
 }
-
-.container-register {
-  z-index: 0;
-  left: calc(100% - 500px);
-  opacity: 0;
+:deep(.el-form-item) {
+  margin-bottom: 25px;
 }
 
 .container-login {
-  z-index: 0;
   left: 0;
+  width: 50%;
+  z-index: 1;
 }
 
-.is-txl {
-  left: calc(100% - 500px);
-  transition: 1.25s;
-  transform-origin: right;
-}
 
-.is-z200 {
-  // z-index: 200;
-  transition: 1.25s;
+.overlay--left {
+  transform: translate(-20%);
 }
-
-.is-login {
-  left: 0;
+.btn {
+  width: 100%;
+  height: 30px;
+  color: white; /* 按钮字体颜色 */
+  border: 0; /* 删除按钮边框 */
+  border-radius: 20px; /* 按钮圆角边 */
+  background-image: linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%, #cf6cc9 33%, #ee609c 66%, #ee609c 100%); /* 按钮颜色 */
 }
-
 .formBtn {
-  margin-top: 30px; /* 按钮顶部与输入框的距离 */
   width: 150px;
   height: 30px;
   color: white; /* 按钮字体颜色 */
@@ -383,15 +291,17 @@ const submit = () => {
   background-image: linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%, #cf6cc9 33%, #ee609c 66%, #ee609c 100%); /* 按钮颜色 */
 }
 
-#components-form-demo-normal-login .login-register-form {
-  max-width: 300px;
-}
+@keyframes show {
+  0%,
+  49.99% {
+    opacity: 0;
+    z-index: 1;
+  }
 
-#components-form-demo-normal-login .login-register-form-forgot {
-  float: right;
-}
-
-.login-register-form-button {
-  width: 100%;
+  50%,
+  100% {
+    opacity: 1;
+    z-index: 5;
+  }
 }
 </style>
