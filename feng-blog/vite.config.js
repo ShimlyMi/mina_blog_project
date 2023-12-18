@@ -38,7 +38,7 @@ export default defineConfig({
     css: {
         preprocessorOptions: {
             scss: {
-                additionalData: `@import "./src/styles/base.scss"; @import "./src/bem.scss";`
+                additionalData: `@import "./src/styles/bem.scss";`
             }
         }
     },

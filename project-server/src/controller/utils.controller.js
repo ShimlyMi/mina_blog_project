@@ -1,6 +1,6 @@
 const path = require('path');
 
-const {unSupportedFileType, fileUploadError} = require("../constant/err.type");
+const { unSupportedFileType, fileUploadError} = require("../constant/err.type");
 
 class UtilsController {
     /** 头像上传 */
@@ -8,7 +8,7 @@ class UtilsController {
         const { file } = ctx.request.files;
         // console.log(file);
         const fileTypes = ['image/jpeg', 'image/png']
-
+        console.log(file)
         if (file) {
             if (!fileTypes.includes(file.mimetype)) {
                 console.log(ctx.request.files.file.mimetype)

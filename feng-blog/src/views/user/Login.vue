@@ -1,17 +1,23 @@
 <script setup>
 import { reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { reqRegister } from '@/api/user.js'
+import { getUserInfoById, reqLogin, reqRegister} from '@/api/user.js'
+import { ElNotification } from "element-plus";
+import { useUserStore } from "@/stores/index.js";
+import {_encrypt} from "@/utils/encipher.js";
 
 const router = useRouter()
 const route = useRoute()
+const userStore = useUserStore()
 
-const loginFormRef = ref();
+// const loginFormRef = ref();
+// const primaryLoginForm = reactive({...loginForm})
 const loginForm = reactive({
   user_name: "",
   password: "",
 })
 
+// const registerFormRef = ref()
 const registerForm = reactive({
   user_name: "",
   password: "",
@@ -22,7 +28,7 @@ const checkUsername = (rule, value, callback) => {
   if (!value) {
     return callback(new Error('请输入用户账号'))
   } else if (value.length > 16 || value.length < 5) {
-    return callback(new Error("用户账号长度应该在5-16之间"));
+    return callback(new Error("用户账号长度应该在5-16位英文数字之间"));
   }
   return callback();
 }
@@ -49,14 +55,39 @@ const registerRules = {
 }
 
 /** 用户注册 */
-const userRegister = async (registerForm) => {
-   let res = await reqRegister(registerForm);
-   console.log(res);
+const userRegister = async () => {
+    let res = await reqRegister(registerForm);
+    if (res && res.code === 0) {
+        ElNotification({
+            offset: 60,
+            title: "提示",
+            message: "注册成功"
+        })
+        await userLogin();
+    } else {
+        ElNotification({
+            offset: 60,
+            title: "提示",
+            message: res.message
+        })
+    }
+    // await registerFormRef.value.validate( async (valid) => {
+    //     if (valid) {
+    //
+    //     }
+    // })
+}
+/** 用户登录 */
+const userLogin = async () => {
+    let res = await reqLogin(loginForm)
+    console.log(res)
+
 }
 
 const goTo = (path) => {
   router.push(path)
 }
+
 
 
 </script>
@@ -83,7 +114,7 @@ const goTo = (path) => {
               </template>
             </el-input>
           </el-form-item>
-          <el-form-item prop="password">
+          <el-form-item prop="password" @keyup.enter="userLogin()">
             <el-input v-model="loginForm.password" placeholder="Password" autocomplete="off" show-password>
               <template #prefix>
                 <el-icon><Lock /></el-icon>
@@ -94,7 +125,7 @@ const goTo = (path) => {
             <el-checkbox>记住我</el-checkbox>
           </el-form-item>
           <el-form-item>
-            <el-button class="btn">立即登录</el-button>
+            <el-button class="btn" @click="userLogin()">立即登录</el-button>
           </el-form-item>
         </el-form>
         <!-- 注册表 -->

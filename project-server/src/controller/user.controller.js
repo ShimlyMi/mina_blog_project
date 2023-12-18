@@ -15,6 +15,7 @@ class UserController {
         // console.log(ctx.request.body);
         // const { user_name, password } = ctx.request.body
             // 2. 操作数据库
+        console.log(123)
         try {
             const res = await createUser(ctx.request.body);
             // 3. 返回数据

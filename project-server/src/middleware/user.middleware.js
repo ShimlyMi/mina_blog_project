@@ -12,7 +12,10 @@ const { userFormatError,
 
 // 用户验证器
 const userValidator = async (ctx,next) => {
+    console.log("vvvv")
     const { user_name,password } = ctx.request.body;
+    console.log(user_name,password)
+    // console.log(ctx)
     /* 判断错误 合法性 */
     if (!user_name || !password) {
         console.error("用户名或密码为空", ctx.request.body)
@@ -23,6 +26,7 @@ const userValidator = async (ctx,next) => {
 }
 
 const verifyUser = async (ctx,next) => {
+    console.log("ccc")
     const  { user_name } = ctx.request.body;
     // 因为 getUserInfo 是异步请求，所以有两种方式可以
     /* 第一种：直接加 await */
@@ -50,6 +54,7 @@ const verifyUser = async (ctx,next) => {
 
 // 密码加密处理
 const crpytPassword = async (ctx, next) => {
+    console.log("pppp")
     // 获取密码
     const  { password } = ctx.request.body;
     // 加盐

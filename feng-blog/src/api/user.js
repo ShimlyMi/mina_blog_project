@@ -4,17 +4,17 @@ import { useUserStore } from "@/stores/index.js";
 
 /** 登录 */
 export const reqLogin = (data) => {
-    return new Promise((resolve) => {
-        http.post("/api/users/login", data).then((res) => {
-            resolve(res);
-        });
-    });
+    return http({
+        url: '/api/users/login',
+        method: 'post',
+        data: data
+    })
 };
 
 /** 注册 */
 export const reqRegister = (data) => {
    return http({
-       url: '/api/usrs/register',
+       url: '/api/users/register',
        headers: {
            isToken: false
        },

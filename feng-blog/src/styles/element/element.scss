@@ -15,7 +15,7 @@
   }
   .el-menu-item:not(is-disabled):focus,
   .el-menu-item:not(is-disabled):hover {
-    color: #f7a7f2;
+    color: #f7a7f2!important;
     background-color: transparent;
   }
   .el-sub-menu__title {

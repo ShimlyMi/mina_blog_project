@@ -9,13 +9,9 @@ import SwitchTheme from "@/components/SwitchTheme/index.vue"
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
-const { getBlogAvatar, getUserInfo } = storeToRefs(userStore);
-const headerState = reactive({
-  drawerShow: false,
-  startScrollTop: 0,
-  headerClass: "",
-  activeIndex: 0,
-})
+const {  getUserInfo } = storeToRefs(userStore);
+console.log(getUserInfo)
+
 const logoSrc = {
   url: 'http://localhost:8888/cd933314a585d1a78f8d65100.jpg'
 }
@@ -24,22 +20,6 @@ const getPath = computed(() => {
   return route.path;
 })
 
-// 导航固定
-/* const scroll = () => {
-  let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-  const { startScrollTop } = headerState;
-  if (scrollTop <= 50) {
-    headerState.headerClass = "fixed-header";
-    headerState.startScrollTop = scrollTop;
-    return;
-  }
-  if (startScrollTop > scrollTop) {
-    headerState.headerClass = "fixed-header";
-  } else if (startScrollTop <= scrollTop) {
-    headerState.headerClass = "hide-header";
-  }
-  headerState.startScrollTop = scrollTop;
-}; */
 </script>
 
 <template>
@@ -56,6 +36,7 @@ const getPath = computed(() => {
         mode="horizontal"
         :ellipsis="false"
         :default-active="getPath"
+        router
       >
         <el-menu-item index="/home"><i class="iconfont icon-shouye1"></i>主页</el-menu-item>
         <el-menu-item><i class="iconfont icon-shizhongfill"></i>时间轴</el-menu-item>
@@ -63,16 +44,16 @@ const getPath = computed(() => {
           <template #title>
             <i class="iconfont icon-yingyongzhongxin"></i>资源导航
           </template>
-          <el-menu-item><i class="iconfont con-qianduankaifa"></i>前端</el-menu-item>
-          <el-menu-item><i class="iconfont icon-houduankaif"></i>后端</el-menu-item>
+          <el-menu-item><i class="iconfont icon-qianduankaifa"></i>前端</el-menu-item>
+          <el-menu-item><i class="iconfont icon-houduankaifa"></i>后端</el-menu-item>
         </el-sub-menu>
         <el-menu-item><i class="iconfont icon-liebiao"></i>分类</el-menu-item>
         <el-menu-item><i class="iconfont icon-tupian1"></i>相册</el-menu-item>
         <el-menu-item><i class="iconfont icon-duihua"></i>说说</el-menu-item>
         <el-menu-item><i class="iconfont icon-dakaixinxi"></i>留言板</el-menu-item>
         <el-menu-item><i class="iconfont icon-lianjie2"></i>友链</el-menu-item>
-        <el-menu-item index="/login"><i class="iconfont icon-yonghu"></i>登录</el-menu-item>
-        <div class="user">
+        <el-menu-item index="/login" v-if="!getUserInfo.id"><i class="iconfont icon-yonghu"></i>登录</el-menu-item>
+        <div class="user" v-else>
           <el-sub-menu index="/#">
             <template #title>
               <el-avatar :src="getUserInfo.avatar" :size="30">{{ getUserInfo.nick_name }}</el-avatar>
@@ -95,7 +76,6 @@ const getPath = computed(() => {
 @include b(header) {
   .sub-avatar {
     padding: 5px 0 0 0;
-    margin-left: 10px;
     display: flex;
     align-items: center;
   }
@@ -136,6 +116,9 @@ const getPath = computed(() => {
 }
 :deep(.el-menu:not(.el-menu--collapse) .el-sub-menu__title) {
   padding: 0 10px;
+}
+:deep(.el-menu--horizontal>.el-menu-item.is-active) {
+  color: #f7a7f2 !important;
 }
 .icon-lianjie2 {
   font-size: 1.2rem;

@@ -12,18 +12,16 @@ const http = axios.create({
         "Content-Type": "application/json",
         "X-Requested-With": "XMLHttpRequest",
     },
-    baseURL: import.meta.env.BASE_URL
+    baseURL: import.meta.env.VITE_APP_BASE_URL
 });
-
 /** 请求拦截器 */
 http.interceptors.request.use(
     config => {
         const userStore = useUserStore();
-        if (userStore.getToken) {
-            Object.assign(config.headers, {
-                Authorization: userStore.getToken,
-            });
-        };
+        // userStore.getToken error
+        if (userStore.token) {
+            config.headers.Authorization = userStore.token
+        }
         // 在发送请求之前做什么
         return config;
     },
@@ -36,7 +34,7 @@ http.interceptors.request.use(
 
 /** 响应拦截器 */
 http.interceptors.response.use(
-    response => {
+    (response) => {
         /** 对响应数据做些什么 */
         const dataAxios = response.data;
         const { code, message } = dataAxios;
@@ -46,28 +44,23 @@ http.interceptors.response.use(
                 ElNotification({
                     offset: 60,
                     title: "温馨提示",
-                    message: h("div", { style: "color: #cf6cc9; font-weight: bold;" }, message),
+                    message:  message
                 });
                 break;
         }
         return dataAxios;
     },
-    error => {
+    (error) => {
         // 超出 2xx 范围的状态码都会触发该函数。
         // 对响应错误做点什么
-        const { status, data } = error.response;
-
+        const { status, data } = error.response
         switch (status + "") {
             case "401":
                 // 403 表示用户未登录，或者token过期了
                 ElNotification({
                     offset: 60,
                     title: "错误提示",
-                    message: h(
-                        "div",
-                        { style: "color: #f56c6c; font-weight: 600;" },
-                        data.message || "登录过期"
-                    ),
+                    message: data.message || "登录过期"
                 });
                 // 进行重新登录
                 // eslint-disable-next-line no-case-declarations
