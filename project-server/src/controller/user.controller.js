@@ -14,7 +14,7 @@ class UserController {
         // 1. 获取数据
         // console.log(ctx.request.body);
         // const { user_name, password } = ctx.request.body
-            // 2. 操作数据库
+        // 2. 操作数据库
         console.log(123)
         try {
             const res = await createUser(ctx.request.body);
@@ -38,9 +38,11 @@ class UserController {
     async login(ctx, next) {
         const { user_name } = ctx.request.body;
         // 1. 获取用户信息(在 token 的 payload 中 记录 id, user_name, is_admin)
+        console.log("ctx", ctx.request.body);
         try {
             // 从 返回结果 剔除掉 password ，把剩下的结果 放在 res 中
             const { password, ...res } = await getUserInfo({ user_name });
+            console.log("res", res);
             ctx.body = {
                 code: 0,
                 message: '用户登录成功',
@@ -50,7 +52,11 @@ class UserController {
                      * 第二个参数：加密的密钥
                      * 第三个参数：配置对象，配置token有效期
                      * */
-                    token: jwt.sign(res, JWT_SECRET, { expiresIn: '1h' })
+                    token: jwt.sign(res, JWT_SECRET, { expiresIn: '1h' }),
+                    user_name: res.user_name,
+                    nick_name: res.nick_name,
+                    id: res.id,
+                    avatar: res.avatar
                 }
             }
 
@@ -87,14 +93,16 @@ class UserController {
             const { user_name } = ctx.request.query;
             let { password, ...res } = await getUserInfo({ user_name });
             const role = res.role === 2 ? "普通用户" : "管理员";
-            console.log(res.role)
+            // console.log(res.role)
             ctx.body = {
-               code: 0,
+                code: 0,
                 message: '查询用户成功',
                 result: {
+                    id: res.id,
                     user_name: res.user_name,
                     nick_name: res.nick_name,
-                    role: role
+                    role: role,
+                    avatar: res.avatar
                 }
             }
         } catch (err) {

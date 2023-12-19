@@ -1,121 +1,118 @@
 <script setup>
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import { getUserInfo, reqLogin, reqRegister} from '@/api/user.js'
-import { ElNotification, ElMessage } from "element-plus";
+import { reqRegister } from '@/api/user.js'
+import { ElNotification } from "element-plus";
 import { useUserStore } from "@/stores/index.js";
 import {_encrypt} from "@/utils/encipher.js";
 
 const router = useRouter()
-// const route = useRoute()
-const userStore = useUserStore()
 
-const loginFormRef = ref();
-// const primaryLoginForm = reactive({...loginForm})
-const loginForm = ref({
+// const registerFormRef = ref()
+const registerForm = ref({
   user_name: "",
   password: "",
-  remember: false
+  nick_name: "",
 })
-
-
-/** 定义登录表单验证规则 */
-const loginRules = {
-  user_name: [{ required: true, message: "请输入用户账号", trigger: 'blur' }],
-  password: [{ required: true, min:8, max: 16, message: "密码长度应在8-16位英文、数字或符号任意两种组合", trigger: 'blur' }],
+/** 验证用户名 */
+const checkUsername = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error('请输入用户账号'))
+  } else if (value.length > 16 || value.length < 5) {
+    return callback(new Error("用户账号长度应该在5-16位英文数字之间"));
+  }
+  return callback();
+}
+/** 定义密码验证 */
+const REGEXP_PWD = /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)]|[()])+$)(?!^.*[\u4E00-\u9FA5].*$)([^(0-9a-zA-Z)]|[()]|[a-z]|[A-Z]|[0-9]){6,18}$/;
+/** 验证密码 */
+const checkPassword = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error('请输入密码'))
+  } else if (!REGEXP_PWD.test(value)) {
+    return callback(new Error("密码格式应该为8-18位数字、字母、符号的任意两种组合"));
+  }
+  return callback();
 }
 
+/** 定义注册表单验证规则 */
+const registerRules = {
+  user_name: [{ required: true, validator: checkUsername, trigger: 'blur' }],
+  password: [{ required: true, validator: checkPassword, trigger: 'blur' }],
+}
 
-
-/** 用户登录 */
-const userLogin = async () => {
-  const { user_name, password } = loginForm.value
-  await loginFormRef.value.validate(async (valid) => {
-    if (valid) {
-      console.log(true);
-      let res = await reqLogin( { user_name, password })
-      console.log("登录处理函数",res)
-      const { token } = res.result;
-      if (res && res.code == 0) {
-        // 保存token
-        await userStore.setToken(token);
-        ElMessage({
-          type: 'success',
-          message: '登录成功'
-        })
-        router.replace({ path: '/home' })
-        const userRes =  await getUserInfo(res.result)
-        console.log(userRes);
-        if (userRes.code == 0) {
-          await userStore.setUserInfo(userRes.result);
-        }
-      } else {
+/** 用户注册 */
+const userRegister = async () => {
+    let res = await reqRegister(registerForm);
+    if (res && res.code === 0) {
         ElNotification({
-
+            offset: 60,
+            title: "提示",
+            message: "注册成功"
         })
-      }
+        await userLogin();
     } else {
-      console.log(false);
+        ElNotification({
+            offset: 60,
+            title: "提示",
+            message: res.message
+        })
     }
-  })
-   
-
 }
 
 const goTo = (path) => {
   router.push(path)
 }
-
-
-
 </script>
-
 
 <template>
   <div class="userForm">
     <div class="userForm--container right-panel-active">
-      <div class="userForm--container__form container-login">
+      <div class="userForm--container__form container-register">
         <!-- 登录表 -->
         <el-form 
-        :model="loginForm" 
-        class="loginForm" 
-        :rules="loginRules"
-        ref="loginFormRef"
+        :model="registerForm" 
+        class="registerForm" 
+        :rules="registerRules"
         >
           <el-form-item>
             <h1 class="form__title">LOGIN</h1>
           </el-form-item>
           <el-form-item prop="user_name">
-            <el-input v-model="loginForm.user_name" placeholder="Username" autocomplete="off" clearable>
+            <el-input v-model="registerForm.user_name" placeholder="Username" autocomplete="off" clearable>
               <template #prefix>
                 <el-icon><User /></el-icon>
               </template>
             </el-input>
           </el-form-item>
           <el-form-item prop="password" @keyup.enter="userLogin()">
-            <el-input v-model="loginForm.password" placeholder="Password" autocomplete="off" show-password>
+            <el-input v-model="registerForm.password" placeholder="Password" autocomplete="off" show-password>
               <template #prefix>
                 <el-icon><Lock /></el-icon>
               </template>
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-checkbox>记住我</el-checkbox>
+            <el-input v-model="registerForm.nick_name" placeholder="Nickname">
+              <template #prefix>
+                <el-icon><User /></el-icon>
+              </template>
+            </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button class="btn" @click="userLogin()">立即登录</el-button>
+            <el-button class="btn">立即注册</el-button>
           </el-form-item>
         </el-form>
+        
       </div>
-
       <div class="container__overlay">
         <div class="overlay">
           <div class="overlay__panel overlay--left" >
-            <h1 class="title">欢迎回来！</h1>
-            <p class="tips">如果您还没有账号，请点击下方立即注册按钮进行账号注册</p>
+            <h1 class="title">您好，欢迎！！</h1>
+            <p class="tips">如果您已经注册了账号，请点击下方立即登录按钮进行登录</p>
             <div class="signUp">
-              <el-button class="formBtn" @click="goTo('/register')" >立即注册</el-button>
-              <el-button class="formBtn">返回首页</el-button>
+              <el-button class="formBtn" @click="goTo('/login')" >立即登录</el-button>
+              <el-button class="formBtn" @click="goTo('/home')">返回首页</el-button>
             </div>
           </div>
         </div>
@@ -148,9 +145,8 @@ const goTo = (path) => {
     width: 100%;
 
     &.right-panel-active {
-      .container-login {
+      .container-register {
         transform: translateX(100%);
-    
       }
       .container__overlay {
         transform: translateX(-100%);
@@ -179,7 +175,7 @@ const goTo = (path) => {
         text-align: center;
         margin-bottom: 10px;
       }
-      .loginForm {
+      .registerForm {
         margin: 10px auto;
       }
     }
@@ -189,7 +185,7 @@ const goTo = (path) => {
       overflow: hidden;
       position: absolute;
       top: 0;
-      // animation: show 0.6s;
+      // animation: show 1s;
       transition: transform 0.6s ease-in-out;
       width: 50%;
       color: var(--white);
@@ -231,7 +227,7 @@ const goTo = (path) => {
   margin-bottom: 25px;
 }
 
-.container-login {
+.container-register {
   left: 0;
   width: 50%;
   z-index: 1;

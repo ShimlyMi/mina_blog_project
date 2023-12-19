@@ -14,7 +14,7 @@ class UserService {
         let { user_name, password, nick_name } = user;
         // 过滤敏感词
         // nick_name = await filterSensitive(nick_name);
-        nick_name = nick_name ? nick_name :randomNickname("星星");
+        nick_name = nick_name ? nick_name : randomNickname("星星");
         const avatar = "http://localhost:8888/11d9bb8bf54125a26464b5c00.jpg";
         const res = await User.create({ user_name, password, nick_name, avatar, role: 2 });
         // console.log(res);
@@ -22,7 +22,7 @@ class UserService {
     };
 
     // 查询用户信息
-    async getUserInfo({id, user_name, password, role, nick_name}) {
+    async getUserInfo({ id, user_name, password, role, nick_name, avatar }) {
         const whereOpt = {};
         /*
          * 判断 id user_name password id_admin 是否存在
@@ -32,12 +32,13 @@ class UserService {
         user_name && Object.assign(whereOpt, { user_name });
         password && Object.assign(whereOpt, { password });
         role && Object.assign(whereOpt, { role });
-        nick_name && Object.assign((whereOpt, { nick_name }))
+        nick_name && Object.assign((whereOpt, { nick_name }));
+        avatar && Object.assign(whereOpt, { avatar })
         console.log(whereOpt)
 
         // 查询数据记录
         const res = await User.findOne({
-            attributes:['id', 'user_name', 'password', 'role', 'nick_name'],
+            attributes: ['id', 'user_name', 'password', 'role', 'nick_name', 'avatar'],
             where: whereOpt,
         });
         return res ? res.dataValues : null;

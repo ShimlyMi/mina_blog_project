@@ -13,6 +13,7 @@ export const useUserStore = defineStore("user", {
             // paths: ["foo", "bar"]
         }]
     },
+    /** 管理用户数据 */
     state: () => {
         return {
             blogAvatar: "",
@@ -22,20 +23,7 @@ export const useUserStore = defineStore("user", {
             tokenFlag: false,
         };
     },
-    getters: {
-        // 获取当前登陆人头像
-        getBlogAvatar() {
-            return this.blogAvatar;
-        },
-        // 获取当前登陆人的信息
-        getUserInfo() {
-            return this.infoFlag ? JSON.parse(_decrypt(this.userInfo)) : "";
-        },
-        // 获取token
-        getToken() {
-            return this.tokenFlag ? _decrypt(this.token) : "";
-        },
-    },
+    /** 管理接口数据 */
     actions: {
         // 设置头像
         setBlogAvatar(avatar) {
@@ -60,4 +48,20 @@ export const useUserStore = defineStore("user", {
             this.infoFlag = "";
         },
     },
+    /**  */
+    getters: {
+        // 获取当前登陆人头像
+        getBlogAvatar() {
+            return this.blogAvatar;
+        },
+        // 获取当前登陆人的信息
+        getUserInfo() {
+            return this.infoFlag ? JSON.parse(_decrypt(this.userInfo)) : "";
+        },
+        // 获取token
+        getToken() {
+            return this.tokenFlag ? _decrypt(this.token) : "";
+        },
+    },
+
 });

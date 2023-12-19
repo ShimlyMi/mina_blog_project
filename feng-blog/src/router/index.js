@@ -35,9 +35,9 @@ const routes = [{
             name: "用户注册",
         },
         component: () =>
-            import ("@/views/user/Login.vue")
+            import ("@/views/user/Register.vue")
     }
-];
+]
 
 const router = createRouter({
     history: createWebHashHistory(),
