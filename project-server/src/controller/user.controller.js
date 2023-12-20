@@ -4,9 +4,11 @@ const jwt = require('jsonwebtoken');
 
 const { JWT_SECRET } = require("../config/config.default")
 
-const { createUser, getUserInfo, updateById } = require("../service/user.service")
+const { createUser, getOneUserInfo, updateById } = require("../service/user.service")
+const { decryptToken }  = require("../service/auth.service")
 
 const { userRegisterError, unSupportedFileType, fileUploadError } = require("../constant/err.type")
+
 
 
 class UserController {
@@ -38,11 +40,11 @@ class UserController {
     async login(ctx, next) {
         const { user_name } = ctx.request.body;
         // 1. 获取用户信息(在 token 的 payload 中 记录 id, user_name, is_admin)
-        console.log("ctx", ctx.request.body);
+        // console.log("ctx", ctx.request.body);
         try {
             // 从 返回结果 剔除掉 password ，把剩下的结果 放在 res 中
-            const { password, ...res } = await getUserInfo({ user_name });
-            console.log("res", res);
+            const { password, ...res } = await getOneUserInfo({ user_name });
+            // console.log("res", res);
             ctx.body = {
                 code: 0,
                 message: '用户登录成功',
@@ -90,21 +92,8 @@ class UserController {
     /** 获取个人信息 */
     async getUserInfo(ctx) {
         try {
-            const { user_name } = ctx.request.query;
-            let { password, ...res } = await getUserInfo({ user_name });
-            const role = res.role === 2 ? "普通用户" : "管理员";
-            // console.log(res.role)
-            ctx.body = {
-                code: 0,
-                message: '查询用户成功',
-                result: {
-                    id: res.id,
-                    user_name: res.user_name,
-                    nick_name: res.nick_name,
-                    role: role,
-                    avatar: res.avatar
-                }
-            }
+
+            let res = decryptToken()
         } catch (err) {
             console.error(err)
         }

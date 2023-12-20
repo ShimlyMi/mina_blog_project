@@ -1,4 +1,4 @@
-const { getUserInfo } = require("../service/user.service")
+const { getOneUserInfo } = require("../service/user.service")
 
 // 加密文件
 const bcrypt = require("bcryptjs")
@@ -11,6 +11,7 @@ const {
     userLoginError,
     invalidPassword,
 } = require("../constant/err.type")
+const {auth} = require("./auth.middleware");
 
 // 用户验证器
 const userValidator = async(ctx, next) => {
@@ -40,7 +41,7 @@ const verifyUser = async(ctx, next) => {
     /* 第二种 用 try-catch 去判断 用户信息(这种会更好一些) */
     // console.log(user_name);
     try {
-        const res = await getUserInfo({ user_name });
+        const res = await getOneUserInfo({ user_name });
         if (res) {
             console.log("用户名已存在", ctx.request.body);
             ctx.app.emit('error', userAlreadyExited, ctx);
@@ -74,7 +75,7 @@ const verifyLogin = async(ctx, next) => {
     // 1. 判断用户是否存在
     const { user_name, password } = ctx.request.body;
     try {
-        const res = await getUserInfo({ user_name })
+        const res = await getOneUserInfo({ user_name })
         if (!res) {
             console.log("当前用户不存在", ctx.request.body);
             ctx.app.emit('error', userDoesNotExist, ctx);

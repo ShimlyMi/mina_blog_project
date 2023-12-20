@@ -22,7 +22,7 @@ class UserService {
     };
 
     // 查询用户信息
-    async getUserInfo({ id, user_name, password, role, nick_name, avatar }) {
+    async getOneUserInfo({ id, user_name, password, role, nick_name, avatar }) {
         const whereOpt = {};
         /*
          * 判断 id user_name password id_admin 是否存在
@@ -34,7 +34,7 @@ class UserService {
         role && Object.assign(whereOpt, { role });
         nick_name && Object.assign((whereOpt, { nick_name }));
         avatar && Object.assign(whereOpt, { avatar })
-        console.log(whereOpt)
+        // console.log(whereOpt)
 
         // 查询数据记录
         const res = await User.findOne({
@@ -43,6 +43,8 @@ class UserService {
         });
         return res ? res.dataValues : null;
     }
+
+
 
     /** 更新用户ID */
     async updateById({ id, user_name, password, role }) {
@@ -58,6 +60,8 @@ class UserService {
         return res[0] > 0 ? true : false;
 
     }
+
+
 }
 
 module.exports = new UserService()

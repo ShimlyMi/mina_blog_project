@@ -33,12 +33,12 @@ export const useUserStore = defineStore("user", {
         // 设置用户信息
         setUserInfo(userInfo) {
             this.infoFlag = true;
-            this.userInfo = _encrypt(userInfo);
+            this.userInfo = userInfo;
         },
         // 设置token
         setToken(token) {
             this.tokenFlag = true;
-            this.token = _encrypt(token);
+            this.token = token
         },
         // 清除用户信息
         clearUserInfo() {
@@ -56,11 +56,11 @@ export const useUserStore = defineStore("user", {
         },
         // 获取当前登陆人的信息
         getUserInfo() {
-            return this.infoFlag ? JSON.parse(_decrypt(this.userInfo)) : "";
+            return this.infoFlag ? this.userInfo : "";
         },
         // 获取token
         getToken() {
-            return this.tokenFlag ? _decrypt(this.token) : "";
+            return this.tokenFlag ? this.token : "";
         },
     },
 

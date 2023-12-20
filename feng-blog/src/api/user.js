@@ -35,10 +35,9 @@ export const reqRegister = (data) => {
 //     })
 // }
 
-export const getUserInfo = ({ user_name }) => {
+export const getUserInfo = ({ id }) => {
     return http({
-        url: '/api/users/info',
+        url: '/api/users/info/' + id,
         method: 'get',
-        params: user_name
     })
 }

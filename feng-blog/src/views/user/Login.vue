@@ -1,10 +1,9 @@
 <script setup>
-import { reactive, ref } from "vue";
+import { ref, h } from "vue";
 import { useRouter } from "vue-router";
-import { getUserInfo, reqLogin, reqRegister} from '@/api/user.js'
+import { getUserInfo, reqLogin } from '@/api/user.js'
 import { ElNotification, ElMessage } from "element-plus";
 import { useUserStore } from "@/stores/index.js";
-import {_encrypt} from "@/utils/encipher.js";
 
 const router = useRouter()
 // const route = useRoute()
@@ -43,22 +42,36 @@ const userLogin = async () => {
           type: 'success',
           message: '登录成功'
         })
-        router.replace({ path: '/home' })
-        const userRes =  await getUserInfo(res.result)
-        console.log(userRes);
+        // router.replace({ path: '/home' })
+        const userRes =  await getUserInfo(res.result.id)
+        console.log('userRes',userRes);
         if (userRes.code == 0) {
           await userStore.setUserInfo(userRes.result);
+          const { nick_name } = userRes.result
+          ElNotification({
+            offset: 60,
+            title: "您好，欢迎！",
+            message: h("div", { style: "color: #000; font-weight: 600;" },nick_name + '登陆成功' ),
+          })
+        } else {
+          ElNotification({
+            offset: 60,
+            title: "温馨提示",
+            message: h("div", { style: "color: #f56c6c; font-weight: 600;" }, '登陆失败' ),
+          })
         }
       } else {
         ElNotification({
-
+          offset: 60,
+          title: "温馨提示",
+          message: h("div", { style: "color: #f56c6c; font-weight: 600;" }, res.message ),
         })
       }
     } else {
       console.log(false);
     }
   })
-   
+
 
 }
 
@@ -76,9 +89,9 @@ const goTo = (path) => {
     <div class="userForm--container right-panel-active">
       <div class="userForm--container__form container-login">
         <!-- 登录表 -->
-        <el-form 
-        :model="loginForm" 
-        class="loginForm" 
+        <el-form
+        :model="loginForm"
+        class="loginForm"
         :rules="loginRules"
         ref="loginFormRef"
         >
@@ -150,7 +163,7 @@ const goTo = (path) => {
     &.right-panel-active {
       .container-login {
         transform: translateX(100%);
-    
+
       }
       .container__overlay {
         transform: translateX(-100%);
@@ -161,7 +174,7 @@ const goTo = (path) => {
       .overlay--left {
         transform: translateX(-20%);
       }
-      
+
     }
     .userForm--container__form {
       display: flex;

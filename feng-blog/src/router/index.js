@@ -1,7 +1,17 @@
 import { createRouter, createWebHashHistory, } from 'vue-router'
 import Layout from '@/components/layout/index.vue'
+import NavPage from '@/views/index.vue'
 
-const routes = [{
+const routes = [
+    {
+        path: '/',
+        name: 'Nav',
+        component: NavPage,
+        meta: {
+            name: '导航页'
+        }
+    },
+    {
         path: "/",
         name: "Layout",
         meta: {

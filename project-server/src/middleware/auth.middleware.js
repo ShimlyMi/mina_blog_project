@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config/config.default");
+const { decryptToken } = require("../controller/auth.controller")
 const { tokenExpiredError, invalidToken, hasNotAdminPermission } = require("../constant/err.type")
 
 const auth = async(ctx, next) => {
@@ -13,6 +14,8 @@ const auth = async(ctx, next) => {
         /** user 包含了 payload 的信息(id,user_name,is_admin) */
         const user = jwt.verify(token, JWT_SECRET);
         ctx.state.user = user;
+        return ctx.state.user
+        console.log("token-user",user)
     } catch (err) {
         switch (err.name) {
             case 'TokenExpiredError':

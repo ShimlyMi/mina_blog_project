@@ -56,7 +56,7 @@ declare module '@vue/runtime-core' {
         ElTimelineItem: (typeof import("element-plus/es"))["ElTimelineItem"]
         ElTooltip: typeof import('element-plus/es')['ElTooltip']
         ElUpload: typeof import('element-plus/es')['ElUpload']
-        First: typeof import('./src/components/WelcomeComps/first.vue')['default']
+        First: typeof import('./src/components/WelcomeComps/First.vue')['default']
         GsapCount: typeof import('./src/components/GsapCount/index.vue')['default']
         HomeArticleList: typeof import('./src/components/HomeArticle/home-article-list.vue')['default']
         IconList: typeof import('./src/components/Comment/item/IconList.vue')['default']

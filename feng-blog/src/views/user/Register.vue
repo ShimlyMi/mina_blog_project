@@ -1,14 +1,12 @@
 <script setup>
-import { reactive, ref } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { reqRegister } from '@/api/user.js'
 import { ElNotification } from "element-plus";
-import { useUserStore } from "@/stores/index.js";
-import {_encrypt} from "@/utils/encipher.js";
 
 const router = useRouter()
 
-// const registerFormRef = ref()
+const registerFormRef = ref()
 const registerForm = ref({
   user_name: "",
   password: "",
@@ -43,21 +41,25 @@ const registerRules = {
 
 /** 用户注册 */
 const userRegister = async () => {
-    let res = await reqRegister(registerForm);
-    if (res && res.code === 0) {
-        ElNotification({
+    await registerFormRef.value.validate(async (valid) => {
+      if (valid) {
+        let res = await reqRegister(registerForm);
+        if (res && res.code === 0) {
+          ElNotification({
             offset: 60,
             title: "提示",
             message: "注册成功"
-        })
-        await userLogin();
-    } else {
-        ElNotification({
+          })
+          router.replace({ path: '/login' })
+        } else {
+          ElNotification({
             offset: 60,
             title: "提示",
             message: res.message
-        })
-    }
+          })
+        }
+      }
+    })
 }
 
 const goTo = (path) => {
@@ -70,9 +72,9 @@ const goTo = (path) => {
     <div class="userForm--container right-panel-active">
       <div class="userForm--container__form container-register">
         <!-- 登录表 -->
-        <el-form 
-        :model="registerForm" 
-        class="registerForm" 
+        <el-form
+        :model="registerForm"
+        class="registerForm"
         :rules="registerRules"
         >
           <el-form-item>
@@ -100,10 +102,10 @@ const goTo = (path) => {
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button class="btn">立即注册</el-button>
+            <el-button class="btn" @click="userRegister">立即注册</el-button>
           </el-form-item>
         </el-form>
-        
+
       </div>
       <div class="container__overlay">
         <div class="overlay">
@@ -157,7 +159,7 @@ const goTo = (path) => {
       .overlay--left {
         transform: translateX(-20%);
       }
-      
+
     }
     .userForm--container__form {
       display: flex;

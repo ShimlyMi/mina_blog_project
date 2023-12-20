@@ -29,6 +29,11 @@ module.exports = {
         message: '密码不匹配',
         result: ''
     },
+    getUserInfoError: {
+        code: '10007',
+        message: '密码不匹配',
+        result: ''
+    },
     tokenExpiredError: {
         code: '10101',
         message: 'token已过期',

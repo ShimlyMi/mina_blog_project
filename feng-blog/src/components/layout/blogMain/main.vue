@@ -3,13 +3,18 @@
 </script>
 
 <template>
-<div class="fy-main">
-  111<br/>1111<br/>2222<br/>44444
+<div class="mi-main">
+  <div class="mi-main__container">
+
+  </div>
 </div>
 </template>
 
 <style scoped lang="scss">
 @include b(main) {
   @include bfc;
+  @include e(container) {
+    margin-top: 60px;
+  }
 }
 </style>
