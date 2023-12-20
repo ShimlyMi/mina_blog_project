@@ -1,16 +1,15 @@
 <script setup>
-import { computed, reactive, } from 'vue';
+import { computed, } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/index.js";
 
 import SwitchTheme from "@/components/SwitchTheme/index.vue"
 
-const router = useRouter();
+// const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
-const {  getUserInfo } = storeToRefs(userStore);
-console.log(getUserInfo)
+const { getUserInfo } = storeToRefs(userStore);
 
 const logoSrc = {
   url: 'http://localhost:8888/cd933314a585d1a78f8d65100.jpg'

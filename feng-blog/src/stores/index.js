@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { _decrypt, _encrypt } from "@/utils/encipher.js";
+
 
 export const useUserStore = defineStore("user", {
     persist: {
@@ -37,8 +37,10 @@ export const useUserStore = defineStore("user", {
         },
         // 设置token
         setToken(token) {
+            console.log(token)
             this.tokenFlag = true;
             this.token = token
+
         },
         // 清除用户信息
         clearUserInfo() {
@@ -56,10 +58,13 @@ export const useUserStore = defineStore("user", {
         },
         // 获取当前登陆人的信息
         getUserInfo() {
+            // console.log("this.userInfo",this.userInfo)
             return this.infoFlag ? this.userInfo : "";
         },
         // 获取token
         getToken() {
+            console.log("this.token",this.token)
+            console.log("this.tokenFlag",this.tokenFlag)
             return this.tokenFlag ? this.token : "";
         },
     },

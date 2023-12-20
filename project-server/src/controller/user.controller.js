@@ -92,8 +92,24 @@ class UserController {
     /** 获取个人信息 */
     async getUserInfo(ctx) {
         try {
+            /** 将 authorization 从 headers里面 去解构出来 */
+            const { authorization = '' } = ctx.request.header;
+            console.log("userInfo",ctx)
+            /** 拿到 token 并去掉 token前面的 “Bearer ” */
+            const token = authorization.replace("Bearer ", "");
+            let res = await decryptToken(token);
+            console.log("userInfo",res.id)
+            // console.log("userInfo",res)
+            ctx.body = {
+                code: 0,
+                message: "查询用户成功",
+                result: {
+                    id: res.id,
+                    nick_name: res.nick_name,
+                    avatar: res.avatar
+                }
+            }
 
-            let res = decryptToken()
         } catch (err) {
             console.error(err)
         }

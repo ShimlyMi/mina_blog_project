@@ -19,5 +19,5 @@ router.patch("/", auth, (ctx,next) => {
 })
 
 // 获取信息
-router.get('/info/:id', auth, getUserInfo);
+router.get('/info', auth, getUserInfo);
 module.exports = router;

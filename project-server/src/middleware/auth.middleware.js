@@ -8,14 +8,13 @@ const auth = async(ctx, next) => {
     const { authorization = '' } = ctx.request.header;
     /** 拿到 token 并去掉 token前面的 “Bearer ” */
     const token = authorization.replace("Bearer ", "");
-    // console.log(token);
+    // console.log("token",ctx);
 
     try {
         /** user 包含了 payload 的信息(id,user_name,is_admin) */
         const user = jwt.verify(token, JWT_SECRET);
         ctx.state.user = user;
-        return ctx.state.user
-        console.log("token-user",user)
+        // console.log("token-user",user)
     } catch (err) {
         switch (err.name) {
             case 'TokenExpiredError':

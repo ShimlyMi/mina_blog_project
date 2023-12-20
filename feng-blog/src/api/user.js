@@ -35,9 +35,9 @@ export const reqRegister = (data) => {
 //     })
 // }
 
-export const getUserInfo = ({ id }) => {
+export const getUserInfo = () => {
     return http({
-        url: '/api/users/info/' + id,
+        url: '/api/users/info/',
         method: 'get',
     })
 }

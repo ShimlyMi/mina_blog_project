@@ -1,6 +1,10 @@
 import { createRouter, createWebHashHistory, } from 'vue-router'
 import Layout from '@/components/layout/index.vue'
 import NavPage from '@/views/index.vue'
+import { createPinia } from "pinia";
+import { useUserStore } from "@/stores/index.js";
+
+const userStore = useUserStore(createPinia())
 
 const routes = [
     {
@@ -53,8 +57,9 @@ const router = createRouter({
     history: createWebHashHistory(),
     routes,
 });
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     next();
 });
+
 
 export default router

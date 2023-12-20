@@ -34,32 +34,30 @@ const userLogin = async () => {
       console.log(true);
       let res = await reqLogin( { user_name, password })
       console.log("登录处理函数",res)
-      const { token } = res.result;
       if (res && res.code == 0) {
         // 保存token
-        await userStore.setToken(token);
-        ElMessage({
-          type: 'success',
-          message: '登录成功'
-        })
-        // router.replace({ path: '/home' })
-        const userRes =  await getUserInfo(res.result.id)
-        console.log('userRes',userRes);
-        if (userRes.code == 0) {
-          await userStore.setUserInfo(userRes.result);
-          const { nick_name } = userRes.result
-          ElNotification({
-            offset: 60,
-            title: "您好，欢迎！",
-            message: h("div", { style: "color: #000; font-weight: 600;" },nick_name + '登陆成功' ),
-          })
-        } else {
-          ElNotification({
-            offset: 60,
-            title: "温馨提示",
-            message: h("div", { style: "color: #f56c6c; font-weight: 600;" }, '登陆失败' ),
-          })
-        }
+        await userStore.setToken(res.result.token);
+        // ElMessage({
+        //   type: 'success',
+        //   message: '登录成功'
+        // })
+          let userRes = await getUserInfo(res.result.id)
+          console.log("userRes",userRes)
+          if (userRes.code == 0) {
+              await userStore.setUserInfo(userRes.result)
+              ElNotification({
+                  offset: 60,
+                  title: "您好，欢迎",
+                  message: h("div", { style: "color: #ffb6c1; font-weight: 600; font-size: 16px;" },"欢迎" + userRes.result.nick_name + "来到米娜的小屋")
+              })
+          } else {
+              ElNotification({
+                  offset: 60,
+                  title: "温馨提示",
+                  message: h("div", { style: "color: #f56c6c; font-weight: 600;" }, userRes.message ),
+              })
+          }
+        await router.replace({ path: '/home' })
       } else {
         ElNotification({
           offset: 60,
@@ -72,14 +70,10 @@ const userLogin = async () => {
     }
   })
 
-
 }
-
 const goTo = (path) => {
   router.push(path)
 }
-
-
 
 </script>
 
