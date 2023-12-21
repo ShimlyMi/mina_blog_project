@@ -1,4 +1,4 @@
-const User = require("../model/user.model")
+const User = require("../model/user/user.model")
 const { randomNickname, getIpAddress } = require("../utils/tools");
 // const filterSensitive = require("../utils/sensitive")
 

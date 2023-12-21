@@ -1,5 +1,5 @@
 
-const Article = require("../model/article.model")
+const Article = require("../model/article/article.model")
 class ArticleService {
     async createArticle(article) {
         let res;

@@ -22,8 +22,8 @@ const getPath = computed(() => {
 </script>
 
 <template>
-<div class="fy-header">
-  <div class="fy-header--menu flex_r_between">
+<div class="mi-header">
+  <div class="mi-header--menu flex_r_between">
     <div class="sub-avatar">
       <router-link to="/">
         <el-avatar class="el-avatar" :src="logoSrc.url" />

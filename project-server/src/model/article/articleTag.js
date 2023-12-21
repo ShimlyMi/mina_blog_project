@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize")
 // 导入 seq
-const seq = require("../db/seq")
+const seq = require("../../db/seq")
 
 const ArticleTag =  seq.define('yz_article_tag', {
     article_id: {

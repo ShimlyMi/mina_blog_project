@@ -1,2 +1,2 @@
-const  ArticleTag = require("../model/articleTag");
+const  ArticleTag = require("../model/article/articleTag");
 const

@@ -1,7 +1,7 @@
 // 	使用的是 seq.define 方法
 const { DataTypes } = require("sequelize")
 // 导入 seq
-const seq = require("../db/seq")
+const seq = require("../../db/seq")
 
 // 创建模型 (所对应的数据表 yz_users)
 const Article = seq.define('yz_article', {
@@ -44,7 +44,7 @@ const Article = seq.define('yz_article', {
     article_types: {
         type: DataTypes.INTEGER,
         defaultValue: 1,
-        comment: "文章类型 1 原创 2 转载 3 翻译",
+        comment: "文章类型 1 原创 2 转载 ",
     },
     origin_url: {
         type: DataTypes.STRING,
