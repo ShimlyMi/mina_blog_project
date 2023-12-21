@@ -1,5 +1,5 @@
 
-const { createArticle, updateArticleById, removeArticleById, revertArticle, toggleArticlePublic, getArticleInfoByTitle, findArticle } = require("../service/article.service");
+const { createArticle, updateArticleById, removeArticleById, revertArticle, toggleArticlePublic, getArticleInfoByTitle, findArticle } = require("../service/article/article.service");
 const { publishArticleError, invalidArticle, invalidArticleID, listArticleError } = require("../constant/err.type");
 const tty = require("tty");
 
