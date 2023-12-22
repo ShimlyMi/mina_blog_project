@@ -48,7 +48,7 @@ const userLogin = async () => {
               ElNotification({
                   offset: 60,
                   title: "您好，欢迎",
-                  message: h("div", { style: "color: #ffb6c1; font-weight: 600; font-size: 16px;" },"欢迎" + userRes.result.nick_name + "来到米娜的小屋")
+                  message: h("div", { style: "color: #ffb6c1; font-weight: 600; font-size: 14px;" },"欢迎" + userRes.result.nick_name + "来到米娜的小屋")
               })
           } else {
               ElNotification({

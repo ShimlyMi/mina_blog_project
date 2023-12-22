@@ -9,7 +9,11 @@ const {JWT_SECRET} = require("../config/config.default");
 //
 // module.exports = new AuthController();
 
-module.exports = function decryptToken(token) {
+ const decryptToken = (token) => {
     const user = jwt.verify(token, JWT_SECRET);
     return user;
+}
+
+module.exports = {
+    decryptToken
 }

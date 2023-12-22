@@ -58,7 +58,7 @@ const verifyUser = async(ctx, next) => {
 // 密码加密处理
 const crpytPassword = async(ctx, next) => {
     console.log("pppp")
-        // 获取密码
+    // 获取密码
     const { password } = ctx.request.body;
     // 加盐
     const salt = bcrypt.genSaltSync(10);

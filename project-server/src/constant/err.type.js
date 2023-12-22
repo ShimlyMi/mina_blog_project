@@ -49,6 +49,10 @@ module.exports = {
         message: '没有管理员权限',
         result: ''
     },
+    hasSuperAminPermission: {
+      code: '10104',
+      message: "管理员信息可通过配置修改"
+    },
     fileUploadError: {
         code: '10201',
         message: '图片上传失败',

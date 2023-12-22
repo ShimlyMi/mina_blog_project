@@ -18,7 +18,7 @@ defineProps({
     </el-image>
   </div>
   <div class="info-avatar">
-    <router-link to="/"><el-avatar :src="configDetail.blogAvatar || avatar" /></router-link>
+    <router-link to="/"><el-avatar :src="configDetail.blogAvatar" /></router-link>
     <span class="blog-name">{{ configDetail.blogName }}</span>
   </div>
   <div class="personality-signature">{{ configDetail.personality_signature }}</div>

@@ -2,7 +2,8 @@
 import { onMounted, reactive, ref } from 'vue'
 import HomeArticleList from "@/components/HomeArticle/index.vue"
 import RightSide from "@/components/RightSider/index.vue"
-import { getHomeAticleList } from "@/api/article.js";
+import { getHomeAticleList, getWebDetail } from "@/api/article.js";
+import {ElNotification} from "element-plus";
 
 const articleList = ref([])
 const articleTotal = ref()
@@ -15,11 +16,11 @@ const param = reactive({
 /** 获取文章列表 */
 const getArticleList = async (type) => {
   param.loading = true
-  type == 'init' ? "" : (param.loading = true)
+  type === 'init' ? "" : (param.loading = true)
   let res = await getHomeAticleList({ pageNum: param.pageNum, pageSize: param.size })
   console.log("home",res)
-  if (res && res.code == 0) {
-    type == 'init' ? "" : (param.loading = false)
+  if (res && res.code === 0) {
+    type === 'init' ? "" : (param.loading = false)
     const  { list, total } = res.result
     articleList.value = list
     articleTotal.value = total
@@ -33,12 +34,23 @@ let configDetail = ref({})
 let tags = ref([])
 /** 获取网站详情 */
 const getConfigDetail = async () => {
-
+  let res = await getWebDetail()
+  console.log(res)
+  if (res && res.code === 0) {
+    configDetail.value = res.result
+  } else {
+    ElNotification({
+      offset: 60,
+      title: "温馨提示",
+      message: "获取设置失败"
+    })
+  }
 }
 
 /** 数据初始化 */
 const init = async () => {
   await getArticleList('init')
+  await getConfigDetail()
 }
 onMounted(async () => {
   await init()

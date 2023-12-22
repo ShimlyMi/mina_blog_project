@@ -1178,3 +1178,19 @@ app.on("error",errorHandle);
 module.exports = app;
 
 ```
+当拥有一个空的数据库，可以先这么创建一条默认的数据
+```javascript
+const [ detail, created ] = await  Config.findOrCreate({
+    where: { blog_name: "米娜的小屋" },
+    defaults: {
+        personality_signature: "这个人很懒，什么也没写~"
+    }
+})
+if (created) {
+    console.log("detail.个性签名",detail.personality_signature)
+}
+console.log("detail.blog_name",detail.blog_name)
+console.log("detail.个性签名",detail.personality_signature)
+console.log("是否是刚刚创建的",created)
+
+```
