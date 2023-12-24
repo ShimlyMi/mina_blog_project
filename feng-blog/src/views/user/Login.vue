@@ -3,7 +3,7 @@ import { ref, h } from "vue";
 import { useRouter } from "vue-router";
 import { getUserInfo, reqLogin } from '@/api/user.js'
 import { ElNotification, ElMessage } from "element-plus";
-import { useUserStore } from "@/stores/index.js";
+import { useUserStore } from "@/stores/user/user.js";
 
 const router = useRouter()
 // const route = useRoute()

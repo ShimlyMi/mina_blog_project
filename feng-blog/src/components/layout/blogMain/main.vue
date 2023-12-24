@@ -18,8 +18,5 @@
 <style scoped lang="scss">
 @include b(main) {
   @include bfc;
-  @include e(container) {
-    margin-top: 60px;
-  }
 }
 </style>

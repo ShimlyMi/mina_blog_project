@@ -1,4 +1,4 @@
-import {createWebHistory } from 'vue-router'
+import {createWebHashHistory } from 'vue-router'
 
 
 export const constantRouter = [
@@ -8,7 +8,7 @@ export const constantRouter = [
 ]
 const createRouter = () => new Router({
   // mode: 'history', // require service support
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(),
   // scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })

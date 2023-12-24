@@ -3,8 +3,10 @@ import { onMounted, reactive, ref } from 'vue'
 import HomeArticleList from "@/components/HomeArticle/index.vue"
 import RightSide from "@/components/RightSider/index.vue"
 import { getHomeAticleList, getWebDetail } from "@/api/article.js";
-import {ElNotification} from "element-plus";
+import { ElNotification } from "element-plus";
+import { useDetailStore } from "@/stores/detail/detail.js";
 
+const detailStore = useDetailStore()
 const articleList = ref([])
 const articleTotal = ref()
 /** 文章 */
@@ -24,6 +26,7 @@ const getArticleList = async (type) => {
     const  { list, total } = res.result
     articleList.value = list
     articleTotal.value = total
+      console.log(list.length)
   }
   param.loading = false
 }
@@ -35,9 +38,12 @@ let tags = ref([])
 /** 获取网站详情 */
 const getConfigDetail = async () => {
   let res = await getWebDetail()
-  console.log(res)
+  // console.log(res)
   if (res && res.code === 0) {
+      console.log(123)
     configDetail.value = res.result
+    await detailStore.setWebDetail(configDetail.value)
+    // console.log(detailStore.getWebDetail)
   } else {
     ElNotification({
       offset: 60,
@@ -62,7 +68,7 @@ onMounted(async () => {
   <div class="mi-homeCenter">
     <el-row>
       <el-col :xs="24" :sm="18">
-        <el-card
+<!--        <el-card
             class="mobile-top-card mobile-card info-card animate__animated animate__fadeIn"
             shadow="hover"
         >
@@ -74,9 +80,8 @@ onMounted(async () => {
               <RightSideTop :configDetail="configDetail" />
             </template>
           </el-skeleton>
-        </el-card>
-        <!-- 博客文章 -->
-        <HomeArticleList :articleList="articleList" :articleTotal="articleTotal" :param="param"></HomeArticleList>
+        </el-card>-->
+          <HomeArticleList :articleList="articleList" :articleTotal="articleTotal" :param="param"></HomeArticleList>
       </el-col>
       <el-col :xs="0" :sm="6">
         <!-- 我的博客信息 -->
@@ -90,5 +95,59 @@ onMounted(async () => {
 </template>
 
 <style scoped lang="scss">
+.mobile-top-card {
+  height: 31rem;
+  margin: 4px;
+  :deep(.info-avatar) {
+    padding: 0 2rem;
+  }
+  :deep(.personal-say) {
+    padding-left: 1rem;
+  }
+  :deep(.info-background) {
+    height: 10rem;
+    width: 100%;
+  }
+  :deep(.common-menu) {
+    padding: 1.5rem 5.5rem;
+  }
+  :deep(.git-ee) {
+    padding: 0 4rem;
+  }
+  :deep(.personal-link) {
+    padding: 1rem 6rem;
+  }
+}
+.mobile-bottom-card {
+  margin: 4px;
+  padding: 1rem;
+  .icon-localoffer {
+    font-weight: 900;
+  }
+  span {
+    margin-left: 0.3rem;
+  }
+  .site-info {
+    padding: 0.3rem 1rem;
+    line-height: 2;
+    font-size: 1rem;
 
+    .value {
+      font-weight: 600;
+    }
+  }
+}
+
+.group {
+  margin-left: 0.3rem;
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  .img {
+    width: 80px;
+    height: 80px;
+  }
+}
 </style>

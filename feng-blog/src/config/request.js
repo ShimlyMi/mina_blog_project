@@ -1,6 +1,6 @@
 import axios from "axios";
 import { h } from "vue";
-import { useUserStore } from "@/stores/index.js";
+import { useUserStore } from "@/stores/user/user.js";
 import { ElNotification } from "element-plus";
 import router from "@/router/index.js";
 

@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory, } from 'vue-router'
 import Layout from '@/components/layout/index.vue'
 import NavPage from '@/views/index.vue'
 import { createPinia } from "pinia";
-import { useUserStore } from "@/stores/index.js";
+import { useUserStore } from "@/stores/user/user.js";
 
 const userStore = useUserStore(createPinia())
 

@@ -2,7 +2,7 @@
 import { computed, } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
-import { useUserStore } from "@/stores/index.js";
+import { useUserStore } from "@/stores/user/user.js";
 
 import SwitchTheme from "@/components/SwitchTheme/index.vue"
 

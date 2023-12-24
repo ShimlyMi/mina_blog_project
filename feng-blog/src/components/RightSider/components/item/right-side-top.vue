@@ -1,10 +1,12 @@
 <script setup>
 defineProps({
-  configDetail: {
-    type: Object,
-    default: () => {}
-  }
+    configDetail: {
+        type: Object,
+        default: () => {}
+    }
 })
+
+// console.log("props",props)
 </script>
 
 <template>
@@ -12,14 +14,14 @@ defineProps({
     <el-image fit="cover" style="width: 100%; height: 100%;">
       <template #error>
         <div class="image-slot">
-          <el-icon><icon-picture /></el-icon>
+          <el-icon></el-icon>
         </div>
       </template>
     </el-image>
   </div>
   <div class="info-avatar">
-    <router-link to="/"><el-avatar :src="configDetail.blogAvatar" /></router-link>
-    <span class="blog-name">{{ configDetail.blogName }}</span>
+    <router-link to="/"><el-avatar :src="configDetail.blog_avatar" /></router-link>
+    <span class="blog-name">{{ configDetail.blog_name }}</span>
   </div>
   <div class="personality-signature">{{ configDetail.personality_signature }}</div>
 </template>

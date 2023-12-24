@@ -1,8 +1,6 @@
 <script setup>
-import RightSideTopSkeleton from "./components/skeleton/right-sider-top-skeleton.vue"
 import RightSideTop from "./components/item/right-side-top.vue";
-import RightSideItem from "./components/item/right-side-item.vue";
-defineProps({
+const props = defineProps({
   configDetail: {
     type: Object,
     default: () => {}
@@ -20,6 +18,8 @@ defineProps({
     default: () =>{}
   }
 })
+// console.log("right-side",props)
+
 </script>
 
 <template>
@@ -29,11 +29,9 @@ defineProps({
       <el-card class="info-card card-hover">
         <el-skeleton>
           <template #template>
-            <RightSideTopSkeleton />
+              <RightSideTop :configDetail="configDetail" />
           </template>
-          <template #default>
-            <RightSideTop :configDetail="configDetail" />
-          </template>
+
         </el-skeleton>
       </el-card>
     </el-col>

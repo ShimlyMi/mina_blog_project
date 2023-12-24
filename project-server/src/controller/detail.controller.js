@@ -23,7 +23,7 @@ class DetailController {
     async getDetail(ctx) {
         try {
             let res = await getWebDetail()
-            console.log("detail", res)
+            // console.log("detail", res)
             if (res) {
                 ctx.body = {
                     code: 0,
@@ -33,6 +33,7 @@ class DetailController {
                         blog_name: res.blog_name,
                         blog_avatar: res.blog_avatar,
                         avatar_bg: res.avatar_bg,
+                        personality_signature: res.personality_signature
                     }
                 }
             } else {
