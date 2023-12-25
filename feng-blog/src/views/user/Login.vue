@@ -34,6 +34,7 @@ const userLogin = async () => {
       console.log(true);
       let res = await reqLogin( { user_name, password })
       console.log("登录处理函数",res)
+      const { token } = res.result;
       if (res && res.code == 0) {
         // 保存token
         await userStore.setToken(res.result.token);
@@ -55,12 +56,12 @@ const userLogin = async () => {
                   offset: 60,
                   title: "温馨提示",
                   message: h("div", { style: "color: #f56c6c; font-weight: 600;" }, userRes.message ),
-              })
-          }
+        })
+        }
         await router.replace({ path: '/home' })
       } else {
         ElNotification({
-          offset: 60,
+offset: 60,
           title: "温馨提示",
           message: h("div", { style: "color: #f56c6c; font-weight: 600;" }, res.message ),
         })
@@ -69,11 +70,15 @@ const userLogin = async () => {
       console.log(false);
     }
   })
+   
 
 }
+
 const goTo = (path) => {
   router.push(path)
 }
+
+
 
 </script>
 
@@ -83,9 +88,9 @@ const goTo = (path) => {
     <div class="userForm--container right-panel-active">
       <div class="userForm--container__form container-login">
         <!-- 登录表 -->
-        <el-form
-        :model="loginForm"
-        class="loginForm"
+        <el-form 
+        :model="loginForm" 
+        class="loginForm" 
         :rules="loginRules"
         ref="loginFormRef"
         >
@@ -157,7 +162,7 @@ const goTo = (path) => {
     &.right-panel-active {
       .container-login {
         transform: translateX(100%);
-
+    
       }
       .container__overlay {
         transform: translateX(-100%);
@@ -168,7 +173,7 @@ const goTo = (path) => {
       .overlay--left {
         transform: translateX(-20%);
       }
-
+      
     }
     .userForm--container__form {
       display: flex;

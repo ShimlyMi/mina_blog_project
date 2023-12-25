@@ -1,4 +1,4 @@
-import { login, getInfo } from "@/api/user.js";
+import { login, getInfo } from "@/api/user-store.js";
 import { getToken, setToken, removeToken } from "@/utils/auth.js";
 import { resetRouter } from "@/router/index.js";
 
