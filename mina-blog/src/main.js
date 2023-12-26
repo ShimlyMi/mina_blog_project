@@ -1,6 +1,10 @@
+// 引入样式
+import "./assets/css/iconfont/iconfont.css";
+import 'normalize.css'
 import '@/styles/main.scss'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

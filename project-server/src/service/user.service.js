@@ -8,7 +8,7 @@ class UserService {
      * 用户注册
      *
      */
-    async createUser() {
+    async createUser(user) {
         /*const [user,created] = await User.findOrCreate({
             where: { user_name: 'superadmin' },
             defaults: {
@@ -26,7 +26,7 @@ class UserService {
         // 键值对的名字一样时可以简写，即 只写一个
         // await 返回的是成功的值
         // 注意postman 发送请求 必须选择 JSON
-        let {user_name, password, nick_name} = user;
+        let { user_name, password, nick_name } = user;
         // 过滤敏感词
         // nick_name = await filterSensitive(nick_name);
         nick_name = nick_name ? nick_name : randomNickname("星星");

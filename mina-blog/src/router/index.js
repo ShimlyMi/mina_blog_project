@@ -1,6 +1,24 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import Layout from "@/components/Layout/index.vue"
+const routes = [
 
-const routes = [{
+    {
+        path: '/',
+        name: "Layout",
+        component: Layout,
+        children: [
+            {
+                path: 'home',
+                name: "Home",
+                component: () => import("@/views/Home/Home.vue"),
+                meta: {
+                    name: "首页"
+                }
+            }
+        ],
+        redirect: "/home"
+    },
+    {
         path: '/login',
         name: "Login",
         component: () =>

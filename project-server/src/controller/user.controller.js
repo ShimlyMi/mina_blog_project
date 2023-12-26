@@ -94,7 +94,7 @@ class UserController {
         try {
             /** 将 authorization 从 headers里面 去解构出来 */
             const { authorization = '' } = ctx.request.header;
-            console.log("userInfo",ctx)
+            // console.log("userInfo",ctx)
             /** 拿到 token 并去掉 token前面的 “Bearer ” */
             const token = authorization.replace("Bearer ", "");
             let res = await decryptToken(token);

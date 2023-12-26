@@ -23,7 +23,6 @@ export const useUserStore = defineStore("user", {
             tokenFlag: false,
         };
     },
-    /** 管理接口数据 */
     actions: {
         // 设置头像
         setBlogAvatar(avatar) {

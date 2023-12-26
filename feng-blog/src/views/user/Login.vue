@@ -70,7 +70,6 @@ offset: 60,
       console.log(false);
     }
   })
-   
 
 }
 
@@ -88,9 +87,9 @@ const goTo = (path) => {
     <div class="userForm--container right-panel-active">
       <div class="userForm--container__form container-login">
         <!-- 登录表 -->
-        <el-form 
-        :model="loginForm" 
-        class="loginForm" 
+        <el-form
+        :model="loginForm"
+        class="loginForm"
         :rules="loginRules"
         ref="loginFormRef"
         >
@@ -162,7 +161,7 @@ const goTo = (path) => {
     &.right-panel-active {
       .container-login {
         transform: translateX(100%);
-    
+
       }
       .container__overlay {
         transform: translateX(-100%);
@@ -173,7 +172,7 @@ const goTo = (path) => {
       .overlay--left {
         transform: translateX(-20%);
       }
-      
+
     }
     .userForm--container__form {
       display: flex;
