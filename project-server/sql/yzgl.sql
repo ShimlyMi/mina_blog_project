@@ -11,7 +11,7 @@
  Target Server Version : 80029
  File Encoding         : 65001
 
- Date: 22/12/2023 16:40:05
+ Date: 27/12/2023 16:19:14
 */
 
 SET NAMES utf8mb4;
@@ -33,10 +33,10 @@ CREATE TABLE `mi_blog_config`  (
   `github_link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'github链接',
   `git_ee_link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'git_ee链接',
   `view_time` int(0) NULL DEFAULT 0 COMMENT '博客访问次数',
-  `createdAt` datetime(0) NOT NULL,
-  `updatedAt` datetime(0) NOT NULL,
+  `createdAt` datetime(0) NULL DEFAULT NULL,
+  `updatedAt` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of mi_blog_config
@@ -57,26 +57,16 @@ CREATE TABLE `yz_article`  (
   `article_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '文章内容',
   `article_cover` varchar(1234) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '文章缩略图',
   `status` int(0) NULL DEFAULT 1 COMMENT '文章状态 1 公开 2 私密 3 草稿箱',
-  `article_types` int(0) NULL DEFAULT 1 COMMENT '文章类型 1 原创 2 转载 3 翻译',
+  `article_types` int(0) NULL DEFAULT 1 COMMENT '文章类型 1 原创 2 转载 ',
   `origin_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '原文链接 是转载或翻译的情况下提供',
   `view_times` int(0) NULL DEFAULT 0 COMMENT '文章访问次数',
   `thumbs_up_times` int(0) NULL DEFAULT 0 COMMENT '文章点赞次数',
   `reading_duration` double NULL DEFAULT 0 COMMENT '文章阅读时长',
-  `createdAt` datetime(0) NOT NULL,
-  `updatedAt` datetime(0) NOT NULL,
+  `createdAt` datetime(0) NULL DEFAULT NULL,
+  `updatedAt` datetime(0) NULL DEFAULT NULL,
   `deletedAt` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of yz_article
--- ----------------------------
-INSERT INTO `yz_article` VALUES (1, '测试文章2', 1, 2, '测试测试测试', '测试测试测试', '', 3, 1, NULL, 0, 0, 0, '2023-12-09 13:36:49', '2023-12-10 06:05:04', NULL);
-INSERT INTO `yz_article` VALUES (2, '测试文章2', 1, 2, '测试测试测试', '测试测试测试', '', 1, 1, NULL, 0, 0, 0, '2023-12-09 13:36:50', '2023-12-09 13:36:50', NULL);
-INSERT INTO `yz_article` VALUES (3, '测试文章2', 1, 2, '测试测试测试', '测试测试测试', '', 3, 1, NULL, 0, 0, 0, '2023-12-09 13:36:51', '2023-12-10 06:12:24', '2023-12-10 07:08:08');
-INSERT INTO `yz_article` VALUES (4, '米娜测试发表文章', 1, 2, '测试测试测试', '测试成功', '', 1, 1, NULL, 0, 0, 0, '2023-12-10 09:24:22', '2023-12-10 09:24:22', NULL);
-INSERT INTO `yz_article` VALUES (5, '测试用户测试', 1, 6, '正在策划测试', '策划书', '', 1, 1, NULL, 0, 0, 0, '2023-12-11 07:03:54', '2023-12-11 07:03:54', NULL);
-INSERT INTO `yz_article` VALUES (6, '测试用户测试', 1, 6, '正在策划测试', '策划书', '', 1, 1, NULL, 0, 0, 0, '2023-12-21 02:15:51', '2023-12-21 02:15:51', NULL);
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for yz_users
@@ -89,19 +79,16 @@ CREATE TABLE `yz_users`  (
   `role` int(0) NOT NULL DEFAULT 2 COMMENT '用户角色 1 管理员 2 普通用户',
   `nick_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '用户昵称',
   `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'http://localhost:8888/11d9bb8bf54125a26464b5c00.jpg' COMMENT '用户头像',
-  `createdAt` datetime(0) NOT NULL,
-  `updatedAt` datetime(0) NOT NULL,
+  `createdAt` datetime(0) NULL DEFAULT NULL,
+  `updatedAt` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `user_name`(`user_name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of yz_users
 -- ----------------------------
-INSERT INTO `yz_users` VALUES (1, 'admin', '$2a$10$M3TJ5v5voL2jR.nX/gEFmOBK4S4gek7nwdNJP46OTo7GqJK5x5AQi', 1, 'admin', 'http://localhost:8888/11d9bb8bf54125a26464b5c00.jpg', '2023-12-13 09:57:10', '2023-12-13 09:57:10');
-INSERT INTO `yz_users` VALUES (2, 'userTest', '$2a$10$w/.j4i92iNIFHyiRe6RBC.c/eJlOu3zJYalRY4LrXZrz88eSl4x2.', 2, '测试用户', 'http://localhost:8888/11d9bb8bf54125a26464b5c00.jpg', '2023-12-19 03:09:10', '2023-12-19 03:09:10');
-INSERT INTO `yz_users` VALUES (3, 'testtest', '$2a$10$XXuUPBhJi84.schbK66BCunPKbD9HekxjnidgcBC.7YhZY3c4LaFS', 2, 'test1234', 'http://localhost:8888/11d9bb8bf54125a26464b5c00.jpg', '2023-12-20 01:53:45', '2023-12-20 01:53:45');
-INSERT INTO `yz_users` VALUES (4, 'xiaomei', '$2a$10$3HAZpVc71aI6BX3GX5NeDu9RH5O8fAAnRdXAYp/k1rhIiISO7Bvaa', 2, '星星l223dxia', 'http://localhost:8888/11d9bb8bf54125a26464b5c00.jpg', '2023-12-21 02:15:08', '2023-12-21 02:15:08');
-INSERT INTO `yz_users` VALUES (76743, 'administrator', 'admin', 1, '超级管理员', 'http://localhost:8888/11d9bb8bf54125a26464b5c00.jpg', '2023-12-22 08:20:50', '2023-12-22 08:20:50');
+INSERT INTO `yz_users` VALUES (76743, 'administrator', 'admin', 1, '超级管理员', 'http://localhost:8888/11d9bb8bf54125a26464b5c00.jpg', '2023-12-27 08:05:08', '2023-12-27 08:05:08');
+INSERT INTO `yz_users` VALUES (76744, 'MINA', '$2a$10$OOsWVpxoAiu7ezNWiYT2Pe1ZdY72f/QsLpRXstEiPi3Sz512sN3Ba', 2, '米娜', 'http://localhost:8888/11d9bb8bf54125a26464b5c00.jpg', '2023-12-27 08:07:43', '2023-12-27 08:07:43');
 
 SET FOREIGN_KEY_CHECKS = 1;
