@@ -1,5 +1,6 @@
 const { Sequelize, DataType, DataTypes} = require("sequelize")
 const seq = require("../../db/seq")
+const moment = require("moment/moment");
 
 const Config = seq.define(
     "mi_blog_config",
@@ -46,6 +47,18 @@ const Config = seq.define(
             type: DataTypes.INTEGER,
             defaultValue: 0,
             comment: "博客访问次数"
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            get() {
+                return moment(this.getDataValue("createdAt")).format("YYYY-MM-DD HH:mm:ss")
+            },
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            get() {
+                return moment(this.getDataValue("updatedAt")).format("YYYY-MM-DD HH:mm:ss")
+            },
         },
     },
     {

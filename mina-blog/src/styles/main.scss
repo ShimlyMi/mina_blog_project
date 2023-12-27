@@ -181,3 +181,29 @@ div:focus {
 .iconfont {
   cursor: pointer;
 }
+
+// 手机
+@media screen and (max-width: 768px) {
+  .mi-home {
+    padding-top: 83px;
+    max-width: 1000px;
+    margin: 0 auto;
+    min-weight: calc(100vh - 120px);
+  }
+  .avatar-show {
+    display: block;
+  }
+}
+
+// pc
+@media screen and (min-width: 768px) {
+  .mi-home {
+    padding-top: 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: calc(100vh - 128px);
+  }
+  .avatar-show {
+    display: none;
+  }
+}

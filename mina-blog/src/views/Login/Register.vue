@@ -16,7 +16,7 @@ const registerForm = ref({
 const checkUsername = (rule, value, callback) => {
   if (!value) {
     return callback(new Error('请输入用户账号'))
-  } else if (value.length > 16 || value.length < 5) {
+  } else if (value.length > 16 || value.length < 4) {
     return callback(new Error("用户账号长度应该在5-16位英文数字之间"));
   }
   return callback();

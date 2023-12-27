@@ -1,6 +1,6 @@
 <script setup>
 import RightSideTop from "./components/item/right-side-top.vue";
-const props = defineProps({
+defineProps({
   configDetail: {
     type: Object,
     default: () => {}
@@ -31,7 +31,6 @@ const props = defineProps({
           <template #template>
               <RightSideTop :configDetail="configDetail" />
           </template>
-
         </el-skeleton>
       </el-card>
     </el-col>

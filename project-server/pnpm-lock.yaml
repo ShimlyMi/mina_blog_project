@@ -32,6 +32,9 @@ dependencies:
   mint-filter:
     specifier: ^4.0.3
     version: 4.0.3
+  moment:
+    specifier: ^2.30.0
+    version: 2.30.0
   mysql2:
     specifier: ^3.6.3
     version: 3.6.3
@@ -1024,11 +1027,11 @@ packages:
   /moment-timezone@0.5.43:
     resolution: {integrity: sha512-72j3aNyuIsDxdF1i7CEgV2FfxM1r6aaqJyLB2vwb33mXYyoyLly+F1zbWqhA3/bVIoJ4szlUoMbUnVdid32NUQ==}
     dependencies:
-      moment: 2.29.4
+      moment: 2.30.0
     dev: false
 
-  /moment@2.29.4:
-    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
+  /moment@2.30.0:
+    resolution: {integrity: sha512-8XSlYFhOSJvnEJOas6RpDCNU2PYeVC+oE33d3Z9tIsXpD8LIgBeqrHPjP8es4b3fcJpf07D1PJWGDUfdbqDLnQ==}
     dev: false
 
   /ms@2.1.2:
@@ -1290,7 +1293,7 @@ packages:
       dottie: 2.0.6
       inflection: 1.13.4
       lodash: 4.17.21
-      moment: 2.29.4
+      moment: 2.30.0
       moment-timezone: 0.5.43
       mysql2: 3.6.3
       pg-connection-string: 2.6.2
