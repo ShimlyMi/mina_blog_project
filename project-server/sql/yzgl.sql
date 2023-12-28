@@ -11,7 +11,7 @@
  Target Server Version : 80029
  File Encoding         : 65001
 
- Date: 27/12/2023 16:19:14
+ Date: 28/12/2023 18:03:21
 */
 
 SET NAMES utf8mb4;
@@ -45,6 +45,28 @@ INSERT INTO `mi_blog_config` VALUES (1, '米娜的小屋', 'http://localhost:888
 INSERT INTO `mi_blog_config` VALUES (2, '米娜的小屋', 'http://localhost:8888/11d9bb8bf54125a26464b5c00.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2023-12-22 07:55:03', '2023-12-22 07:55:03');
 
 -- ----------------------------
+-- Table structure for yz_album
+-- ----------------------------
+DROP TABLE IF EXISTS `yz_album`;
+CREATE TABLE `yz_album`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `album_name` varchar(26) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '相册名称',
+  `album_cover` varchar(555) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '相册名称',
+  `description` varchar(55) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '相册描述信息',
+  `createAt` datetime(0) NULL DEFAULT NULL,
+  `updateAt` datetime(0) NULL DEFAULT NULL,
+  `createdAt` datetime(0) NOT NULL,
+  `updatedAt` datetime(0) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of yz_album
+-- ----------------------------
+INSERT INTO `yz_album` VALUES (1, '测试添加', 'http://localhost:8888/bccb7a0ebfe175fb2c517cf00.jpg', '测试添加相册', NULL, NULL, '2023-12-28 06:34:52', '2023-12-28 06:34:52');
+INSERT INTO `yz_album` VALUES (2, '测试添加3', 'http://localhost:8888/bccb7a0ebfe175fb2c517cf00.jpg', '测试添加相册', NULL, NULL, '2023-12-28 06:37:11', '2023-12-28 06:37:11');
+
+-- ----------------------------
 -- Table structure for yz_article
 -- ----------------------------
 DROP TABLE IF EXISTS `yz_article`;
@@ -66,7 +88,37 @@ CREATE TABLE `yz_article`  (
   `updatedAt` datetime(0) NULL DEFAULT NULL,
   `deletedAt` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of yz_article
+-- ----------------------------
+INSERT INTO `yz_article` VALUES (1, '测试用户测试3', 1, 6, '正在策划测试', '策划书', '', 1, 1, NULL, 0, 0, 0, '2023-12-28 07:47:50', '2023-12-28 07:47:50', NULL);
+INSERT INTO `yz_article` VALUES (2, '测试用户测试', 1, 6, '正在策划测试', '策划书', '', 1, 1, NULL, 0, 0, 0, '2023-12-28 07:47:54', '2023-12-28 07:47:54', NULL);
+INSERT INTO `yz_article` VALUES (3, '测试用户测试2', 1, 6, '正在策划测试', '策划书', '', 1, 1, NULL, 0, 0, 0, '2023-12-28 07:47:58', '2023-12-28 07:47:58', NULL);
+
+-- ----------------------------
+-- Table structure for yz_photo
+-- ----------------------------
+DROP TABLE IF EXISTS `yz_photo`;
+CREATE TABLE `yz_photo`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `album_id` int(0) NULL DEFAULT NULL COMMENT '相册id 属于哪个相册',
+  `url` varchar(555) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '图片地址',
+  `status` int(0) NULL DEFAULT 1 COMMENT '状态 1 正常 2 回收站',
+  `createAt` datetime(0) NULL DEFAULT NULL,
+  `updateAt` datetime(0) NULL DEFAULT NULL,
+  `createdAt` datetime(0) NOT NULL,
+  `updatedAt` datetime(0) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of yz_photo
+-- ----------------------------
+INSERT INTO `yz_photo` VALUES (1, 1, 'http://localhost:8888/b4e81e8116e5aaf762af3e100.jpg', 1, NULL, NULL, '2023-12-28 09:29:41', '2023-12-28 09:29:41');
+INSERT INTO `yz_photo` VALUES (2, 2, 'http://localhost:8888/b4e81e8116e5aaf762af3e100.jpg', 1, NULL, NULL, '2023-12-28 09:29:41', '2023-12-28 09:29:41');
+INSERT INTO `yz_photo` VALUES (3, 1, 'http://localhost:8888/b4e81e8116e5aaf762af3e100.jpg', 1, NULL, NULL, '2023-12-28 09:29:41', '2023-12-28 09:29:41');
 
 -- ----------------------------
 -- Table structure for yz_users
@@ -83,12 +135,13 @@ CREATE TABLE `yz_users`  (
   `updatedAt` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `user_name`(`user_name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 76746 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of yz_users
 -- ----------------------------
 INSERT INTO `yz_users` VALUES (76743, 'administrator', 'admin', 1, '超级管理员', 'http://localhost:8888/11d9bb8bf54125a26464b5c00.jpg', '2023-12-27 08:05:08', '2023-12-27 08:05:08');
 INSERT INTO `yz_users` VALUES (76744, 'MINA', '$2a$10$OOsWVpxoAiu7ezNWiYT2Pe1ZdY72f/QsLpRXstEiPi3Sz512sN3Ba', 2, '米娜', 'http://localhost:8888/11d9bb8bf54125a26464b5c00.jpg', '2023-12-27 08:07:43', '2023-12-27 08:07:43');
+INSERT INTO `yz_users` VALUES (76745, 'xiaomei', '$2a$10$SFdLEjif31b.onnTeb0tZOszfQ9ZyPc2XKVmMFmkb8dTlkX5xkkzq', 2, '星星8y87t4g9', 'http://localhost:8888/11d9bb8bf54125a26464b5c00.jpg', '2023-12-28 06:32:39', '2023-12-28 06:32:39');
 
 SET FOREIGN_KEY_CHECKS = 1;

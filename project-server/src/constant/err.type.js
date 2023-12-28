@@ -90,8 +90,43 @@ module.exports = {
     },
     getWebDetailError: {
         code: '10301',
-        message: "获取网站详情失败",
+        message: '获取网站详情失败',
         result: '',
     },
+    albumAlreadyExisted: {
+        code: '10401',
+        message: '该相册已经存在',
+        result: '',
+    },
+    getAlbumListError: {
+        code: '10402',
+        message: "获取相册列表失败",
+        result: ''
+    },
+    deleteAlbumError: {
+        code: '10403',
+        message: "删除相册失败",
+        result: ''
+    },
+    addPictureError: {
+        code: '10511',
+        message: '添加图片失败',
+        result: ''
+    },
+    getPictureListError: {
+        code: '10512',
+        message: '获取图片失败',
+        result: ''
+    },
+    deletePictureError: {
+        code: '10513',
+        message: '获取图片失败',
+        result: ''
+    },
+    revertPictureError: {
+        code: '10514',
+        message: '获取图片失败',
+        result: ''
+    }
 
 }

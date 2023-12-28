@@ -40,7 +40,7 @@ const hadAdminPermission = async (ctx, next) => {
 /** 超级管理员 */
 const isSuperAmin = async (ctx, next) => {
     const { user_name } = ctx.state.user
-    if (user_name === 'admin') {
+    if (user_name === 'administrator') {
         console.error("管理员信息可通过配置修改")
         return ctx.app.emit('error', hasSuperAminPermission, ctx)
     }
@@ -48,5 +48,6 @@ const isSuperAmin = async (ctx, next) => {
 
 module.exports = {
     auth,
-    hadAdminPermission
+    hadAdminPermission,
+    isSuperAmin
 }
