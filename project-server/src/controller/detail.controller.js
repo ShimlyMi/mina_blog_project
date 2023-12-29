@@ -3,7 +3,7 @@ const { getWebDetailError } = require("../constant/err.type")
 class DetailController {
     /** 修改设置 */
     async updateDetail(ctx) {
-        /*try {
+        try {
             console.log("detailUpdate",ctx.request.body)
             // 如果背景图不一致，删除原来的
             let res = await updateDetailById(ctx.request.body)
@@ -17,7 +17,7 @@ class DetailController {
         } catch (error) {
             console.error("修改网站设置失败")
             return ctx.app.emit("error",ctx)
-        }*/
+        }
     }
     /** 获取详情信息 */
     async getDetail(ctx) {

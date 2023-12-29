@@ -63,6 +63,14 @@ watch(
                                 <span class="meta-label">发表于</span>
                                 <span class="meta-value">{{ item.createdAt }}</span>
                             </span>
+                          <span class="to_printer">
+                                <span class="meta-label">发表于</span>
+                                <span class="meta-value">{{ item.createdAt }}</span>
+                            </span>
+                          <span class="to_printer">
+                                <span class="meta-label">发表于</span>
+                                <span class="meta-value">{{ item.createdAt }}</span>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -77,6 +85,13 @@ watch(
 </template>
 
 <style scoped lang="scss">
+.article-cover {
+  .image {
+    width: 100%;
+    height: 100%;
+    vertical-align: bottom;
+  }
+}
 .no-article {
   color: var(--font-color);
   margin: 10px auto;
@@ -85,6 +100,54 @@ watch(
   text-align: center;
 }
 
+.article-info {
+  .title {
+    display: inline-block;
+    width: 100%;
+    font-size: 1.8rem;
+    color: #676767;
+    font-weight: 600;
+    line-height: 3;
+    transition: 0.2s ease-in-out;
+
+    &:hover {
+      cursor: pointer;
+      color: var(--primary);
+    }
+  }
+
+  .meta {
+    color: #858585;
+    line-height: 1.4;
+    font-size: 100%;
+    font-weight: 500;
+
+    &-label {
+      padding-right: 0.2rem;
+    }
+
+    &-value {
+      padding-right: 0.2rem;
+    }
+
+    .article-meta__separator {
+      margin: 0 0.4rem;
+      font-size: 1.1rem;
+      position: relative;
+
+      &::after {
+        content: "|";
+        position: absolute;
+        top: -3px;
+        right: 0;
+      }
+    }
+
+    i {
+      margin: 0 0.2rem 0 0;
+    }
+  }
+}
 /** mobile */
 @media screen and (max-width: 768px) {
   @include b(articleBox) {
@@ -102,5 +165,18 @@ watch(
     align-items: center;
     height: 20rem;
   }
+  .article-cover {
+    width: 45%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .article-info {
+    width: 55%;
+    padding: 0 40px;
+    overflow: hidden;
+    display: inline-block;
+  }
+}
 }
 </style>

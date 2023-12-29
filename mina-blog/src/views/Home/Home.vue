@@ -36,6 +36,7 @@ let configDetail = ref({})
 /** 获取个人信息 */
 const getConfigDetail = async () => {
   let res = await getWebDetail()
+  console.log(res)
   if (res && res.code === 0) {
     // console.log(123)
     configDetail.value = res.result

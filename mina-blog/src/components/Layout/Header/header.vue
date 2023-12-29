@@ -45,7 +45,7 @@ const getPath = computed(() => {
           <el-menu-item><i class="iconfont icon-houduankaifa"></i>后端</el-menu-item>
         </el-sub-menu>
         <el-menu-item><i class="iconfont icon-liebiao"></i>分类</el-menu-item>
-        <el-menu-item><i class="iconfont icon-tupian1"></i>相册</el-menu-item>
+        <el-menu-item index="/album"><i class="iconfont icon-tupian1"></i>相册</el-menu-item>
         <el-menu-item><i class="iconfont icon-duihua"></i>说说</el-menu-item>
         <el-menu-item><i class="iconfont icon-dakaixinxi"></i>留言板</el-menu-item>
         <el-menu-item><i class="iconfont icon-lianjie2"></i>友链</el-menu-item>

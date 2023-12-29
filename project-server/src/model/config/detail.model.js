@@ -13,11 +13,12 @@ const Config = seq.define(
         blog_avatar: {
             type: DataTypes.STRING, // STRING 默认255
             comment: "博客头像",
-            defaultValue: "http://localhost:8888/11d9bb8bf54125a26464b5c00.jpg"
+            defaultValue: "http://localhost:8888/9bafc3b3e3c6cd84226181100.jpg"
         },
         avatar_bg: {
             type: DataTypes.STRING,
             comment: "博客头像背景图",
+            defaultValue: "http://localhost:8888/06e6fc4151a89ec4b9b6d9f00.jpg"
         },
         personality_signature: {
             type: DataTypes.STRING,

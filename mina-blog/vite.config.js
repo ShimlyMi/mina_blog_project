@@ -12,11 +12,14 @@ export default defineConfig({
         vue(),
         vueJsx(),
         AutoImport({
-            resolvers: [ElementPlusResolver()]
+            resolvers: [ElementPlusResolver()],
+            directoryAsNamespace: true,
         }),
         Components({
-            resolvers: [ElementPlusResolver()]
-        })
+            resolvers: [ElementPlusResolver()],
+            directoryAsNamespace: true,
+        }),
+
     ],
     resolve: {
         alias: {

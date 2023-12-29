@@ -34,7 +34,7 @@ const Article = seq.define('yz_article', {
         },
         article_cover: {
             type: DataTypes.STRING(1234),
-            defaultValue: "",
+            defaultValue: "http://localhost:8888/b4e81e8116e5aaf762af3e101.jpg",
             comment: '文章缩略图',
         },
         status: {

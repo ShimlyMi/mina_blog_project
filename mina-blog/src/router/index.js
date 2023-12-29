@@ -6,17 +6,23 @@ const routes = [
         path: '/',
         name: "Layout",
         component: Layout,
+        redirect: "/home",
         children: [
             {
-                path: 'home',
+                path: '/home',
                 name: "Home",
                 component: () => import("@/views/Home/Home.vue"),
                 meta: {
                     name: "首页"
                 }
+            },
+            {
+                path: '/album',
+                name: 'Album',
+                component: () => import("@/views/Photo/album.vue"),
             }
         ],
-        redirect: "/home"
+
     },
     {
         path: '/login',

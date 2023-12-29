@@ -27,6 +27,7 @@ export default defineConfig({
                     enabledCollections: ['ep'],
                 }),
             ],
+            directoryAsNamespace: true,
         }),
     ],
     resolve: {

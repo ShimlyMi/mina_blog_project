@@ -66,6 +66,10 @@ div:focus {
   background: linear-gradient(90deg, #ffffff 1%,#f0fff0 10.2%,  #fffafa 19.6%, #f8f8ff 36.8%, #fff0f5 62.2%,#ffe4e1 88.9%, #ffffff 100%) !important;
 }
 
+.gradient {
+  background: rgb(255, 255, 255, 0.7);
+  background: linear-gradient(120deg, #f8feff, #dffbff, #faedff, #e0eeff, #f5f5d2, #fffff9);
+}
 @include b(header){
   position: fixed;
   top: 0;
@@ -182,6 +186,10 @@ div:focus {
   cursor: pointer;
 }
 
+svg {
+  cursor: pointer;
+}
+
 // 手机
 @media screen and (max-width: 768px) {
   .mi-home {
@@ -190,9 +198,22 @@ div:focus {
     margin: 0 auto;
     min-weight: calc(100vh - 120px);
   }
+  .article_box {
+    padding: 1.6rem 10px;
+    max-width: 1000px;
+    margin: 0 auto;
+    min-height: calc(100vh - 28rem);
+  }
   .avatar-show {
     display: block;
   }
+  .article-box {
+    padding: 1.6rem 10px;
+    max-width: 1000px;
+    margin: 0 auto;
+    min-height: calc(100vh - 28rem);
+  }
+
 }
 
 // pc
@@ -203,7 +224,19 @@ div:focus {
     margin: 0 auto;
     min-height: calc(100vh - 128px);
   }
+  .center_box {
+    padding: 2.8rem 10px;
+    max-width: 1000px;
+    margin: 0 auto;
+    min-height: calc(100vh - 35rem);
+  }
   .avatar-show {
     display: none;
+  }
+  .article-box {
+    padding: 2.8rem 10px;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: calc(100vh - 28rem);
   }
 }

@@ -1,4 +1,5 @@
 <script setup>
+import {Picture as IconPicture} from '@element-plus/icons-vue'
 defineProps({
   configDetail: {
     type: Object,
@@ -9,15 +10,22 @@ defineProps({
 // console.log("props",props)
 </script>
 <template>
-<!--  <div class="info-background">-->
-<!--    <el-image fit="cover" style="width: 100%; height: 100%;">-->
-<!--      <template #error>-->
-<!--        <div class="image-slot">-->
-<!--          <el-icon></el-icon>-->
-<!--        </div>-->
-<!--      </template>-->
-<!--    </el-image>-->
-<!--  </div>-->
+  <div v-image="configDetail.avatar_bg" class="info-background">
+    <el-image
+        :preview-src-list="[configDetail.avatar_bg]"
+        :src="configDetail.avatar_bg"
+        fit="cover"
+        preview-teleported
+        style="width: 100%; height: 100%;">
+      <template #error>
+        <div class="image-slot">
+          <el-icon>
+            <icon-picture/>
+          </el-icon>
+        </div>
+      </template>
+    </el-image>
+  </div>
   <div class="info-avatar">
     <router-link to="/"><el-avatar :src="configDetail.blog_avatar" /></router-link>
     <span class="blog-name">{{ configDetail.blog_name }}</span>
@@ -36,7 +44,7 @@ defineProps({
 .info-avatar {
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  //align-items: center;
 
   .el-avatar {
     position: relative;
@@ -44,7 +52,7 @@ defineProps({
     height: 60px;
     transition: ease-in-out 1s;
     background-color: #fff;
-    //margin: -2rem 0 0 1rem;
+    margin: -2rem 0 0 1rem;
 
     &:hover {
       transform: rotate(360deg);
@@ -53,7 +61,8 @@ defineProps({
   }
 
   .blog-name {
-    padding-left: 0.5rem;
+    //padding-left: 0.5rem;
+    padding: 0.5rem 0 0 0.5rem;
     color: #222;
     font-size: 14px;
     font-weight: 600;
