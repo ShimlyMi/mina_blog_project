@@ -1,3 +1,4 @@
+import '@/styles/base.scss'
 import App from './App.vue'
 import { createApp } from 'vue'
 import router from './router'
@@ -12,7 +13,7 @@ import VueKinesis from "vue-kinesis";
 // 引入样式
 import "./assets/css/iconfont/iconfont.css";
 import 'normalize.css'
-import '@/styles/base.scss'
+
 
 // animate
 // import "animate.css";

@@ -97,6 +97,10 @@ const getPath = computed(() => {
   font-size: 1.1rem;
   margin-right: 5px;
 }
+
+:deep(.el-menu) {
+  background-color: transparent;
+}
 :deep(.el-menu--horizontal.el-menu) {
   border-bottom: 0;
 }

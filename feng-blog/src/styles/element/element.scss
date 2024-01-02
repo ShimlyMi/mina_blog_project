@@ -1,7 +1,7 @@
 
 .el-menu {
   border-right: none;
-  background: transparent;
+  background: transparent !important;
   .el-menu-item {
     border-bottom: none;
     font-size: 1rem;
@@ -25,6 +25,10 @@
     font-weight: 600;
   }
 }
+
+:deep(.el-menu) {
+  background-color: transparent;
+}
 .el-card {
   border: none;
   border-radius: 5px 5px 8px 8px;
@@ -34,9 +38,15 @@
   &__body {
     width: 100%;
   }
+
   :deep(.el-card__body) {
     padding: 0 !important;
   }
+
+}
+
+:deep(.el-card__body) {
+  padding: 0 !important;
 }
 .card-hover:hover {
   box-shadow: var(--card-hover-box-shadow) !important;

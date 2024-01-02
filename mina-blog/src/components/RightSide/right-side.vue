@@ -38,5 +38,7 @@ defineProps({
 </template>
 
 <style lang="scss" scoped>
-
+.el-card :deep(.el-card__body) {
+  padding: 0;
+}
 </style>

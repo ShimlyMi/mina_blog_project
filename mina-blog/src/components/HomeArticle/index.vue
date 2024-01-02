@@ -192,6 +192,10 @@ watch(
     }
   }
 }
+
+.el-card :deep(.el-card__body) {
+  padding: 0;
+}
 /** mobile */
 @media screen and (max-width: 768px) {
   @include b(articleBox) {

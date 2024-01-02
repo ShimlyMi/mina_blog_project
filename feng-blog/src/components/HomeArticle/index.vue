@@ -148,6 +148,11 @@ watch(
     }
   }
 }
+
+el-card :deep(.el-card__body) {
+  //background-color: lightblue;
+  padding: 0;
+}
 /** mobile */
 @media screen and (max-width: 768px) {
   @include b(articleBox) {

@@ -11,14 +11,14 @@ import SkeletonIem from "@/components/SkeletonItem/index.vue"
     <SkeletonIem variant="text" width="65%" height="30px" />
   </div>
 </div>
-  <div class="mobile">
-    <SkeletonIem variant="image" width="100%" height="18rem" />
-    <div class="flex_c_around mobile-text">
-      <SkeletonIem variant="text" width="60%" height="45px" />
-      <SkeletonIem variant="text" width="95%" height="35px" />
-      <SkeletonIem variant="text" width="65%" height="25px" />
-    </div>
-  </div>
+  <!--  <div class="mobile">-->
+  <!--    <SkeletonIem variant="image" width="100%" height="18rem" />-->
+  <!--    <div class="flex_c_around mobile-text">-->
+  <!--      <SkeletonIem variant="text" width="60%" height="45px" />-->
+  <!--      <SkeletonIem variant="text" width="95%" height="35px" />-->
+  <!--      <SkeletonIem variant="text" width="65%" height="25px" />-->
+  <!--    </div>-->
+  <!--  </div>-->
 </template>
 
 <style scoped lang="scss">
