@@ -3,14 +3,15 @@ import {createWebHashHistory } from 'vue-router'
 
 export const constantRouter = [
   {
-
+    path: '/login',
+    component: () => import('@/views/login/Login.vue')
   }
 ]
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   history: createWebHashHistory(),
   // scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  routes: constantRouter
 })
 
 const router = createRouter()
