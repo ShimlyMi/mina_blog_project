@@ -30,7 +30,7 @@ const routes = [
         component: () =>
             import ("@/views/Login/Login.vue"),
         meta: {
-            name: "Login"
+            name: "login"
         }
     },
     {

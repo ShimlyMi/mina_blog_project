@@ -1,19 +1,20 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createWebHashHistory} from 'vue-router'
+import Vue from 'vue'
+import Router from 'vue-router'
 
+Vue.use(Router)
 
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: () => import('')
-    }
-  ]
+export const constantRouter = [
+  {
+    path: '/login',
+    component: () => import('@/views/login/Login.vue')
+  }
+]
+const createRouter = () => new Router({
+  // mode: 'history', // require service support
+  history: createWebHashHistory(),
+  // scrollBehavior: () => ({ y: 0 }),
+  routes: constantRouter
 })
 
 const router = createRouter()

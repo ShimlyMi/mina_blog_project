@@ -14,5 +14,14 @@
     "strict": false,
     "jsx": "preserve",
     "moduleResolution": "node"
-  }
+  },
+  "include": [
+    "app.d.ts",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "types/**/*.d.ts",
+    "types/**/*.ts"
+  ]
 }
