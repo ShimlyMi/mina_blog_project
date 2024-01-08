@@ -3,12 +3,16 @@
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+// import svgLoader from 'vite-svg-loader'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
 
 import path from 'path'
 
 const defaultSettings = require('./src/settings.js')
 
-function resolve(dir) {
+function pathResolve(dir) {
   return path.join(__dirname, ".", dir)
 }
 
@@ -27,20 +31,34 @@ export default defineConfig({
     name: name,
     resolve: {
       alias: {
-        '@': resolve('src')
+          '@': pathResolve('src')
       }
     }
   },
   plugins: [
     vue(),
     vueJsx(),
+      // svgLoader(),
+      AutoImport({
+          resolvers: [ElementPlusResolver()],
+      }),
+      Components({
+          resolvers: [ElementPlusResolver()],
+      }),
   ],
   resolve: {
     alias: {
-      '@': resolve('src'),
-      'build': resolve('build')
+        '@': pathResolve('src'),
+        'build': pathResolve('build')
     },
   },
+    // css: {
+    //     preprocessorOptions: {
+    //         scss: {
+    //             additionalData: `@import "./src/styles/index.scss";`
+    //         }
+    //     }
+    // },
   server: {
     port: port,
     host: "0.0.0.0",
@@ -53,5 +71,21 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ""),
       }
     }
-  }
+  },
+    build: {
+        sourcemap: false,
+        // 消除打包大小超过500kb警告
+        chunkSizeWarningLimit: 4000,
+        rollupOptions: {
+            input: {
+                index: pathResolve("index.html")
+            },
+            // 静态资源分类打包
+            output: {
+                chunkFileNames: "static/js/[name]-[hash].js",
+                entryFileNames: "static/js/[name]-[hash].js",
+                assetFileNames: "static/[ext]/[name]-[hash].[ext]"
+            }
+        }
+    },
 })

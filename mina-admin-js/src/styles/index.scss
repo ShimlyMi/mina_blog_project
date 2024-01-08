@@ -1,1 +1,10 @@
 @import "reset";
+@import "transition";
+@import "tailwind.css";
+@import "element-plus";
+
+/* 自定义全局 CssVar */
+:root {
+  --mina-transition-duration: 0.016s;
+}
+

@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Layout from "@/components/Layout/index.vue"
+import {formatTwoStageRoutes} from "@/router/utils.js";
 const routes = [
 
     {
@@ -43,6 +44,17 @@ const routes = [
         }
     },
 ]
+
+/** 重置路由 */
+export function resetRouter() {
+    router.getRoutes().forEach(route => {
+        const {name, meta} = route
+        if (name && router.hasRoute(name) && meta?.backstage) {
+            router.removeRoute(name)
+            router.options.routes = formatTwoStageRoutes()
+        }
+    })
+}
 
 const router = createRouter({
     history: createWebHashHistory(),
