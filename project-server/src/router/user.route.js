@@ -3,7 +3,7 @@ const Router = require('koa-router')
 // 导入 UserController 对象
 const { userValidator, verifyUser, crpytPassword, verifyLogin } = require("../middleware/user.middleware")
 const { auth, hadAdminPermission } = require("../middleware/auth.middleware")
-const { register, login, getUserInfo } = require("../controller/user.controller")
+const {register, login, getUserInfo, getUserInfoById} = require("../controller/user.controller")
 
 const router = new Router({ prefix: '/users' })
 
@@ -20,4 +20,6 @@ router.patch("/", auth, (ctx,next) => {
 
 // 获取信息
 router.get('/info', auth, getUserInfo);
+// 根据id获取
+router.get('/info/:id', getUserInfoById)
 module.exports = router;

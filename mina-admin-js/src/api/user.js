@@ -1,11 +1,11 @@
 import http from "@/utils/request"
 
 /** 用户登录 */
-export const reqLogin = ({data}) => {
+export const reqLogin = (data) => {
     return http({
         url: '/api/users/login',
         method: 'post',
-        data: {data}
+        data: data
     })
 }
 
@@ -22,7 +22,7 @@ export const reqRegister = (data) => {
 };
 
 /** 获取当前登录人的信息 */
-export const getUserInfoById = id => {
+export const getUserInfoById = (id) => {
     return http({
         url: '/api/users/info/' + id,
         method: 'get',

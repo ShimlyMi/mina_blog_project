@@ -11,6 +11,7 @@ const { userRegisterError, unSupportedFileType, fileUploadError } = require("../
 
 
 
+
 class UserController {
     async register(ctx, next) {
         // 1. 获取数据
@@ -110,6 +111,35 @@ class UserController {
                 }
             }
 
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    /** 通过id获取个人信息 */
+    async getUserInfoById(ctx) {
+        try {
+            if (ctx.params.id) {
+                if (ctx.params.id == 76743) {
+                    ctx.body = {
+                        code: 0,
+                        message: "获取用户信息成功",
+                        result: {
+                            id: 76743,
+                            nick_name: "超级管理员",
+                            role: 1
+                        }
+                    }
+                } else {
+                    let res = await getOneUserInfo({id: ctx.params.id})
+                    const {password, user_name, ...resInfo} = res;
+                    ctx.body = {
+                        code: 0,
+                        message: "获取用户信息成功",
+                        result: resInfo
+                    }
+                }
+            }
         } catch (err) {
             console.error(err)
         }

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
+    "@pureadmin/utils": "^2.1.2",
     "axios": "^1.6.4",
     "core-js": "^3.35.0",
     "element-plus": "^2.4.4",

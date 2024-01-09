@@ -1,16 +1,29 @@
 import {defineStore} from "pinia";
-import {store} from "@/stores/index"
-import {removeToken, setToken} from "@/utils/auth";
+import {removeToken, sessionKey, setToken} from "@/utils/auth";
 import {getUserInfoById, reqLogin} from "@/api/user";
+import {resetRouter} from "@/router";
 import router from "@/router";
+import {storageSession} from "@pureadmin/utils";
+import {store} from "@/stores";
 
 export const useUserStore = defineStore('user', {
     id: "mina-user",
+    persist: {
+        // enabled: true, // 数据持久化
+        strategies: [{
+            // 自定义存储的 key，默认是 store.$id
+            key: "userStore",
+            // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
+            // storage: localStorage,
+            // state 中的字段名，按组打包储存
+            // paths: ["foo", "bar"]
+        }]
+    },
     /** 管理用户数据 */
     state: () => {
         return {
-            user_name: "",
-            role: "",
+            user_name: storageSession().getItem(sessionKey)?.user_name ?? "",
+            role: storageSession().getItem(sessionKey)?.role ?? "",
             avatar: "",
             nick_name: "",
             id: 0 // 登录用户id
@@ -19,21 +32,21 @@ export const useUserStore = defineStore('user', {
     getters: {
         // 获取头像
         getAvatar() {
-            return this.avatar
+            return this.avatar || storageSession().getItem("blogCurrentUser")?.avatar
         },
         // 获取当前登陆人的昵称
         getNickName() {
-            return this.nick_name
+            return this.nick_name || storageSession().getItem("blogCurrentUser")?.nick_name
         },
         // 获取当前登陆人用户id
         getUserId() {
-            return this.id
+            return this.id || storageSession().getItem("blogCurrentUser")?.id
         }
     },
     actions: {
         /** 存储用户名 */
         SET_USERNAME(username) {
-            this.username = username;
+            this.user_name = username;
         },
         /** 存储角色 */
         SET_ROLE(role) {
@@ -56,6 +69,7 @@ export const useUserStore = defineStore('user', {
             return new Promise((resolve, reject) => {
                 reqLogin(data).then(async res => {
                     if (res.code == 0) {
+                        console.log(res)
                         setToken((res.result))
                         this.SET_ID(Number(res.result.id))
                         await this.saveUserInfo(res.result.id)
@@ -83,7 +97,9 @@ export const useUserStore = defineStore('user', {
             this.roles = [];
             removeToken()
             resetRouter();
-            router.push("/login")
+            router.push("/login").then(() => {
+                console.log("退出登录成功")
+            })
         }
     }
 })

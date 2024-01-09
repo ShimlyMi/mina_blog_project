@@ -66,7 +66,7 @@ export default defineConfig({
     proxy: {
       "/api": {
         // 要访问的跨域域名
-        target: "http://127.0.0.1:8888",
+          target: "http://localhost:8888",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       }

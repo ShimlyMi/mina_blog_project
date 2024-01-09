@@ -8,6 +8,9 @@ dependencies:
   '@element-plus/icons-vue':
     specifier: ^2.3.1
     version: 2.3.1(vue@3.3.11)
+  '@pureadmin/utils':
+    specifier: ^2.1.2
+    version: 2.1.2(vue@3.3.11)
   axios:
     specifier: ^1.6.4
     version: 1.6.4
@@ -770,6 +773,20 @@ packages:
     resolution: { integrity: sha512-Zwq5OCzuwJC2jwqmpEQt7Ds1DTi6BWSwoGkbb1n9pO3hzb35BoJELx7c0T23iDkBGkh2e7tvOtjF3tr3OaQHDQ== }
     engines: { node: ^12.20.0 || ^14.18.0 || >=16.0.0 }
     dev: true
+
+  /@pureadmin/utils@2.1.2(vue@3.3.11):
+    resolution: { integrity: sha512-TjMLN6MBNa5WkJYMidk1LhTfmTlHcSEjFm1jtN3e5z9Q3jzfnu5jF8MC+b0WF0LzeRqnq6kICrxXpSn5/HqNIA== }
+    peerDependencies:
+      echarts: '*'
+      vue: '*'
+    peerDependenciesMeta:
+      echarts:
+        optional: true
+      vue:
+        optional: true
+    dependencies:
+      vue: 3.3.11
+    dev: false
 
   /@rollup/pluginutils@5.1.0:
     resolution: { integrity: sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g== }
