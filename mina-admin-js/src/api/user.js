@@ -21,6 +21,13 @@ export const reqRegister = (data) => {
     })
 };
 
+export const getUserInfo = () => {
+  return http({
+    url: '/api/users/info/',
+    method: 'get',
+  });
+}
+
 /** 获取当前登录人的信息 */
 export const getUserInfoById = (id) => {
     return http({

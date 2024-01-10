@@ -1,9 +1,9 @@
 <script setup>
-import AppLink from './Link.vue'
+
 </script>
 
 <template>
-
+  <div>side</div>
 </template>
 
 <style lang="scss" scoped>

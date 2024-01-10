@@ -5,6 +5,7 @@ export const constantRoutes = [
     path: '/login',
     name: 'Login',
     component: () => import('@/views/login/index.vue'),
+    hidden: true,
     meta: {
       title: '登录',
     }
@@ -13,6 +14,7 @@ export const constantRoutes = [
     path: '/register',
     name: 'Register',
     component: () => import('@/views/register/index.vue'),
+    hidden: true,
     meta: {
       title: '注册'
     }
@@ -26,7 +28,40 @@ export const constantRoutes = [
         path: "home",
         name: "Home",
         component: () => import("@/views/home/index.vue"),
-        meta: {title: 'Home'}
+        meta: {title: 'Home', icon: 'Home'}
+      }
+    ]
+  },
+  {
+    path: '/article',
+    component: Layout,
+    redirect: '/article/list',
+    name: 'Article',
+    meta: {title: 'Article', icon: '<el-icon><Document /></el-icon>'},
+    children: [
+      {
+        path: 'list',
+        name: 'List',
+        component: () => import('@/views/article/article-list/index.vue'),
+        meta: {title: 'List', icon: '<el-icon><List /></el-icon>'}
+      },
+      {
+        path: 'addArticle',
+        name: 'addArticle',
+        component: () => import('@/views/article/add-article/index.vue'),
+        meta: {title: 'addArticle', icon: '<el-icon><DocumentAdd /></el-icon>'}
+      },
+      {
+        path: 'tag',
+        name: 'tagManagement',
+        component: () => import('@/views/article/tag/index.vue'),
+        meta: {title: 'tagManagement', icon: '<el-icon><CollectionTag /></el-icon>'}
+      },
+      {
+        path: 'category',
+        name: 'category',
+        component: () => import('@/views/article/category/index.vue'),
+        meta: {title: 'category', icon: '<el-icon><PriceTag /></el-icon>'}
       }
     ]
   }
@@ -47,6 +82,7 @@ const whiteList = ['/login', '/register']
 
 const router = createRouter({
   history: createWebHashHistory(),
+  scrollBehavior: () => ({y: 0}),
   routes: constantRoutes,
 });
 

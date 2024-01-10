@@ -1,9 +1,9 @@
 <script setup>
 
 </script>
-
+<div>header</div>
 <template>
-  <div>首页</div>
+
 </template>
 
 <style lang="scss" scoped>

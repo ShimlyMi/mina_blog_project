@@ -1,11 +1,11 @@
 <script setup>
-import {ref, onMounted, onBeforeUnmount} from 'vue'
+import {ref, onMounted, onBeforeUnmount, watch} from 'vue'
 import {useRoute, useRouter} from "vue-router";
 import {bg, singUp, logo} from './utils/static'
 import {loginRules} from "@/utils/rules";
 import {reqLogin} from "@/api/user";
 import {storageLocal} from "@pureadmin/utils";
-import {useUserStoreHook} from "@/stores/modules/user";
+import {useUserStoreHook} from "@/stores";
 import {ElMessage} from "element-plus";
 
 const router = useRouter()
@@ -17,6 +17,7 @@ const ruleForm = ref({
 })
 const loading = ref(false)
 const isRememberMe = ref(false)
+const redirect = ref(undefined)
 
 const onLogin = async () => {
   loading.value = true
@@ -33,7 +34,7 @@ const onLogin = async () => {
       if (res && res.code == 0) {
         useUserStoreHook().loginByUsername(ruleForm.value).then(res => {
           if (res.code == 0) {
-            router.replace({path: "/"})
+            router.replace({path: redirect.value || '/'})
             ElMessage({
               type: 'success',
               message: '登录成功'
@@ -57,6 +58,11 @@ function onkeypress({code}) {
   }
 }
 
+watch(
+  () => {
+
+  },
+)
 onMounted(() => {
   window.document.addEventListener("keypress", onkeypress);
   const route = useRoute();

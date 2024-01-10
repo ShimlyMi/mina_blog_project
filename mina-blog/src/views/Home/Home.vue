@@ -27,7 +27,7 @@ const getArticleList = async (type) => {
     const  { list, total } = res.result
     articleList.value = list
     articleTotal.value = total
-    // console.log(list.length, total)
+    // console.log(article-list.length, total)
   }
   param.loading = false
 }

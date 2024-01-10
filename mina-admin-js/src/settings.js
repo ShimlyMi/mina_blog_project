@@ -1,4 +1,4 @@
-module.exports = {
+const defaultSettings = {
   title: '米娜小屋后台管理',
   /**
    * @type {boolean} true | false
@@ -6,3 +6,5 @@ module.exports = {
    */
   sidebarLogo: false
 }
+
+export default defaultSettings

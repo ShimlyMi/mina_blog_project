@@ -1,11 +1,18 @@
-
 import {createPinia} from "pinia";
+import persist from 'pinia-plugin-persistedstate'
+import getters from "@/stores/getters";
+import {useUserStoreHook} from './modules/user'
+import sidebar from "@/stores/modules/app";
 
+const store = createPinia()
+store.use(persist)
 
-const store = createPinia();
+export default store
 
-export function setupStore(app) {
-    app.use(store);
+export {
+  useUserStoreHook,
+  sidebar,
+  getters
 }
 
-export {store};
+

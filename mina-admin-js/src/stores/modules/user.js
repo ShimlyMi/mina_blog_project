@@ -4,10 +4,9 @@ import {getUserInfoById, reqLogin} from "@/api/user";
 import {resetRouter} from "@/router";
 import router from "@/router";
 import {storageSession} from "@pureadmin/utils";
-import {store} from "@/stores";
+import store from "@/stores";
 
 export const useUserStore = defineStore('user', {
-    id: "mina-user",
     persist: {
         // enabled: true, // 数据持久化
         strategies: [{
@@ -91,6 +90,7 @@ export const useUserStore = defineStore('user', {
                 sessionStorage.setItem("blogCurrentUser", res.result)
             }
         },
+
         // 前端登出
         logOut() {
             this.user_name = "";
@@ -100,7 +100,15 @@ export const useUserStore = defineStore('user', {
             router.push("/login").then(() => {
                 console.log("退出登录成功")
             })
-        }
+        },
+      // remove token
+      resetToken({commit}) {
+        return new Promise(resolve => {
+          removeToken() // must remove  token  first
+          commit('RESET_STATE')
+          resolve()
+        })
+      }
     }
 })
 
