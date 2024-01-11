@@ -71,7 +71,7 @@ class UserService {
 
         const res = await User.update(newUser, {where: whereOpt});
 
-        return res[0] > 0 ? true : false;
+        return res[0] > 0;
 
     }
 

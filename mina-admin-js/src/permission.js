@@ -2,7 +2,7 @@ import router from "@/router";
 import {useUserStoreHook} from "@/stores";
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-import getPageTitle from "@/get-page-title";
+// import getPageTitle from "@/get-page-title";
 import {getToken} from "@/utils/auth";
 import {storeToRefs} from 'pinia'
 import {ElMessage} from "element-plus";

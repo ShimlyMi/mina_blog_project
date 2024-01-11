@@ -1,3 +1,11 @@
+/*
+ * @Author: MINA
+ * @Date: 2023-11-19
+ * @Description: 用户路由
+ * @LastEditTime: 2024-01-11 10:48:12
+ * @LastEditors: MINA
+ */
+
 const Router = require('koa-router')
 
 // 导入 UserController 对象
@@ -17,6 +25,8 @@ router.post("/login", userValidator,verifyLogin, login);
 router.patch("/", auth, (ctx,next) => {
    ctx.body = "修改密码成功"
 })
+
+// 获取菜单信息
 
 // 获取信息
 router.get('/info', auth, getUserInfo);
