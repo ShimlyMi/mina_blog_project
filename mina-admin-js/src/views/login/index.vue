@@ -32,7 +32,7 @@ const onLogin = async () => {
       const res = await reqLogin(ruleForm.value)
       // console.log(ruleForm.value)
       if (res && res.code == 0) {
-        useUserStoreHook.loginByUsername(ruleForm.value).then(res => {
+        useUserStoreHook().loginByUsername(ruleForm.value).then(res => {
           if (res.code == 0) {
             router.replace({path: redirect.value || '/'})
             ElMessage({
