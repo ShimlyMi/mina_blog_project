@@ -120,7 +120,7 @@ class UserController {
     async getUserInfoById(ctx) {
         try {
             if (ctx.params.id) {
-                if (ctx.params.id == 76743) {
+                if (ctx.params.id == 1) {
                     ctx.body = {
                         code: 0,
                         message: "获取用户信息成功",

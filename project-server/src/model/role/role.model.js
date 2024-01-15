@@ -2,32 +2,41 @@ const {DataType, DataTypes} = require("sequelize")
 const seq = require("../../db/seq")
 const moment = require("moment/moment")
 
-const Menu = seq.define('yz_menu',
+const Role = seq.define('yz_role',
     {
-        /** 菜单名称 */
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            comment: "菜单ID 唯一"
-        },
-        menu_name: {
+            comment: "角色ID 唯一",
+            require: true
+        }, // 主键，自增
+        /** 菜单名称 */
+        role_name: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
-            comment: "菜单名称 唯一"
+            comment: "角色名称 唯一",
+            require: true
         },
-        menu_type: {
+        role_logotype: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            comment: "角色标识",
+            require: true
+        },
+        role_type: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 2,
-            comment: "菜单类型 1 是超级管理员菜单 2 是 普通用户菜单"
+            defaultValue: 3,
+            comment: "1 为管理员 2 为普通用户 3 为游客",
+            require: true
         },
-        // menu_url: {
-        //     type: DataTypes.STRING,
-        //     allowNull: false,
-        //     comment: "接口路径",
-        // },
+        remark: {
+            type: DataTypes.STRING,
+            comment: "备注",
+            require: true
+        },
         createdAt: {
             type: DataTypes.DATE,
             get() {
@@ -47,7 +56,7 @@ const Menu = seq.define('yz_menu',
     }
 )
 // 强制同步数据库 表创建完之后 要注释掉
-// Menu.sync({force: true})
+// Role.sync({force: true})
 // console.log("User模型同步成功");
 
-module.exports = Menu
+module.exports = Role

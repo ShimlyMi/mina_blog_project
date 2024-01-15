@@ -10,6 +10,12 @@ const User = seq.define('yz_user', {
     /*
      * id 会被 sequelize 自动创建
      */
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        comment: "用户ID 唯一"
+    },
     // 用户名
     user_name: {
         type: DataTypes.STRING,
@@ -22,12 +28,12 @@ const User = seq.define('yz_user', {
         allowNull: false,
         comment: "密码",
     },
-    role: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 2,
-        comment: "用户角色 1 管理员 2 普通用户",
-    },
+    // role: {
+    //     type: DataTypes.INTEGER,
+    //     allowNull: false,
+    //     defaultValue: 2,
+    //     comment: "用户角色 1 管理员 2 普通用户",
+    // },
     nick_name: {
         type: DataTypes.STRING,
         allowNull: true,

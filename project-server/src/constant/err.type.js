@@ -51,7 +51,18 @@ module.exports = {
     },
     hasSuperAminPermission: {
       code: '10104',
-      message: "管理员信息可通过配置修改"
+        message: "管理员信息可通过配置修改",
+        result: ""
+    },
+    roleCreateError: {
+        code: '10111',
+        message: '角色创建失败',
+        result: ''
+    },
+    roleAlreadyExited: {
+        code: '10112',
+        message: '角色已经存在',
+        result: ''
     },
     fileUploadError: {
         code: '10201',
