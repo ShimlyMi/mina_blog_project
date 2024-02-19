@@ -3,7 +3,7 @@ const seq = require("../../db/seq")
 var moment = require('moment')
 
 const Photo = seq.define(
-    "yz_photo",
+    "mi_photo",
     {
         album_id: {
             type: DataTypes.INTEGER,

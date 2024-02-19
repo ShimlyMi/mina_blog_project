@@ -31,16 +31,5 @@ const UsersRole = seq.define('yz_users_role',
     }
 )
 
-// 用belongsToMany指定多对多关联关系，并指定外键
-User.belongsToMany(Role, {
-    through: UsersRole,
-    foreignKey: 'users_id',
-    otherKey: 'role_id',
-})
-Role.belongsToMany(User, {
-    through: UsersRole,
-    foreignKey: 'role_id',
-    otherKey: 'users_id',
-})
 
 module.exports = UsersRole

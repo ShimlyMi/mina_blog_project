@@ -1,0 +1,12 @@
+@import "reset";
+@import "transition";
+@import "tailwind.css";
+@import "element-plus";
+@import "variables";
+@import "sidebar";
+
+/* 自定义全局 CssVar */
+:root {
+  --mina-transition-duration: 0.016s;
+}
+

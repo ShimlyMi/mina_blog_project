@@ -1,54 +1,59 @@
-import router from "@/router";
-import {useUserStoreHook} from "@/stores";
+import router from './router'
+import store from './store'
+import {Message} from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-// import getPageTitle from "@/get-page-title";
-import {getToken} from "@/utils/auth";
-import {storeToRefs} from 'pinia'
-import {ElMessage} from "element-plus";
+import {getToken} from '@/utils/auth' // get token from cookie
+import getPageTitle from '@/utils/get-page-title'
 
+NProgress.configure({showSpinner: false}) // NProgress Configuration
 
-// 白名单
-const whiteList = ['/login', '/register']
+const whiteList = ['/login'] // no redirect whitelist
 
-/** 路由前置守卫 */
 router.beforeEach(async (to, from, next) => {
   // start progress bar
-  // NProgress.start()
+  NProgress.start()
 
-  // document.title = getPageTitle(to.meta.title)
+  // set page title
+  document.title = getPageTitle(to.meta.title)
 
+  // determine whether the user has logged in
   const hasToken = getToken()
-  console.log(hasToken)
+
   if (hasToken) {
     if (to.path === '/login') {
+      // if is logged in, redirect to the home page
       next({path: '/'})
-      // NProgress.done()
+      NProgress.done()
     } else {
-      const hasGetUserInfo = storeToRefs(useUserStoreHook().user_name)
+      const hasGetUserInfo = store.getters.name
       if (hasGetUserInfo) {
         next()
       } else {
         try {
-          await useUserStoreHook.saveUserInfo()
+          // get user info
+          await store.dispatch('user/getInfo')
+
           next()
-        } catch (err) {
-          await useUserStoreHook.resetToken
-          ElMessage({
-            type: 'error',
-            message: err || 'Has Error'
-          })
+        } catch (error) {
+          // remove token and go to login page to re-login
+          await store.dispatch('user/resetToken')
+          Message.error(error || 'Has Error')
           next(`/login?redirect=${to.path}`)
-          // NProgress.done()
+          NProgress.done()
         }
       }
     }
   } else {
+    /* has no token*/
+
     if (whiteList.indexOf(to.path) !== -1) {
+      // in the free login whitelist, go directly
       next()
     } else {
+      // other pages that do not have permission to access are redirected to the login page.
       next(`/login?redirect=${to.path}`)
-      // NProgress.done()
+      NProgress.done()
     }
   }
 })

@@ -3,7 +3,7 @@ const seq = require("../../db/seq")
 var moment = require('moment')
 
 const Album = seq.define(
-    "yz_album",
+    "mi_album",
     {
         album_name: {
             type: DataTypes.STRING(26),

@@ -1,4 +1,4 @@
-import http from "@/utils/request"
+import http from '@/utils/request'
 
 /** 用户登录 */
 export const reqLogin = (data) => {
@@ -19,20 +19,20 @@ export const reqRegister = (data) => {
         method: 'post',
         data: data
     })
-};
+}
 
 export const getUserInfo = () => {
   return http({
     url: '/api/users/info/',
-    method: 'get',
-  });
+      method: 'get'
+  })
 }
 
 /** 获取当前登录人的信息 */
 export const getUserInfoById = (id) => {
     return http({
         url: '/api/users/info/' + id,
-        method: 'get',
-    });
-};
+        method: 'get'
+    })
+}
 

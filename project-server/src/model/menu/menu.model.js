@@ -2,7 +2,7 @@ const {DataType, DataTypes} = require("sequelize")
 const seq = require("../../db/seq")
 const moment = require("moment/moment")
 
-const Menu = seq.define('yz_menu',
+const Menu = seq.define('mi_menu',
     {
         /** 菜单名称 */
         id: {

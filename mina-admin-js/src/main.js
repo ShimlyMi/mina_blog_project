@@ -1,30 +1,43 @@
-import {createApp} from 'vue'
+import Vue from 'vue'
 
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
-import App from './App.vue'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+
+import '@/styles/index.scss' // global css
+
+import App from './App'
+import store from './store'
 import router from './router'
-import store from "@/stores";
 
-// 引入重置样式
-import "./styles/reset.scss";
-import 'normalize.css';
-// 导入公共样式
-import "./styles/index.scss";
-import "./assets/css/iconfont/iconfont.css";
-// 一定要在main.js中导入tailwind.css，防止vite每次hmr都会请求src/style/index.scss整体css文件导致热更新慢的问题
-import "./styles/tailwind.css";
+import '@/icons' // icon
+import '@/permission' // permission control
 
-import "element-plus/dist/index.css";
+/**
+ * If you don't want to use mock-server
+ * you want to use MockJs for mock api
+ * you can execute: mockXHR()
+ *
+ * Currently MockJs will be used in the production environment,
+ * please remove it before going online ! ! !
+ */
+// if (process.env.NODE_ENV === 'production') {
+//   const { mockXHR } = require('../mock')
+//   mockXHR()
+// }
 
-import "@/permission"
+// set ElementUI lang to EN
+Vue.use(ElementUI, {locale})
+// 如果想要中文版 element-ui，按如下方式声明
+// Vue.use(ElementUI)
 
-const app = createApp(App)
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-    app.component(key, component)
-}
+Vue.config.productionTip = false
 
-app.use(store)
-app.use(router)
-
-app.mount('#app')
+new Vue({
+  el: '#app',
+  router,
+  store,
+  render: h => h(App)
+})

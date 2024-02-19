@@ -5,7 +5,7 @@ const seq = require("../../db/seq")
 const moment = require("moment");
 
 // 创建模型 (所对应的数据表 yz_users)
-const Article = seq.define('yz_article', {
+const Article = seq.define('mi_article', {
         // 编写表的字段
         article_title: {
             type: DataTypes.STRING,
