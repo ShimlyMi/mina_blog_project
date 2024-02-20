@@ -1,16 +1,10 @@
-module.exports = {
-
-    title: 'Vue Admin Template',
-
+const defaultSettings = {
+    title: '米娜小屋后台管理',
     /**
      * @type {boolean} true | false
-     * @description Whether fix the header
+     * @description Whether show the logo in sidebar
      */
-    fixedHeader: false,
-
-  /**
-   * @type {boolean} true | false
-   * @description Whether show the logo in sidebar
-   */
-  sidebarLogo: false
+    sidebarLogo: false
 }
+
+export default defaultSettings

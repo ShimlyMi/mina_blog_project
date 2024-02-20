@@ -1,85 +1,120 @@
-import axios from 'axios'
-import {MessageBox, Message} from 'element-ui'
-import store from '@/store'
-import {getToken} from '@/utils/auth'
+import axios from "axios";
+import {h} from "vue";
+import {useUserStore} from '@/stores/modules/user';
+import {ElNotification} from "element-plus";
+import router from "@/router/index.js";
 
-// create an axios instance
-const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
-})
-
-// request interceptor
-service.interceptors.request.use(
+const http = axios.create({
+    timeout: 10000,
+    withCredentials: true,
+    headers: {
+        // 设置后端需要的传参类型
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+    },
+    baseURL: import.meta.env.VITE_APP_BASE_URL
+});
+/** 请求拦截器 */
+http.interceptors.request.use(
     config => {
-      // do something before request is sent
-
-      if (store.getters.token) {
-        // let each request carry token
-        // ['X-Token'] is a custom headers key
-        // please modify it according to the actual situation
-        config.headers['X-Token'] = getToken()
-      }
-      return config
-    },
-    error => {
-      // do something with request error
-      console.log(error) // for debug
-      return Promise.reject(error)
-    }
-)
-
-// response interceptor
-service.interceptors.response.use(
-    /**
-     * If you want to get http information such as headers or status
-     * Please return  response => response
-     */
-
-    /**
-     * Determine the request status by custom code
-     * Here is just an example
-     * You can also judge the status by HTTP Status Code
-     */
-    response => {
-      const res = response.data
-
-      // if the custom code is not 20000, it is judged as an error.
-      if (res.code !== 20000) {
-        Message({
-          message: res.message || 'Error',
-          type: 'error',
-          duration: 5 * 1000
-        })
-
-        // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-        if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-          // to re-login
-          MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-            confirmButtonText: 'Re-Login',
-            cancelButtonText: 'Cancel',
-            type: 'warning'
-          }).then(() => {
-            store.dispatch('user/resetToken').then(() => {
-              location.reload()
-            })
-          })
+        const userStore = useUserStore();
+        // userStore.getToken error
+        if (userStore.token) {
+            config.headers.Authorization = userStore.token
         }
-        return Promise.reject(new Error(res.message || 'Error'))
-      } else {
-        return res
-      }
+        // 在发送请求之前做什么
+        return config;
     },
     error => {
-      console.log('err' + error) // for debug
-      Message({
-        message: error.message,
-        type: 'error',
-        duration: 5 * 1000
-      })
-      return Promise.reject(error)
+        // 对请求错误做些什么
+        console.log(error);
+        return Promise.reject(error);
     }
-)
+);
 
-export default service
+/** 响应拦截器 */
+http.interceptors.response.use(
+    (response) => {
+        /** 对响应数据做些什么 */
+        const dataAxios = response.data;
+        const {code, message} = dataAxios;
+        switch (code + "") {
+            // 给用户一点提示
+            case '100':
+                ElNotification({
+                    offset: 60,
+                    title: "温馨提示",
+                    message: message
+                });
+                break;
+        }
+        return dataAxios;
+    },
+    (error) => {
+        // 超出 2xx 范围的状态码都会触发该函数。
+        // 对响应错误做点什么
+        const {status, data} = error.response
+        switch (status + "") {
+            case "401":
+                // 403 表示用户未登录，或者token过期了
+                ElNotification({
+                    offset: 60,
+                    title: "错误提示",
+                    message: data.message || "登录过期"
+                });
+                // 进行重新登录
+                // eslint-disable-next-line no-case-declarations
+                const userStore = useUserStore();
+                userStore.clearUserInfo();
+                router.push("/login");
+                break;
+            case "403":
+                // 403 表示权限不足
+                ElNotification({
+                    offset: 60,
+                    title: "错误提示",
+                    message: h(
+                        "div",
+                        {style: "color: #f56c6c; font-weight: 600;"},
+                        data.message || "权限不足"
+                    ),
+                });
+                break;
+            case "404":
+                ElNotification({
+                    offset: 60,
+                    title: "错误提示",
+                    message: h("div", {style: "color: #f56c6c; font-weight: 600;"}, "接口没有找到"),
+                });
+                break;
+            case "408":
+                // 205 表示给用户一些提示
+                ElNotification({
+                    offset: 60,
+                    title: "温馨提示",
+                    message: h(
+                        "div",
+                        {style: "color: #e6c081; font-weight: 600;"},
+                        data.message || "服务端错误"
+                    ),
+                });
+                break;
+            case "500":
+                ElNotification({
+                    offset: 60,
+                    title: "错误提示",
+                    message: h(
+                        "div",
+                        {style: "color: #f56c6c; font-weight: 600;"},
+                        data.message || "服务端错误"
+                    ),
+                });
+                break;
+            default:
+                return;
+        }
+        return Promise.reject(error);
+    }
+);
+
+export default http;
