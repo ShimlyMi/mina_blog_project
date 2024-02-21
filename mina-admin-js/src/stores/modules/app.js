@@ -1,48 +1,63 @@
-import Cookies from 'js-cookie'
+import {store} from '@/stores'
+import {defineStore} from 'pinia'
+import {storageLocal, deviceDetection} from '@pureadmin/utils'
+import {getConfig} from '@/config'
 
-const state = {
-    sidebar: {
-        opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
-        withoutAnimation: false
-    },
-    device: 'desktop'
-}
-
-const mutations = {
-    TOGGLE_SIDEBAR: state => {
-        state.sidebar.opened = !state.sidebar.opened
-        state.sidebar.withoutAnimation = false
-        if (state.sidebar.opened) {
-            Cookies.set('sidebarStatus', 1)
-        } else {
-            Cookies.set('sidebarStatus', 0)
-        }
-    },
-    CLOSE_SIDEBAR: (state, withoutAnimation) => {
-        Cookies.set('sidebarStatus', 0)
-        state.sidebar.opened = false
-        state.sidebar.withoutAnimation = withoutAnimation
-    },
-    TOGGLE_DEVICE: (state, device) => {
-        state.device = device
+export const useAppStore = defineStore({
+  id: 'mina-app',
+  state: () => {
+    return {
+      sidebar: {
+        opened: storageLocal().getItem("responsive-layout")?.sidebarStatus ?? getConfig().SidebarStatus,
+        withoutAnimation: false,
+        isClickCollapse: false,
+      },
+      // 这里的layout 用于 监听容器拖拉后恢复对应的导航模式
+      layout: storageLocal().getItem("responsive-layout")?.layout ?? getConfig().Layout,
+      device: deviceDetection() ? "mobile" : "desktop"
     }
-}
-
-const actions = {
-    toggleSideBar({commit}) {
-        commit('TOGGLE_SIDEBAR')
+  },
+  getters: {
+    // 获取 sidebar 状态
+    getSidebarStatus() {
+      return this.sidebar.opened
     },
-    closeSideBar({commit}, {withoutAnimation}) {
-        commit('CLOSE_SIDEBAR', withoutAnimation)
-    },
-    toggleDevice({commit}, device) {
-        commit('TOGGLE_DEVICE', device)
+    // 获取 设备
+    getDevice() {
+      return this.device
     }
-}
+  },
+  actions: {
+    TOGGLE_SIDEBAR(opened, resize) {
+      const layout = storageLocal().getItem("responsive-layout")
+      if (opened && resize) {
+        this.sidebar.withoutAnimation = true
+        this.sidebar.opened = true
+        layout.sidebarStatus = true
+      } else if (!opened && resize) {
+        this.sidebar.withoutAnimation = true
+        this.sidebar.opened = false
+        layout.sidebarStatus = false
+      } else if (!opened && !resize) {
+        this.sidebar.withoutAnimation = false
+        this.sidebar.opened = !this.sidebar.opened
+        this.sidebar.isClickCollapse = !this.sidebar.isClickCollapse
+        layout.sidebarStatus = this.sidebar.opened
+      }
+      storageLocal().setItem("responsive-layout", layout)
+    },
+    async toggleSideBar(opened, resize) {
+      await this.TOGGLE_SIDEBAR(opened, resize)
+    },
+    toggleDevice(device) {
+      this.device = device
+    },
+    setLayout(layout) {
+      this.layout = layout
+    }
+  }
+})
 
-export default {
-    namespaced: true,
-    state,
-    mutations,
-    actions
+export function useAppStoreHook() {
+  return useAppStore(store)
 }

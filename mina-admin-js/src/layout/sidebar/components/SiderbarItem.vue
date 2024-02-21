@@ -57,7 +57,6 @@ function resolvePath(routePath) {
 </script>
 
 <template>
-  <div v-if="!props.item.hidden">
     <template
         v-if="hasOneShowingChild(props.item.children.item, props.item) && (!onlyOneChild.children || onlyOneChild.noShowingChildren)">
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
@@ -77,7 +76,6 @@ function resolvePath(routePath) {
           :is-nest="true" :item="child" class="nest-menu"
       />
     </el-sub-menu>
-  </div>
 </template>
 
 <style lang="scss" scoped>
