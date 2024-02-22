@@ -1,32 +1,58 @@
-<script setup>
-import {bg, singIn, logo} from '../login/utils/static'
-import {ref, reactive} from "vue";
+<script lang="ts" name="Register" setup>
+import {useI18n} from "vue-i18n";
+import Motion from "../login/utils/motion";
 import {useRouter} from "vue-router";
-import {reqRegister} from "@/api/user";
-import {ElMessage} from "element-plus";
+import {message} from "@/utils/message";
+import {useNav} from "@/layout/hooks/useNav";
+import type {FormInstance} from "element-plus";
+import {useLayout} from "@/layout/hooks/useLayout";
+import {bg, avatar, signIn} from "../login/utils/static";
+import {useRenderIcon} from "@/components/ReIcon/src/hooks";
+import {ref, reactive, toRaw, onMounted, onBeforeUnmount} from "vue";
+import {useTranslationLang} from "@/layout/hooks/useTranslationLang";
+import {useDataThemeChange} from "@/layout/hooks/useDataThemeChange";
 
-const router = useRouter()
-const loading = ref(false)
+import dayIcon from "@/assets/svg/day.svg?component";
+import darkIcon from "@/assets/svg/dark.svg?component";
+import globalization from "@/assets/svg/globalization.svg?component";
+import Lock from "@iconify-icons/ri/lock-fill";
+import Check from "@iconify-icons/ep/check";
+import User from "@iconify-icons/ri/user-3-fill";
 
-const ruleFormRef = ref()
+import {registerUser} from "@/api/user";
+
+const router = useRouter();
+const loading = ref(false);
+const ruleFormRef = ref<FormInstance>();
+
+const {initStorage} = useLayout();
+initStorage();
+
+const {t} = useI18n();
+const {dataTheme, dataThemeChange} = useDataThemeChange();
+dataThemeChange();
+
+const {title, getDropdownItemStyle, getDropdownItemClass} = useNav();
+
+const {locale, translationCh, translationEn} = useTranslationLang();
+
 const ruleForm = reactive({
   user_name: "",
-  password1: "", // 密码
-  password2: "", // 确认密码
-  nick_name: "" // 昵称
-})
+  password1: "",
+  password2: "",
+  nick_name: ""
+});
 const REGEXP_PWD =
-    /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)]|[()])+$)(?!^.*[\u4E00-\u9FA5].*$)([^(0-9a-zA-Z)]|[()]|[a-z]|[A-Z]|[0-9]){6,18}$/;
+  /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)]|[()])+$)(?!^.*[\u4E00-\u9FA5].*$)([^(0-9a-zA-Z)]|[()]|[a-z]|[A-Z]|[0-9]){6,18}$/;
 
-/** 注册校验 */
 const registerRules = reactive({
-  user_name: [
+  username: [
     {
       validator: (rule, value, callback) => {
         if (value === "") {
           callback(new Error("请输入用户名"));
         } else if (value.length < 4 || value.length > 16) {
-          callback(new Error("用户名称程度应该在5-16之间"));
+          callback(new Error("用户名程度应该在5-16之间"));
         } else {
           callback();
         }
@@ -40,7 +66,9 @@ const registerRules = reactive({
         if (value === "") {
           callback(new Error("请输入密码"));
         } else if (!REGEXP_PWD.test(value)) {
-          callback(new Error("密码格式应为6-18位数字、字母、符号的任意两种组合"));
+          callback(
+            new Error("密码格式应为6-18位数字、字母、符号的任意两种组合")
+          );
         } else {
           callback();
         }
@@ -52,7 +80,7 @@ const registerRules = reactive({
     {
       validator: (rule, value, callback) => {
         if (value === "") {
-          callback(new Error("请输入密码"));
+          callback(new Error("请输入确认密码"));
         } else if (ruleForm.password1 != ruleForm.password2) {
           callback(new Error("两次密码不一致"));
         } else {
@@ -62,95 +90,179 @@ const registerRules = reactive({
       trigger: "blur"
     }
   ]
-})
-
-const onRegister = async () => {
-  loading.value = true
-  await ruleFormRef.value.validate(async (valid) => {
+});
+const register = async (formEl: FormInstance | undefined) => {
+  loading.value = true;
+  if (!formEl) return;
+  await formEl.validate(async (valid, fields) => {
     if (valid) {
-      console.log(true)
-      // 注册用户
       const registerObj = {
         user_name: ruleForm.user_name,
         password: ruleForm.password1,
         nick_name: ruleForm.nick_name
-      }
-      let res = await reqRegister(registerObj)
+      };
+      const res = await registerUser(registerObj);
       if (res.code == 0) {
-        const {user_name} = res.result
-        ElMessage({
-          type: 'success',
-          message: '注册成功,请牢记密码哦~',
-        })
-        await router.push({path: "/login", query: {user_name}})
+        const {user_name} = res.result;
+        console.log(res);
+        message("注册成功，请牢记账号密码哦~", {type: "success"});
+        router.push({path: "/login", query: {user_name}});
       } else {
-        loading.value = false
+        loading.value = false;
       }
     } else {
-      loading.value = false
-      console.log(false)
+      loading.value = false;
+      return fields;
     }
+  });
+};
 
-  })
+/** 使用公共函数，避免`removeEventListener`失效 */
+function onkeypress({code}: KeyboardEvent) {
+  if (code === "Enter") {
+    register(ruleFormRef.value);
+  }
 }
 
 const goLogin = () => {
   router.push("/login");
 };
+
+onMounted(() => {
+  window.document.addEventListener("keypress", onkeypress);
+});
+
+onBeforeUnmount(() => {
+  window.document.removeEventListener("keypress", onkeypress);
+});
 </script>
 
 <template>
-  <div class="mi-login">
-    <img :src="bg" class="wave">
-    <div class="mi-login__container">
+  <div class="select-none">
+    <img :src="bg" class="wave"/>
+    <div class="flex-c absolute right-5 top-3">
+      <!-- 主题 -->
+      <el-switch
+        v-model="dataTheme"
+        :active-icon="dayIcon"
+        :inactive-icon="darkIcon"
+        inline-prompt
+        @change="dataThemeChange"
+      />
+      <!-- 国际化 -->
+      <el-dropdown trigger="click">
+        <globalization
+          class="hover:text-primary hover:!bg-[transparent] w-[20px] h-[20px] ml-1.5 cursor-pointer outline-none duration-300"
+        />
+        <template #dropdown>
+          <el-dropdown-menu class="translation">
+            <el-dropdown-item
+              :class="['dark:!text-white', getDropdownItemClass(locale, 'zh')]"
+              :style="getDropdownItemStyle(locale, 'zh')"
+              @click="translationCh"
+            >
+              <IconifyIconOffline
+                v-show="locale === 'zh'"
+                :icon="Check"
+                class="check-zh"
+              />
+              简体中文
+            </el-dropdown-item>
+            <el-dropdown-item
+              :class="['dark:!text-white', getDropdownItemClass(locale, 'en')]"
+              :style="getDropdownItemStyle(locale, 'en')"
+              @click="translationEn"
+            >
+              <span v-show="locale === 'en'" class="check-en">
+                <IconifyIconOffline :icon="Check"/>
+              </span>
+              English
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+    </div>
+
+    <div class="login-container">
       <div class="img">
-        <img :src="singIn">
+        <component :is="toRaw(signIn)"/>
       </div>
       <div class="login-box">
         <div class="login-form">
-          <div class="title">
-            <img :src="logo" class="logo">
-            <h2 class="outline-none">米娜的小屋后台</h2>
+          <div class="topInfo">
+            <avatar class="avatar"/>
+            <Motion>
+              <h2 class="outline-none">{{ title }}</h2>
+            </Motion>
           </div>
-          <el-form ref="ruleFormRef" :model="ruleForm" :rules="registerRules">
-            <el-form-item prop="user_name">
-              <el-input v-model="ruleForm.user_name" clearable placeholder="账号">
-                <template #prefix>
-                  <el-icon>
-                    <UserFilled/>
-                  </el-icon>
-                </template>
-              </el-input>
-            </el-form-item>
-            <el-form-item prop="password">
-              <el-input v-model="ruleForm.password1" clearable placeholder="密码" show-password>
-                <template #prefix>
-                  <el-icon>
-                    <Lock/>
-                  </el-icon>
-                </template>
-              </el-input>
-            </el-form-item>
-            <el-form-item prop="password">
-              <el-input v-model="ruleForm.password2" clearable placeholder="确认密码" show-password>
-                <template #prefix>
-                  <el-icon>
-                    <Lock/>
-                  </el-icon>
-                </template>
-              </el-input>
-            </el-form-item>
-            <el-form-item prop="nick_name">
-              <el-input v-model="ruleForm.nick_name" clearable placeholder="昵称">
-                <template #prefix>
-                  <el-icon>
-                    <UserFilled/>
-                  </el-icon>
-                </template>
-              </el-input>
-            </el-form-item>
-            <el-button class="loginBtn" size="default" type="primary" @click="onRegister()">立即注册</el-button>
-            <el-button class="loginBtn" size="default" type="primary" @click="goLogin()">返回登录</el-button>
+
+          <el-form
+            ref="ruleFormRef"
+            :model="ruleForm"
+            :rules="registerRules"
+            size="large"
+          >
+            <Motion :delay="100">
+              <el-form-item prop="user_name">
+                <el-input
+                  v-model="ruleForm.user_name"
+                  :placeholder="t('login.username')"
+                  :prefix-icon="useRenderIcon(User)"
+                  clearable
+                />
+              </el-form-item>
+            </Motion>
+
+            <Motion :delay="150">
+              <el-form-item prop="password1">
+                <el-input
+                  v-model="ruleForm.password1"
+                  :placeholder="t('login.password')"
+                  :prefix-icon="useRenderIcon(Lock)"
+                  clearable
+                  show-password
+                />
+              </el-form-item>
+            </Motion>
+            <Motion :delay="150">
+              <el-form-item prop="password2">
+                <el-input
+                  v-model="ruleForm.password2"
+                  :placeholder="t('login.password')"
+                  :prefix-icon="useRenderIcon(Lock)"
+                  clearable
+                  show-password
+                />
+              </el-form-item>
+            </Motion>
+            <Motion :delay="150">
+              <el-form-item prop="nickname">
+                <el-input
+                  v-model="ruleForm.nick_name"
+                  :prefix-icon="useRenderIcon(User)"
+                  clearable
+                  placeholder="昵称"
+                />
+              </el-form-item>
+            </Motion>
+            <Motion :delay="250" class="register">
+              <div>
+                已有账号？<span class="line" @click="goLogin">
+                  点击此处去登录
+                </span>
+              </div>
+            </Motion>
+            <Motion :delay="250">
+              <el-button
+                :loading="loading"
+                class="w-full mt-4"
+                size="default"
+                type="primary"
+                @click="register(ruleFormRef)"
+              >
+                立即注册
+              </el-button>
+            </Motion>
           </el-form>
         </div>
       </div>
@@ -159,7 +271,7 @@ const goLogin = () => {
 </template>
 
 <style scoped>
-@import url("@/styles/login.css");
+@import url("@/style/login.css");
 </style>
 
 <style lang="scss" scoped>
@@ -167,30 +279,29 @@ const goLogin = () => {
   padding: 0;
 }
 
-:deep(.el-input__wrapper) {
-  border-radius: 20px;
-  height: 2.5rem;
+.register {
+  text-align: right;
+  font-size: 0.8em;
+  color: #676767;
 }
-
-.title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 360px;
-  height: 50px;
-  margin-bottom: 20px;
-}
-
-
 .line {
   cursor: pointer;
   text-decoration: underline;
 }
 
-.loginBtn {
-  width: 40%;
-  border-radius: 20px;
-  margin-top: 20px;
+.translation {
+  ::v-deep(.el-dropdown-menu__item) {
+    padding: 5px 40px;
+  }
+
+  .check-zh {
+    position: absolute;
+    left: 20px;
+  }
+
+  .check-en {
+    position: absolute;
+    left: 20px;
+  }
 }
 </style>
-
