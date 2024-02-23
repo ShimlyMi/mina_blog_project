@@ -2,7 +2,7 @@ import router from "@/router";
 import {useUserStoreHook} from "@/stores";
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-// import getPageTitle from "@/get-page-title";
+import getPageTitle from "@/get-page-title";
 import {getToken} from "@/utils/auth";
 import {storeToRefs} from 'pinia'
 import {ElMessage} from "element-plus";
@@ -16,10 +16,10 @@ router.beforeEach(async (to, from, next) => {
     // start progress bar
     // NProgress.start()
 
-    // document.title = getPageTitle(to.meta.title)
+  document.title = getPageTitle(to.meta.title)
 
     const hasToken = getToken()
-    console.log(hasToken)
+  // console.log(hasToken)
     if (hasToken) {
         if (to.path === '/login') {
             next({path: '/'})

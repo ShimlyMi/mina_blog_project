@@ -8,6 +8,10 @@ import Axios, {
 export type resultType = {
   accessToken?: string;
 };
+export type responseType = {
+  code?: number;
+  message?: string;
+};
 
 export type RequestMethods = Extract<
   Method,
@@ -16,6 +20,10 @@ export type RequestMethods = Extract<
 
 export interface PureHttpError extends AxiosError {
   isCancelRequest?: boolean;
+  response?: {
+    data?: responseType;
+    status?: string;
+  }
 }
 
 export interface PureHttpResponse extends AxiosResponse {

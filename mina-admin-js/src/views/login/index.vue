@@ -1,21 +1,21 @@
 <script lang="ts" name="Login" setup>
-import {useI18n} from "vue-i18n";
+import { useI18n } from "vue-i18n";
 import Motion from "./utils/motion";
-import {useRouter, useRoute} from "vue-router";
-import {message} from "@/utils/message";
-import {loginRules} from "./utils/rule";
-import {useNav} from "@/layout/hooks/useNav";
-import type {FormInstance} from "element-plus";
-import {$t, transformI18n} from "@/plugins/i18n";
-import {useLayout} from "@/layout/hooks/useLayout";
-import {useUserStoreHook} from "@/store/modules/user";
-import {initRouter} from "@/router/utils";
-import {bg, avatar, signUp} from "./utils/static";
-import {useRenderIcon} from "@/components/ReIcon/src/hooks";
-import {ref, reactive, toRaw, onMounted, onBeforeUnmount} from "vue";
-import {useTranslationLang} from "@/layout/hooks/useTranslationLang";
-import {useDataThemeChange} from "@/layout/hooks/useDataThemeChange";
-import {storageLocal} from "@pureadmin/utils";
+import { useRouter, useRoute } from "vue-router";
+import { message } from "@/utils/message";
+import { loginRules } from "./utils/rule";
+import { useNav } from "@/layout/hooks/useNav";
+import type { FormInstance } from "element-plus";
+import { $t, transformI18n } from "@/plugins/i18n";
+import { useLayout } from "@/layout/hooks/useLayout";
+import { useUserStoreHook } from "@/store/modules/user";
+import { initRouter } from "@/router/utils";
+import { bg, avatar, signUp } from "./utils/static";
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { ref, reactive, toRaw, onMounted, onBeforeUnmount } from "vue";
+import { useTranslationLang } from "@/layout/hooks/useTranslationLang";
+import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
+import { storageLocal } from "@pureadmin/utils";
 
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
@@ -24,7 +24,7 @@ import Lock from "@iconify-icons/ri/lock-fill";
 import Check from "@iconify-icons/ep/check";
 import User from "@iconify-icons/ri/user-3-fill";
 
-import {getLogin} from "@/api/user";
+import { getLogin } from "@/api/user";
 
 type RuleFormType = {
   user_name?: string;
@@ -34,18 +34,18 @@ const router = useRouter();
 const loading = ref(false);
 const ruleFormRef = ref<FormInstance>();
 
-const {initStorage} = useLayout();
+const { initStorage } = useLayout();
 initStorage();
 
-const {t} = useI18n();
-const {dataTheme, dataThemeChange} = useDataThemeChange();
+const { t } = useI18n();
+const { dataTheme, dataThemeChange } = useDataThemeChange();
 dataThemeChange();
 
-const {title, getDropdownItemStyle, getDropdownItemClass} = useNav();
+const { title, getDropdownItemStyle, getDropdownItemClass } = useNav();
 
-const {locale, translationCh, translationEn} = useTranslationLang();
+const { locale, translationCh, translationEn } = useTranslationLang();
 
-const ruleForm = reactive<RuleFormType>({
+const ruleForm = ref<RuleFormType>({
   user_name: "",
   password: ""
 });
@@ -58,20 +58,21 @@ const onLogin = async (formEl: FormInstance | undefined) => {
   await formEl.validate(async (valid, fields) => {
     if (valid) {
       if (isRememberMe.value) {
-        storageLocal().setItem("loginInfo", ruleForm);
+        storageLocal().setItem("loginInfo", ruleForm.value);
       } else {
         storageLocal().removeItem("loginInfo");
       }
-      const res = await getLogin(ruleForm);
+      const res = await getLogin(ruleForm.value);
+      console.log(ruleForm.value);
       if (res.code == 0) {
         useUserStoreHook()
-          .loginByUsername(ruleForm)
+          .loginByUsername(ruleForm.value)
           .then(res => {
             if (res.code == 0) {
               // 获取后端路由
               initRouter().then(() => {
                 router.push("/");
-                message("登录成功", {type: "success"});
+                message("登录成功", { type: "success" });
               });
             }
           });
@@ -86,7 +87,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
 };
 
 /** 使用公共函数，避免`removeEventListener`失效 */
-function onkeypress({code}: KeyboardEvent) {
+function onkeypress({ code }: KeyboardEvent) {
   if (code === "Enter") {
     onLogin(ruleFormRef.value);
   }
@@ -117,7 +118,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="select-none">
-    <img :src="bg" class="wave"/>
+    <img :src="bg" class="wave" />
     <div class="flex-c absolute right-5 top-3">
       <!-- 主题 -->
       <el-switch
@@ -152,7 +153,7 @@ onBeforeUnmount(() => {
               @click="translationEn"
             >
               <span v-show="locale === 'en'" class="check-en">
-                <IconifyIconOffline :icon="Check"/>
+                <IconifyIconOffline :icon="Check" />
               </span>
               English
             </el-dropdown-item>
@@ -163,12 +164,12 @@ onBeforeUnmount(() => {
 
     <div class="login-container">
       <div class="img">
-        <component :is="toRaw(signUp)"/>
+        <component :is="toRaw(signUp)" />
       </div>
       <div class="login-box">
         <div class="login-form">
           <div class="topInfo">
-            <avatar class="avatar"/>
+            <avatar class="avatar" />
             <Motion>
               <h2 class="outline-none">{{ title }}</h2>
             </Motion>

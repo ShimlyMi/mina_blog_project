@@ -1,16 +1,16 @@
 <script lang="ts" name="Register" setup>
-import {useI18n} from "vue-i18n";
+import { useI18n } from "vue-i18n";
 import Motion from "../login/utils/motion";
-import {useRouter} from "vue-router";
-import {message} from "@/utils/message";
-import {useNav} from "@/layout/hooks/useNav";
-import type {FormInstance} from "element-plus";
-import {useLayout} from "@/layout/hooks/useLayout";
-import {bg, avatar, signIn} from "../login/utils/static";
-import {useRenderIcon} from "@/components/ReIcon/src/hooks";
-import {ref, reactive, toRaw, onMounted, onBeforeUnmount} from "vue";
-import {useTranslationLang} from "@/layout/hooks/useTranslationLang";
-import {useDataThemeChange} from "@/layout/hooks/useDataThemeChange";
+import { useRouter } from "vue-router";
+import { message } from "@/utils/message";
+import { useNav } from "@/layout/hooks/useNav";
+import type { FormInstance } from "element-plus";
+import { useLayout } from "@/layout/hooks/useLayout";
+import { bg, avatar, signIn } from "../login/utils/static";
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { ref, reactive, toRaw, onMounted, onBeforeUnmount } from "vue";
+import { useTranslationLang } from "@/layout/hooks/useTranslationLang";
+import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
 
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
@@ -19,22 +19,22 @@ import Lock from "@iconify-icons/ri/lock-fill";
 import Check from "@iconify-icons/ep/check";
 import User from "@iconify-icons/ri/user-3-fill";
 
-import {registerUser} from "@/api/user";
+import { registerUser } from "@/api/user";
 
 const router = useRouter();
 const loading = ref(false);
 const ruleFormRef = ref<FormInstance>();
 
-const {initStorage} = useLayout();
+const { initStorage } = useLayout();
 initStorage();
 
-const {t} = useI18n();
-const {dataTheme, dataThemeChange} = useDataThemeChange();
+const { t } = useI18n();
+const { dataTheme, dataThemeChange } = useDataThemeChange();
 dataThemeChange();
 
-const {title, getDropdownItemStyle, getDropdownItemClass} = useNav();
+const { title, getDropdownItemStyle, getDropdownItemClass } = useNav();
 
-const {locale, translationCh, translationEn} = useTranslationLang();
+const { locale, translationCh, translationEn } = useTranslationLang();
 
 const ruleForm = reactive({
   user_name: "",
@@ -103,10 +103,10 @@ const register = async (formEl: FormInstance | undefined) => {
       };
       const res = await registerUser(registerObj);
       if (res.code == 0) {
-        const {user_name} = res.result;
-        console.log(res);
-        message("注册成功，请牢记账号密码哦~", {type: "success"});
-        router.push({path: "/login", query: {user_name}});
+        const { user_name } = res.result;
+        // console.log(res);
+        message("注册成功，请牢记账号密码哦~", { type: "success" });
+        router.push({ path: "/login", query: { user_name } });
       } else {
         loading.value = false;
       }
@@ -118,7 +118,7 @@ const register = async (formEl: FormInstance | undefined) => {
 };
 
 /** 使用公共函数，避免`removeEventListener`失效 */
-function onkeypress({code}: KeyboardEvent) {
+function onkeypress({ code }: KeyboardEvent) {
   if (code === "Enter") {
     register(ruleFormRef.value);
   }
@@ -139,7 +139,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="select-none">
-    <img :src="bg" class="wave"/>
+    <img :src="bg" class="wave" />
     <div class="flex-c absolute right-5 top-3">
       <!-- 主题 -->
       <el-switch
@@ -174,7 +174,7 @@ onBeforeUnmount(() => {
               @click="translationEn"
             >
               <span v-show="locale === 'en'" class="check-en">
-                <IconifyIconOffline :icon="Check"/>
+                <IconifyIconOffline :icon="Check" />
               </span>
               English
             </el-dropdown-item>
@@ -185,12 +185,12 @@ onBeforeUnmount(() => {
 
     <div class="login-container">
       <div class="img">
-        <component :is="toRaw(signIn)"/>
+        <component :is="toRaw(signIn)" />
       </div>
       <div class="login-box">
         <div class="login-form">
           <div class="topInfo">
-            <avatar class="avatar"/>
+            <avatar class="avatar" />
             <Motion>
               <h2 class="outline-none">{{ title }}</h2>
             </Motion>

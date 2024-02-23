@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import path from "path";
-import {getConfig} from "@/config";
-import {menuType} from "../../types";
+import { getConfig } from "@/config";
+import { menuType } from "../../types";
 import extraIcon from "./extraIcon.vue";
-import {useNav} from "@/layout/hooks/useNav";
-import {transformI18n} from "@/plugins/i18n";
-import {useRenderIcon} from "@/components/ReIcon/src/hooks";
-import {ref, toRaw, PropType, nextTick, computed, CSSProperties} from "vue";
+import { useNav } from "@/layout/hooks/useNav";
+import { transformI18n } from "@/plugins/i18n";
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { ref, toRaw, PropType, nextTick, computed, CSSProperties } from "vue";
 
 import ArrowUp from "@iconify-icons/ep/arrow-up-bold";
 import EpArrowDown from "@iconify-icons/ep/arrow-down-bold";
 import ArrowLeft from "@iconify-icons/ep/arrow-left-bold";
 import ArrowRight from "@iconify-icons/ep/arrow-right-bold";
 
-const {layout, isCollapse, tooltipEffect, getDivStyle} = useNav();
+const { layout, isCollapse, tooltipEffect, getDivStyle } = useNav();
 
 const props = defineProps({
   item: {
@@ -60,8 +60,8 @@ const getsubMenuIconStyle = computed((): CSSProperties => {
       layout.value === "horizontal"
         ? "0 5px 0 0"
         : isCollapse.value
-          ? "0 auto"
-          : "0 5px 0 0"
+        ? "0 auto"
+        : "0 5px 0 0"
   };
 });
 
@@ -84,21 +84,21 @@ const getSubMenuDivStyle = computed((): any => {
   return item => {
     return !isCollapse.value
       ? {
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        overflow: "hidden"
-      }
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          overflow: "hidden"
+        }
       : {
-        width: "100%",
-        textAlign:
-          item?.parentId === null
-            ? "center"
-            : layout.value === "mix" && item?.pathList?.length === 2
+          width: "100%",
+          textAlign:
+            item?.parentId === null
+              ? "center"
+              : layout.value === "mix" && item?.pathList?.length === 2
               ? "center"
               : ""
-      };
+        };
   };
 });
 
@@ -126,11 +126,11 @@ function hoverMenu(key) {
     // 如果文本内容的整体宽度大于其可视宽度，则文本溢出
     menuTextRef.value?.scrollWidth > menuTextRef.value?.clientWidth
       ? Object.assign(key, {
-        showTooltip: true
-      })
+          showTooltip: true
+        })
       : Object.assign(key, {
-        showTooltip: false
-      });
+          showTooltip: false
+        });
     hoverMenuMap.set(key, true);
   });
 }
@@ -141,8 +141,8 @@ function overflowSlice(text, item?: any) {
     (text?.length > 1 ? text.toString().slice(0, 1) : text) + "...";
   if (item && !(isCollapse.value && item?.parentId === null)) {
     return layout.value === "mix" &&
-    item?.pathList?.length === 2 &&
-    isCollapse.value
+      item?.pathList?.length === 2 &&
+      isCollapse.value
       ? newText
       : text;
   }
@@ -164,7 +164,7 @@ function hasOneShowingChild(children: menuType[] = [], parent: menuType) {
   }
 
   if (showingChildren.length === 0) {
-    onlyOneChild.value = {...parent, path: "", noShowingChildren: true};
+    onlyOneChild.value = { ...parent, path: "", noShowingChildren: true };
     return true;
   }
   return false;
@@ -250,7 +250,7 @@ function resolvePath(routePath) {
             {{ transformI18n(onlyOneChild.meta.title) }}
           </span>
         </el-tooltip>
-        <extraIcon :extraIcon="onlyOneChild.meta.extraIcon"/>
+        <extraIcon :extraIcon="onlyOneChild.meta.extraIcon" />
       </div>
     </template>
   </el-menu-item>
@@ -304,7 +304,7 @@ function resolvePath(routePath) {
             }}
           </span>
         </el-tooltip>
-        <extraIcon v-if="!isCollapse" :extraIcon="props.item.meta.extraIcon"/>
+        <extraIcon v-if="!isCollapse" :extraIcon="props.item.meta.extraIcon" />
       </div>
     </template>
     <sidebar-item

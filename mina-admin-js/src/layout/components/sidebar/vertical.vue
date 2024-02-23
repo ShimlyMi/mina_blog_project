@@ -18,18 +18,18 @@ const showLogo = ref(
   )?.showLogo ?? true
 );
 
-const {device, pureApp, isCollapse, menuSelect, toggleSideBar} = useNav();
+const {device, minaApp, isCollapse, menuSelect, toggleSideBar} = useNav();
 
 const subMenuData = ref([]);
 
 const menuData = computed(() => {
-  return pureApp.layout === "mix" && device.value !== "mobile"
+  return minaApp.layout === "mix" && device.value !== "mobile"
     ? subMenuData.value
     : usePermissionStoreHook().wholeMenus;
 });
 
 const loading = computed(() =>
-  pureApp.layout === "mix" ? false : menuData.value.length === 0 ? true : false
+  minaApp.layout === "mix" ? false : menuData.value.length === 0 ? true : false
 );
 
 const defaultActive = computed(() =>
@@ -107,7 +107,7 @@ onBeforeUnmount(() => {
     </el-scrollbar>
     <leftCollapse
       v-if="device !== 'mobile'"
-      :is-active="pureApp.sidebar.opened"
+      :is-active="minaApp.sidebar.opened"
       @toggleClick="toggleSideBar"
     />
   </div>

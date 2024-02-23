@@ -1,43 +1,40 @@
-import {http} from "@/utils/http";
+import { http } from "@/utils/http";
 
 export type UserResult = {
-  success: boolean;
   code: number;
-  data: {
+  message: String;
+  result: {
     /** 用户名 */
-    username: string;
+    user_name: string;
     /** 当前登陆用户的角色 */
-    roles: Array<string>;
+    role: number;
     /** `token` */
-    accessToken: string;
-    /** 用于调用刷新`accessToken`的接口时所需的`token` */
-    refreshToken: string;
-    /** `accessToken`的过期时间（格式'xxxx/xx/xx xx:xx:xx'） */
-    expires: Date;
+    token: string;
+    id: number; // 用户id
   };
 };
 
-export type RefreshTokenResult = {
-  success: boolean;
+export type Result = {
   code: number;
-  data: any;
+  message: string;
+  result: any;
 };
 
 /** 登录 */
 export const getLogin = (data?: object) => {
-  return http.request<UserResult>("post", "/api/users/login", {data});
+  return http.request<UserResult>("post", "/api/users/login", { data });
 };
 /** 注册 */
 export const registerUser = (data?: object) => {
-  return http.request<UserResult>("post", "/api/users/register", {data});
+  return http.request<Result>("post", "/api/users/register", { data });
 };
 
 /** 获取当前登录人的信息 */
 export const getUserInfoById = id => {
-  return http.request<UserResult>("get", "/api/users/info" + id, {});
+  return http.request<Result>("get", "/api/users/info" + id, {});
 };
 
 /** 刷新token */
-export const refreshTokenApi = (data?: object) => {
-  return http.request<RefreshTokenResult>("post", "/refreshToken", {data});
-};
+// export const refreshTokenApi = (data?: object) => {
+//   return http.request<RefreshTokenResult>("post", "/refreshToken", { data });
+// };

@@ -36,8 +36,17 @@ export type setType = {
 };
 
 export type userType = {
-  username?: string;
-  roles?: Array<string>;
+  user_name?: string;
+  role?: number;
   verifyCode?: string;
   currentPage?: number;
+  avatar: string;
+  nick_name: string;
+  id: number;
+};
+
+export type userInfoType = {
+  nick_name: string;
+  avatar: string;
+  id?: number;
 };

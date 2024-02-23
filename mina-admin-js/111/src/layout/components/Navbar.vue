@@ -1,139 +1,188 @@
+<script lang="ts" setup>
+import Search from "./search/index.vue";
+import Notice from "./notice/index.vue";
+import mixNav from "./sidebar/mixNav.vue";
+import {useNav} from "@/layout/hooks/useNav";
+import Breadcrumb from "./sidebar/breadCrumb.vue";
+import topCollapse from "./sidebar/topCollapse.vue";
+import {useTranslationLang} from "../hooks/useTranslationLang";
+import globalization from "@/assets/svg/globalization.svg?component";
+import LogoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
+import Setting from "@iconify-icons/ri/settings-3-line";
+import Check from "@iconify-icons/ep/check";
+
+const {
+  layout,
+  device,
+  logout,
+  onPanel,
+  pureApp,
+  username,
+  userAvatar,
+  avatarsStyle,
+  toggleSideBar,
+  getDropdownItemStyle,
+  getDropdownItemClass
+} = useNav();
+
+const {t, locale, translationCh, translationEn} = useTranslationLang();
+</script>
+
 <template>
-  <div class="navbar">
-    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar"/>
+  <div
+    class="navbar bg-[#fff] shadow-sm shadow-[rgba(0, 21, 41, 0.08)] dark:shadow-[#0d0d0d]"
+  >
+    <topCollapse
+      v-if="device === 'mobile'"
+      :is-active="pureApp.sidebar.opened"
+      class="hamburger-container"
+      @toggleClick="toggleSideBar"
+    />
 
-    <breadcrumb class="breadcrumb-container"/>
+    <Breadcrumb
+      v-if="layout !== 'mix' && device !== 'mobile'"
+      class="breadcrumb-container"
+    />
 
-    <div class="right-menu">
-      <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom"/>
-        </div>
-        <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              Home
+    <mixNav v-if="layout === 'mix'"/>
+
+    <div v-if="layout === 'vertical'" class="vertical-header-right">
+      <!-- 菜单搜索 -->
+      <Search/>
+      <!-- 通知 -->
+      <Notice id="header-notice"/>
+      <!-- 国际化 -->
+      <el-dropdown id="header-translation" trigger="click">
+        <globalization
+          class="navbar-bg-hover w-[40px] h-[48px] p-[11px] cursor-pointer outline-none"
+        />
+        <template #dropdown>
+          <el-dropdown-menu class="translation">
+            <el-dropdown-item
+              :class="['dark:!text-white', getDropdownItemClass(locale, 'zh')]"
+              :style="getDropdownItemStyle(locale, 'zh')"
+              @click="translationCh"
+            >
+              <IconifyIconOffline
+                v-show="locale === 'zh'"
+                :icon="Check"
+                class="check-zh"
+              />
+              简体中文
             </el-dropdown-item>
-          </router-link>
-          <a href="https://github.com/PanJiaChen/vue-admin-template/" target="_blank">
-            <el-dropdown-item>Github</el-dropdown-item>
-          </a>
-          <a href="https://panjiachen.github.io/vue-element-admin-site/#/" target="_blank">
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a>
-          <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
+            <el-dropdown-item
+              :class="['dark:!text-white', getDropdownItemClass(locale, 'en')]"
+              :style="getDropdownItemStyle(locale, 'en')"
+              @click="translationEn"
+            >
+              <span v-show="locale === 'en'" class="check-en">
+                <IconifyIconOffline :icon="Check"/>
+              </span>
+              English
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
       </el-dropdown>
+      <!-- 退出登录 -->
+      <el-dropdown trigger="click">
+        <span class="el-dropdown-link navbar-bg-hover select-none">
+          <img :src="userAvatar" :style="avatarsStyle"/>
+          <p v-if="username" class="dark:text-white">{{ username }}</p>
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu class="logout">
+            <el-dropdown-item @click="logout">
+              <IconifyIconOffline
+                :icon="LogoutCircleRLine"
+                style="margin: 5px"
+              />
+              {{ t("buttons.hsLoginOut") }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+      <span
+        :title="t('buttons.hssystemSet')"
+        class="set-icon navbar-bg-hover"
+        @click="onPanel"
+      >
+        <IconifyIconOffline :icon="Setting"/>
+      </span>
     </div>
   </div>
 </template>
 
-<script>
-import {mapGetters} from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
-
-export default {
-  components: {
-    Breadcrumb,
-    Hamburger
-  },
-  computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar'
-    ])
-  },
-  methods: {
-    toggleSideBar() {
-      this.$store.dispatch('app/toggleSideBar')
-    },
-    async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    }
-  }
-}
-</script>
-
 <style lang="scss" scoped>
 .navbar {
-  height: 50px;
+  width: 100%;
+  height: 48px;
   overflow: hidden;
-  position: relative;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
 
   .hamburger-container {
-    line-height: 46px;
-    height: 100%;
     float: left;
+    height: 100%;
+    line-height: 48px;
     cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color: transparent;
+  }
 
-    &:hover {
-      background: rgba(0, 0, 0, .025)
+  .vertical-header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 280px;
+    height: 48px;
+    color: #000000d9;
+
+    .el-dropdown-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      height: 48px;
+      padding: 10px;
+      color: #000000d9;
+      cursor: pointer;
+
+      p {
+        font-size: 14px;
+      }
+
+      img {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+      }
     }
   }
 
   .breadcrumb-container {
     float: left;
+    margin-left: 16px;
+  }
+}
+
+.translation {
+  ::v-deep(.el-dropdown-menu__item) {
+    padding: 5px 40px;
   }
 
-  .right-menu {
-    float: right;
-    height: 100%;
-    line-height: 50px;
+  .check-zh {
+    position: absolute;
+    left: 20px;
+  }
 
-    &:focus {
-      outline: none;
-    }
+  .check-en {
+    position: absolute;
+    left: 20px;
+  }
+}
 
-    .right-menu-item {
-      display: inline-block;
-      padding: 0 8px;
-      height: 100%;
-      font-size: 18px;
-      color: #5a5e66;
-      vertical-align: text-bottom;
+.logout {
+  max-width: 120px;
 
-      &.hover-effect {
-        cursor: pointer;
-        transition: background .3s;
-
-        &:hover {
-          background: rgba(0, 0, 0, .025)
-        }
-      }
-    }
-
-    .avatar-container {
-      margin-right: 30px;
-
-      .avatar-wrapper {
-        margin-top: 5px;
-        position: relative;
-
-        .user-avatar {
-          cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-        }
-
-        .el-icon-caret-bottom {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
-        }
-      }
-    }
+  ::v-deep(.el-dropdown-menu__item) {
+    display: inline-flex;
+    flex-wrap: wrap;
+    min-width: 100%;
   }
 }
 </style>

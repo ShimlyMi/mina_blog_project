@@ -4,7 +4,7 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 import App from './App.vue'
 import router from './router'
-import store from "@/stores";
+import {store} from "@/stores";
 
 // 引入重置样式
 import "./styles/reset.scss";

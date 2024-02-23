@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import {getTopMenu} from "@/router/utils";
-import {useNav} from "@/layout/hooks/useNav";
+import { getTopMenu } from "@/router/utils";
+import { useNav } from "@/layout/hooks/useNav";
 
 const props = defineProps({
   collapse: Boolean
 });
 
-const {title} = useNav();
+const { title } = useNav();
 </script>
 
 <template>
@@ -19,7 +19,7 @@ const {title} = useNav();
         :to="getTopMenu()?.path ?? '/'"
         class="sidebar-logo-link"
       >
-        <img alt="logo" src="/logo.svg"/>
+        <img alt="logo" src="/logo.svg" />
         <span class="sidebar-title">{{ title }}</span>
       </router-link>
       <router-link
@@ -29,7 +29,7 @@ const {title} = useNav();
         :to="getTopMenu()?.path ?? '/'"
         class="sidebar-logo-link"
       >
-        <img alt="logo" src="/logo.svg"/>
+        <img alt="logo" src="/logo.svg" />
         <span class="sidebar-title">{{ title }}</span>
       </router-link>
     </transition>

@@ -4,7 +4,7 @@ import {getUserInfoById, reqLogin} from "@/api/user";
 import {resetRouter} from "@/router";
 import router from "@/router";
 import {storageSession} from "@pureadmin/utils";
-import store from "@/stores";
+import {store} from "@/stores";
 
 export const useUserStore = defineStore('user', {
     persist: {

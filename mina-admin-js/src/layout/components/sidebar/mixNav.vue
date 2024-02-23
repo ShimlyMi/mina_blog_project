@@ -2,14 +2,14 @@
 import extraIcon from "./extraIcon.vue";
 import Search from "../search/index.vue";
 import Notice from "../notice/index.vue";
-import {isAllEmpty} from "@pureadmin/utils";
-import {useNav} from "@/layout/hooks/useNav";
-import {transformI18n} from "@/plugins/i18n";
-import {ref, toRaw, watch, onMounted, nextTick} from "vue";
-import {useRenderIcon} from "@/components/ReIcon/src/hooks";
-import {getParentPaths, findRouteByPath} from "@/router/utils";
-import {useTranslationLang} from "../../hooks/useTranslationLang";
-import {usePermissionStoreHook} from "@/store/modules/permission";
+import { isAllEmpty } from "@pureadmin/utils";
+import { useNav } from "@/layout/hooks/useNav";
+import { transformI18n } from "@/plugins/i18n";
+import { ref, toRaw, watch, onMounted, nextTick } from "vue";
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { getParentPaths, findRouteByPath } from "@/router/utils";
+import { useTranslationLang } from "../../hooks/useTranslationLang";
+import { usePermissionStoreHook } from "@/store/modules/permission";
 import globalization from "@/assets/svg/globalization.svg?component";
 import LogoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
 import Setting from "@iconify-icons/ri/settings-3-line";
@@ -18,14 +18,14 @@ import Check from "@iconify-icons/ep/check";
 const menuRef = ref();
 const defaultActive = ref(null);
 
-const {t, route, locale, translationCh, translationEn} =
+const { t, route, locale, translationCh, translationEn } =
   useTranslationLang(menuRef);
 const {
   device,
   logout,
   onPanel,
   resolvePath,
-  username,
+  user_name,
   userAvatar,
   getDivStyle,
   avatarsStyle,
@@ -89,16 +89,16 @@ watch(
             <span class="select-none">
               {{ transformI18n(route.meta.title) }}
             </span>
-            <extraIcon :extraIcon="route.meta.extraIcon"/>
+            <extraIcon :extraIcon="route.meta.extraIcon" />
           </div>
         </template>
       </el-menu-item>
     </el-menu>
     <div class="horizontal-header-right">
       <!-- 菜单搜索 -->
-      <Search/>
+      <Search />
       <!-- 通知 -->
-      <Notice id="header-notice"/>
+      <Notice id="header-notice" />
       <!-- 国际化 -->
       <el-dropdown id="header-translation" trigger="click">
         <globalization
@@ -112,7 +112,7 @@ watch(
               @click="translationCh"
             >
               <span v-show="locale === 'zh'" class="check-zh">
-                <IconifyIconOffline :icon="Check"/>
+                <IconifyIconOffline :icon="Check" />
               </span>
               简体中文
             </el-dropdown-item>
@@ -122,7 +122,7 @@ watch(
               @click="translationEn"
             >
               <span v-show="locale === 'en'" class="check-en">
-                <IconifyIconOffline :icon="Check"/>
+                <IconifyIconOffline :icon="Check" />
               </span>
               English
             </el-dropdown-item>
@@ -132,17 +132,14 @@ watch(
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
         <span class="el-dropdown-link navbar-bg-hover select-none">
-          <img :src="userAvatar" :style="avatarsStyle"/>
-          <p v-if="username" class="dark:text-white">{{ username }}</p>
+          <img :src="userAvatar" :style="avatarsStyle" />
+          <p v-if="user_name" class="dark:text-white">{{ user_name }}</p>
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
             <el-dropdown-item @click="logout">
-              <IconifyIconOffline
-                :icon="LogoutCircleRLine"
-                style="margin: 5px"
-              />
-              {{ t("buttons.hsLoginOut") }}
+              <IconifyIconOffline :icon="LogoutCircleRLine" />
+              退出系统
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -152,7 +149,7 @@ watch(
         class="set-icon navbar-bg-hover"
         @click="onPanel"
       >
-        <IconifyIconOffline :icon="Setting"/>
+        <IconifyIconOffline :icon="Setting" />
       </span>
     </div>
   </div>
@@ -183,9 +180,11 @@ watch(
   max-width: 120px;
 
   ::v-deep(.el-dropdown-menu__item) {
+    padding: 5px 10px !important;
     display: inline-flex;
     flex-wrap: wrap;
     min-width: 100%;
+
   }
 }
 </style>

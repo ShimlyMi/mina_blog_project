@@ -1,81 +1,70 @@
+<script lang="ts" setup>
+import {getTopMenu} from "@/router/utils";
+import {useNav} from "@/layout/hooks/useNav";
+
+const props = defineProps({
+  collapse: Boolean
+});
+
+const {title} = useNav();
+</script>
+
 <template>
-  <div :class="{'collapse':collapse}" class="sidebar-logo-container">
+  <div :class="{ collapses: props.collapse }" class="sidebar-logo-container">
     <transition name="sidebarLogoFade">
-      <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
-        <h1 v-else class="sidebar-title">{{ title }} </h1>
+      <router-link
+        v-if="props.collapse"
+        key="props.collapse"
+        :title="title"
+        :to="getTopMenu()?.path ?? '/'"
+        class="sidebar-logo-link"
+      >
+        <img alt="logo" src="/logo.svg"/>
+        <span class="sidebar-title">{{ title }}</span>
       </router-link>
-      <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
-        <h1 class="sidebar-title">{{ title }} </h1>
+      <router-link
+        v-else
+        key="expand"
+        :title="title"
+        :to="getTopMenu()?.path ?? '/'"
+        class="sidebar-logo-link"
+      >
+        <img alt="logo" src="/logo.svg"/>
+        <span class="sidebar-title">{{ title }}</span>
       </router-link>
     </transition>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'SidebarLogo',
-  props: {
-    collapse: {
-      type: Boolean,
-      required: true
-    }
-  },
-  data() {
-    return {
-      title: 'Vue Admin Template',
-      logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
-    }
-  }
-}
-</script>
-
 <style lang="scss" scoped>
-.sidebarLogoFade-enter-active {
-  transition: opacity 1.5s;
-}
-
-.sidebarLogoFade-enter,
-.sidebarLogoFade-leave-to {
-  opacity: 0;
-}
-
 .sidebar-logo-container {
   position: relative;
   width: 100%;
-  height: 50px;
-  line-height: 50px;
-  background: #2b2f3a;
-  text-align: center;
+  height: 48px;
   overflow: hidden;
 
-  & .sidebar-logo-link {
+  .sidebar-logo-link {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
     height: 100%;
-    width: 100%;
 
-    & .sidebar-logo {
-      width: 32px;
-      height: 32px;
-      vertical-align: middle;
-      margin-right: 12px;
-    }
-
-    & .sidebar-title {
+    img {
       display: inline-block;
-      margin: 0;
-      color: #fff;
-      font-weight: 600;
-      line-height: 50px;
-      font-size: 14px;
-      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
-      vertical-align: middle;
+      height: 32px;
     }
-  }
 
-  &.collapse {
-    .sidebar-logo {
-      margin-right: 0px;
+    .sidebar-title {
+      display: inline-block;
+      height: 32px;
+      margin: 2px 0 0 12px;
+      overflow: hidden;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 32px;
+      color: $subMenuActiveText;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }

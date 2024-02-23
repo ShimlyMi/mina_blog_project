@@ -29,7 +29,8 @@ export const constantRoutes = [
                 path: "home",
                 name: "Home",
                 component: () => import("@/views/home/index.vue"),
-                meta: {title: 'Home', icon: 'Home'}
+              meta: {title: 'Home', icon: 'Home'},
+              hidden: false,
             }
         ]
     },
@@ -44,24 +45,28 @@ export const constantRoutes = [
                 path: 'list',
                 name: 'List',
                 component: () => import('@/views/article/article-list/index.vue'),
+              hidden: false,
                 meta: {title: 'List', icon: '<el-icon><List /></el-icon>'}
             },
             {
                 path: 'addArticle',
                 name: 'addArticle',
                 component: () => import('@/views/article/add-article/index.vue'),
+              hidden: false,
                 meta: {title: 'addArticle', icon: '<el-icon><DocumentAdd /></el-icon>'}
             },
             {
                 path: 'tag',
                 name: 'tagManagement',
                 component: () => import('@/views/article/tag/index.vue'),
+              hidden: false,
                 meta: {title: 'tagManagement', icon: '<el-icon><CollectionTag /></el-icon>'}
             },
             {
                 path: 'category',
                 name: 'category',
                 component: () => import('@/views/article/category/index.vue'),
+              hidden: false,
                 meta: {title: 'category', icon: '<el-icon><PriceTag /></el-icon>'}
             }
         ]

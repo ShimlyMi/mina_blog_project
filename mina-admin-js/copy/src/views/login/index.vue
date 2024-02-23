@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted, onBeforeUnmount, watch} from 'vue'
+import {ref, onMounted, onBeforeUnmount} from 'vue'
 import {useRoute, useRouter} from "vue-router";
 import {bg, singUp, logo} from './utils/static'
 import {loginRules} from "@/utils/rules";

@@ -1,25 +1,26 @@
-import {storeToRefs} from "pinia";
-import {getConfig} from "@/config";
-import {useRouter} from "vue-router";
-import {emitter} from "@/utils/mitt";
-import {routeMetaType} from "../types";
-import userAvatar from "@/assets/user.jpg";
-import {getTopMenu} from "@/router/utils";
-import {useGlobal} from "@pureadmin/utils";
-import {transformI18n} from "@/plugins/i18n";
-import {router, remainingPaths} from "@/router";
-import {computed, type CSSProperties} from "vue";
-import {useAppStoreHook} from "@/store/modules/app";
-import {useUserStoreHook} from "@/store/modules/user";
-import {useEpThemeStoreHook} from "@/store/modules/epTheme";
-import {usePermissionStoreHook} from "@/store/modules/permission";
+import { storeToRefs } from "pinia";
+import { getConfig } from "@/config";
+import { useRoute, useRouter } from "vue-router";
+import { emitter } from "@/utils/mitt";
+import { routeMetaType } from "../types";
+import userAvatar from "@/assets/avatar.jpg";
+import { getTopMenu } from "@/router/utils";
+import { useGlobal } from "@pureadmin/utils";
+import { transformI18n } from "@/plugins/i18n";
+import { router, remainingPaths } from "@/router";
+import { computed, type CSSProperties } from "vue";
+import { useAppStoreHook } from "@/store/modules/app";
+import { useUserStoreHook } from "@/store/modules/user";
+import { useEpThemeStoreHook } from "@/store/modules/epTheme";
+import { usePermissionStoreHook } from "@/store/modules/permission";
 
 const errorInfo = "当前路由配置不正确，请检查配置";
 
 export function useNav() {
-  const pureApp = useAppStoreHook();
+  const route = useRoute();
+  const minaApp = useAppStoreHook();
   const routers = useRouter().options.routes;
-  const {wholeMenus} = storeToRefs(usePermissionStoreHook());
+  const { wholeMenus } = storeToRefs(usePermissionStoreHook());
   /** 平台`layout`中所有`el-tooltip`的`effect`配置，默认`light` */
   const tooltipEffect = getConfig()?.TooltipEffect ?? "light";
 
@@ -34,9 +35,16 @@ export function useNav() {
   });
 
   /** 用户名 */
-  const username = computed(() => {
-    return useUserStoreHook()?.username;
+  const user_name = computed(() => {
+    return useUserStoreHook()?.user_name;
   });
+  const nick_name = computed(() => {
+    return useUserStoreHook()?.getNickName;
+  });
+  const avatar = computed(() => {
+    return useUserStoreHook()?.getAvatar;
+  });
+  const userId = useUserStoreHook()?.getUserId;
 
   /** 设置国际化选中后的样式 */
   const getDropdownItemStyle = computed(() => {
@@ -55,18 +63,18 @@ export function useNav() {
   });
 
   const avatarsStyle = computed(() => {
-    return username.value ? {marginRight: "10px"} : "";
+    return user_name.value ? { marginRight: "10px" } : "";
   });
 
   const isCollapse = computed(() => {
-    return !pureApp.getSidebarStatus;
+    return !minaApp.getSidebarStatus;
   });
 
   const device = computed(() => {
-    return pureApp.getDevice;
+    return minaApp.getDevice;
   });
 
-  const {$storage, $config} = useGlobal<GlobalPropertiesApi>();
+  const { $storage, $config } = useGlobal<GlobalPropertiesApi>();
   const layout = computed(() => {
     return $storage?.layout?.layout;
   });
@@ -96,7 +104,7 @@ export function useNav() {
   }
 
   function toggleSideBar() {
-    pureApp.toggleSideBar();
+    minaApp.toggleSideBar();
   }
 
   function handleResize(menuRef) {
@@ -118,6 +126,29 @@ export function useNav() {
     if (wholeMenus.value.length === 0 || isRemaining(indexPath)) return;
     emitter.emit("changLayoutRoute", indexPath);
   }
+  // function menuSelect(indexPath: string, routers): void {
+  //   if (wholeMenus.value.length === 0 || isRemaining(indexPath)) return;
+  //   let parentPath = "";
+  //   const parentPathIndex = indexPath.lastIndexOf("/");
+  //   if (parentPathIndex > 0) {
+  //     parentPath = indexPath.slice(0, parentPathIndex);
+  //   }
+  //   /** 找到当前路由的信息 */
+  //   function findCurrentRoute(indexPath: string, routes) {
+  //     if (!routes) return console.error(errorInfo);
+  //     return routes.map(item => {
+  //       if (item.path === indexPath) {
+  //         if (item.redirect) {
+  //           findCurrentRoute(item.redirect, item.children);
+  //         } else {
+  //           /** 切换左侧菜单 通知标签页 */
+  //           emitter.emit("changLayoutRoute", { indexPath, parentPath });
+  //         }
+  //       } else if (item.children) findCurrentRoute(indexPath, item.children);
+  //     });
+  //   }
+  //   findCurrentRoute(indexPath, routers);
+  // }
 
   /** 判断路径是否参与菜单 */
   function isRemaining(path: string) {
@@ -125,6 +156,7 @@ export function useNav() {
   }
 
   return {
+    route,
     title,
     device,
     layout,
@@ -140,9 +172,12 @@ export function useNav() {
     handleResize,
     resolvePath,
     isCollapse,
-    pureApp,
-    username,
+    minaApp,
+    user_name,
+    nick_name,
+    avatar,
     userAvatar,
+    userId,
     avatarsStyle,
     tooltipEffect,
     getDropdownItemStyle,

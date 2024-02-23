@@ -12,6 +12,22 @@ module.exports = {
         ecmaVersion: 'latest'
     },
     env: {
-        node: true
-    }
+      browser: true,
+      node: true,
+      es6: true,
+    },
+  // add your custom rules here
+  //it is base on https://github.com/vuejs/eslint-config-vue
+  rules: {
+
+    "no-unused-vars": [
+      "error",
+      {
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_"
+      }
+    ],
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+
+  }
 }

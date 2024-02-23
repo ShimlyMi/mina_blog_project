@@ -1,16 +1,15 @@
 <script setup>
-import menuTree from './components/Item.vue'
 
 </script>
 
 <template>
-  <el-row>
-    <el-col>
-      <el-menu>
-        <menuTree/>
-      </el-menu>
-    </el-col>
-  </el-row>
+  <template>
+    <el-menu-item>
+      <div class="sub-menu-icon">
+
+      </div>
+    </el-menu-item>
+  </template>
 </template>
 
 <style lang="scss" scoped>

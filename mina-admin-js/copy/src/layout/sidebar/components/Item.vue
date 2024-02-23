@@ -1,26 +1,40 @@
-<script>
+<script lang="jsx">
+
 export default {
-  name: 'menuTree',
+  name: "menuItem",
   props: {
-    menuList: {
-      type: Array
+    icon: {
+      type: String,
+      default: ''
+    },
+    title: {
+      type: String,
+      default: ''
     }
   },
-  setup(props) {
-    return {}
+  render(context) {
+    const {icon, title} = context.props
+    const vNodes = []
+    if (icon) {
+      if (icon.includes('el-icon')) {
+        vNodes.push(<i class={[icon, 'sub-el-icon']}/>)
+      } else {
+        vNodes.push(<svg-icon icon-class={icon}/>)
+      }
+    }
+    if (title) {
+      vNodes.push(<span slot="title">{{title}}</span>)
+    }
+    return vNodes
   }
 }
 </script>
 
-<template>
-  <div>
-    <template v-for="item in menuList" :key="item.path">
-      <!-- 分两种方式渲染，有子菜单和没有子菜单 -->
 
-    </template>
-  </div>
-</template>
-
-<style lang="scss" scoped>
-
+<style scoped>
+.sub-el-icon {
+  color: currentColor;
+  width: 1em;
+  height: 1em;
+}
 </style>

@@ -34,7 +34,7 @@ const User = seq.define('mi_user', {
         comment: "密码",
     },
     // role: {
-    //     type: Sequelize.INTEGER,
+    //     type: DataTypes.INTEGER,
     //     allowNull: false,
     //     defaultValue: 2,
     //     comment: "用户角色 1 管理员 2 普通用户",

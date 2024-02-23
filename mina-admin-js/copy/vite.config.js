@@ -64,12 +64,12 @@ export default defineConfig({
         host: "0.0.0.0",
         open: false,
         proxy: {
-            "/api": {
-                // 要访问的跨域域名
-                target: "http://localhost:8888",
-                changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/api/, ""),
-            }
+          // "/api": {
+          //     // 要访问的跨域域名
+          //     target: "http://localhost:8888",
+          //     changeOrigin: true,
+          //     rewrite: (path) => path.replace(/^\/api/, ""),
+          // }
         }
     },
     build: {

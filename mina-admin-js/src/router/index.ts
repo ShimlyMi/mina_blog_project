@@ -1,10 +1,10 @@
 // import "@/utils/sso";
-import {getConfig} from "@/config";
+import { getConfig } from "@/config";
 import NProgress from "@/utils/progress";
-import {transformI18n} from "@/plugins/i18n";
-import {sessionKey, type DataInfo} from "@/utils/auth";
-import {useMultiTagsStoreHook} from "@/store/modules/multiTags";
-import {usePermissionStoreHook} from "@/store/modules/permission";
+import { transformI18n } from "@/plugins/i18n";
+import { sessionKey, type DataInfo } from "@/utils/auth";
+import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
+import { usePermissionStoreHook } from "@/store/modules/permission";
 import {
   Router,
   createRouter,
@@ -22,8 +22,8 @@ import {
   formatTwoStageRoutes,
   formatFlatteningRoutes
 } from "./utils";
-import {buildHierarchyTree} from "@/utils/tree";
-import {isUrl, openLink, storageSession, isAllEmpty} from "@pureadmin/utils";
+import { buildHierarchyTree } from "@/utils/tree";
+import { isUrl, openLink, storageSession, isAllEmpty } from "@pureadmin/utils";
 
 import remainingRouter from "./modules/remaining";
 
@@ -73,7 +73,7 @@ export const router: Router = createRouter({
         if (from.meta.saveSrollTop) {
           const top: number =
             document.documentElement.scrollTop || document.body.scrollTop;
-          resolve({left: 0, top});
+          resolve({ left: 0, top });
         }
       }
     });
@@ -83,7 +83,7 @@ export const router: Router = createRouter({
 /** 重置路由 */
 export function resetRouter() {
   router.getRoutes().forEach(route => {
-    const {name, meta} = route;
+    const { name, meta } = route;
     if (name && router.hasRoute(name) && meta?.backstage) {
       router.removeRoute(name);
       router.options.routes = formatTwoStageRoutes(
@@ -99,7 +99,7 @@ export function resetRouter() {
 /** 路由白名单 */
 const whiteList = ["/login", "/register"];
 
-const {VITE_HIDE_HOME} = import.meta.env;
+const { VITE_HIDE_HOME } = import.meta.env;
 
 router.beforeEach((to: ToRouteType, _from, next) => {
   if (to.meta?.keepAlive) {
@@ -124,11 +124,11 @@ router.beforeEach((to: ToRouteType, _from, next) => {
   if (userInfo) {
     // 无权限跳转403页面
     if (to.meta?.roles) {
-      next({path: "/error/403"});
+      next({ path: "/error/403" });
     }
     // 开启隐藏首页后在浏览器地址栏手动输入首页welcome路由则跳转到404页面
     if (VITE_HIDE_HOME === "true" && to.fullPath === "/welcome") {
-      next({path: "/error/404"});
+      next({ path: "/error/404" });
     }
     if (_from?.name) {
       // name为超链接
@@ -146,7 +146,7 @@ router.beforeEach((to: ToRouteType, _from, next) => {
       ) {
         initRouter().then((router: Router) => {
           if (!useMultiTagsStoreHook().getMultiTagsCache) {
-            const {path} = to;
+            const { path } = to;
             const route = findRouteByPath(
               path,
               router.options.routes[0].children
@@ -172,7 +172,7 @@ router.beforeEach((to: ToRouteType, _from, next) => {
       if (whiteList.indexOf(to.path) !== -1) {
         next();
       } else {
-        next({path: "/login"});
+        next({ path: "/login" });
       }
     } else {
       next();
