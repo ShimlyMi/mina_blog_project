@@ -30,8 +30,8 @@ export const registerUser = (data?: object) => {
 };
 
 /** 获取当前登录人的信息 */
-export const getUserInfoById = id => {
-  return http.request<Result>("get", "/api/users/info" + id, {});
+export const getUserInfoById = () => {
+  return http.request<Result>("get", "/api/users/info", {});
 };
 
 /** 刷新token */

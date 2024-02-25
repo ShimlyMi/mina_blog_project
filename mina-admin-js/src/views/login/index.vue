@@ -12,7 +12,7 @@ import { useUserStoreHook } from "@/store/modules/user";
 import { initRouter } from "@/router/utils";
 import { bg, avatar, signUp } from "./utils/static";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { ref, reactive, toRaw, onMounted, onBeforeUnmount } from "vue";
+import { ref, toRaw, onMounted, onBeforeUnmount } from "vue";
 import { useTranslationLang } from "@/layout/hooks/useTranslationLang";
 import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
 import { storageLocal } from "@pureadmin/utils";
@@ -63,7 +63,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
         storageLocal().removeItem("loginInfo");
       }
       const res = await getLogin(ruleForm.value);
-      console.log(ruleForm.value);
+      // console.log(ruleForm.value);
       if (res.code == 0) {
         useUserStoreHook()
           .loginByUsername(ruleForm.value)
@@ -101,12 +101,12 @@ onMounted(() => {
   window.document.addEventListener("keypress", onkeypress);
   const route = useRoute();
   if (route.query.user_name) {
-    ruleForm.user_name = route.query.user_name + "";
+    ruleForm.value.user_name = route.query.user_name + "";
     isRememberMe.value = true;
   } else {
     if (storageLocal().getItem("loginInfo")) {
       isRememberMe.value = true;
-      Object.assign(ruleForm, storageLocal().getItem("loginInfo"));
+      Object.assign(ruleForm.value, storageLocal().getItem("loginInfo"));
     }
   }
 });

@@ -33,12 +33,12 @@ const User = seq.define('mi_user', {
         allowNull: false,
         comment: "密码",
     },
-    // role: {
-    //     type: DataTypes.INTEGER,
-    //     allowNull: false,
-    //     defaultValue: 2,
-    //     comment: "用户角色 1 管理员 2 普通用户",
-    // },
+    role: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 2,
+        comment: "用户角色 1 管理员 2 普通用户",
+    },
     nick_name: {
         type: DataTypes.STRING,
         allowNull: true,

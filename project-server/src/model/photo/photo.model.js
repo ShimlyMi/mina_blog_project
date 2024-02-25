@@ -40,6 +40,6 @@ const Photo = seq.define(
     }
 )
 
-// Photo.sync({ alter: true }) // 同步数据库表
+//Photo.sync({ alter: true }) // 同步数据库表
 
 module.exports = Photo
