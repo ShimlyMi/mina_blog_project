@@ -1,69 +1,51 @@
 <script lang="ts" setup>
-import extraIcon from "./extraIcon.vue";
 import Search from "../search/index.vue";
 import Notice from "../notice/index.vue";
-import { isAllEmpty } from "@pureadmin/utils";
-import { useNav } from "@/layout/hooks/useNav";
-import { transformI18n } from "@/plugins/i18n";
-import { ref, toRaw, watch, onMounted, nextTick } from "vue";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { getParentPaths, findRouteByPath } from "@/router/utils";
-import { useTranslationLang } from "../../hooks/useTranslationLang";
-import { usePermissionStoreHook } from "@/store/modules/permission";
+import SidebarItem from "./sidebarItem.vue";
+import {isAllEmpty} from "@pureadmin/utils";
+import {ref, nextTick, computed} from "vue";
+import {useNav} from "@/layout/hooks/useNav";
+import {useTranslationLang} from "../../hooks/useTranslationLang";
+import {usePermissionStoreHook} from "@/store/modules/permission";
 import globalization from "@/assets/svg/globalization.svg?component";
 import LogoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
 import Setting from "@iconify-icons/ri/settings-3-line";
 import Check from "@iconify-icons/ep/check";
 
 const menuRef = ref();
-const defaultActive = ref(null);
 
-const { t, route, locale, translationCh, translationEn } =
+const {t, route, locale, translationCh, translationEn} =
   useTranslationLang(menuRef);
 const {
-  device,
+  title,
   logout,
+  backTopMenu,
   onPanel,
-  resolvePath,
-  user_name,
+  username,
   userAvatar,
-  getDivStyle,
   avatarsStyle,
   getDropdownItemStyle,
   getDropdownItemClass
 } = useNav();
 
-function getDefaultActive(routePath) {
-  const wholeMenus = usePermissionStoreHook().wholeMenus;
-  /** 当前路由的父级路径 */
-  const parentRoutes = getParentPaths(routePath, wholeMenus)[0];
-  defaultActive.value = !isAllEmpty(route.meta?.activePath)
-    ? route.meta.activePath
-    : findRouteByPath(parentRoutes, wholeMenus)?.children[0]?.path;
-}
-
-onMounted(() => {
-  getDefaultActive(route.path);
-});
+const defaultActive = computed(() =>
+  !isAllEmpty(route.meta?.activePath) ? route.meta.activePath : route.path
+);
 
 nextTick(() => {
   menuRef.value?.handleResize();
 });
-
-watch(
-  () => [route.path, usePermissionStoreHook().wholeMenus],
-  () => {
-    getDefaultActive(route.path);
-  }
-);
 </script>
 
 <template>
   <div
-    v-if="device !== 'mobile'"
     v-loading="usePermissionStoreHook().wholeMenus.length === 0"
     class="horizontal-header"
   >
+    <div class="horizontal-header-left" @click="backTopMenu">
+      <img alt="logo" src="/logo.svg"/>
+      <span>{{ title }}</span>
+    </div>
     <el-menu
       ref="menuRef"
       :default-active="defaultActive"
@@ -71,36 +53,19 @@ watch(
       mode="horizontal"
       router
     >
-      <el-menu-item
+      <sidebar-item
         v-for="route in usePermissionStoreHook().wholeMenus"
         :key="route.path"
-        :index="resolvePath(route) || route.redirect"
-      >
-        <template #title>
-          <div
-            v-if="toRaw(route.meta.icon)"
-            :class="['sub-menu-icon', route.meta.icon]"
-          >
-            <component
-              :is="useRenderIcon(route.meta && toRaw(route.meta.icon))"
-            />
-          </div>
-          <div :style="getDivStyle">
-            <span class="select-none">
-              {{ transformI18n(route.meta.title) }}
-            </span>
-            <extraIcon :extraIcon="route.meta.extraIcon" />
-          </div>
-        </template>
-      </el-menu-item>
+        :base-path="route.path"
+        :item="route"
+      />
     </el-menu>
     <div class="horizontal-header-right">
       <!-- 菜单搜索 -->
-      <Search />
+      <Search/>
       <!-- 通知 -->
-      <Notice id="header-notice" />
+      <Notice id="header-notice"/>
       <!-- 国际化 -->
-      <!--
       <el-dropdown id="header-translation" trigger="click">
         <globalization
           class="navbar-bg-hover w-[40px] h-[48px] p-[11px] cursor-pointer outline-none"
@@ -113,7 +78,7 @@ watch(
               @click="translationCh"
             >
               <span v-show="locale === 'zh'" class="check-zh">
-                <IconifyIconOffline :icon="Check" />
+                <IconifyIconOffline :icon="Check"/>
               </span>
               简体中文
             </el-dropdown-item>
@@ -123,25 +88,27 @@ watch(
               @click="translationEn"
             >
               <span v-show="locale === 'en'" class="check-en">
-                <IconifyIconOffline :icon="Check" />
+                <IconifyIconOffline :icon="Check"/>
               </span>
               English
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      -->
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
-        <span class="el-dropdown-link navbar-bg-hover select-none">
-          <img :src="userAvatar" :style="avatarsStyle" />
-          <p v-if="user_name" class="dark:text-white">{{ user_name }}</p>
+        <span class="el-dropdown-link navbar-bg-hover">
+          <img :src="userAvatar" :style="avatarsStyle"/>
+          <p v-if="username" class="dark:text-white">{{ username }}</p>
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
             <el-dropdown-item @click="logout">
-              <IconifyIconOffline :icon="LogoutCircleRLine" />
-              退出系统
+              <IconifyIconOffline
+                :icon="LogoutCircleRLine"
+                style="margin: 5px"
+              />
+              {{ t("buttons.hsLoginOut") }}
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -151,7 +118,7 @@ watch(
         class="set-icon navbar-bg-hover"
         @click="onPanel"
       >
-        <IconifyIconOffline :icon="Setting" />
+        <IconifyIconOffline :icon="Setting"/>
       </span>
     </div>
   </div>
@@ -182,11 +149,9 @@ watch(
   max-width: 120px;
 
   ::v-deep(.el-dropdown-menu__item) {
-    padding: 5px 10px !important;
     display: inline-flex;
     flex-wrap: wrap;
     min-width: 100%;
-
   }
 }
 </style>

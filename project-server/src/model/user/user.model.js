@@ -21,7 +21,7 @@ const User = seq.define('mi_user', {
         autoIncrement: true,
         comment: "用户ID 唯一"
     },
-    // 用户名
+    // 用户名clear
     user_name: {
         type: DataTypes.STRING,
         allowNull: false,

@@ -1,6 +1,7 @@
 const path = require('path');
 
-const { unSupportedFileType, fileUploadError} = require("../constant/err.type");
+const { ERRORCODE, throwError, result } = require("../constant/err.type")
+const errorCode = ERRORCODE.UPLOAD
 
 class UtilsController {
     /** 头像上传 */
@@ -12,7 +13,7 @@ class UtilsController {
         if (file) {
             if (!fileTypes.includes(file.mimetype)) {
                 console.log(ctx.request.files.file.mimetype)
-                return ctx.app.emit('error', unSupportedFileType, ctx)
+                return ctx.app.emit('error', throwError(errorCode, "文件格式错误"), ctx)
             }
             ctx.body = {
                 code: 0,
@@ -23,7 +24,7 @@ class UtilsController {
             }
             console.log("头像上传成功");
         } else {
-            return ctx.app.emit('error', fileUploadError, ctx)
+            return ctx.app.emit('error', throwError(errorCode, "头像上传失败"), ctx)
         }
     }
 }

@@ -38,7 +38,7 @@ export const useUserStore = defineStore({
       return (
         this.id || storageSession().getItem<userInfoType>("blogCurrentUser")?.id
       );
-    }
+    },
   },
   actions: {
     /** 存储用户名 */
@@ -81,7 +81,7 @@ export const useUserStore = defineStore({
     },
     // 保存当前登录人信息
     async savaUserInfo() {
-      const res = await getUserInfoById(this.getUserId);
+      const res = await getUserInfoById();
       if (res.code == 0) {
         this.SET_AVATAR(res.result.avatar);
         this.SET_NICKNAME(res.result.nick_name);

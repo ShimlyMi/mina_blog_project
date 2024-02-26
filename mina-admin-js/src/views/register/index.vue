@@ -1,5 +1,5 @@
 <script lang="ts" name="Register" setup>
-import { useI18n } from "vue-i18n";
+// import { useI18n } from "vue-i18n";
 import Motion from "../login/utils/motion";
 import { useRouter } from "vue-router";
 import { message } from "@/utils/message";
@@ -9,14 +9,14 @@ import { useLayout } from "@/layout/hooks/useLayout";
 import { bg, avatar, signIn } from "../login/utils/static";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { ref, reactive, toRaw, onMounted, onBeforeUnmount } from "vue";
-import { useTranslationLang } from "@/layout/hooks/useTranslationLang";
+// import { useTranslationLang } from "@/layout/hooks/useTranslationLang";
 import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
 
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
-import globalization from "@/assets/svg/globalization.svg?component";
+// import globalization from "@/assets/svg/globalization.svg?component";
 import Lock from "@iconify-icons/ri/lock-fill";
-import Check from "@iconify-icons/ep/check";
+// import Check from "@iconify-icons/ep/check";
 import User from "@iconify-icons/ri/user-3-fill";
 
 import { registerUser } from "@/api/user";
@@ -28,13 +28,13 @@ const ruleFormRef = ref<FormInstance>();
 const { initStorage } = useLayout();
 initStorage();
 
-const { t } = useI18n();
+// const { t } = useI18n();
 const { dataTheme, dataThemeChange } = useDataThemeChange();
 dataThemeChange();
 
-const { title, getDropdownItemStyle, getDropdownItemClass } = useNav();
-
-const { locale, translationCh, translationEn } = useTranslationLang();
+// const { title, getDropdownItemStyle, getDropdownItemClass } = useNav();
+const { title } = useNav();
+// const { locale, translationCh, translationEn } = useTranslationLang();
 
 const ruleForm = reactive({
   user_name: "",
@@ -150,6 +150,7 @@ onBeforeUnmount(() => {
         @change="dataThemeChange"
       />
       <!-- 国际化 -->
+      <!--
       <el-dropdown trigger="click">
         <globalization
           class="hover:text-primary hover:!bg-[transparent] w-[20px] h-[20px] ml-1.5 cursor-pointer outline-none duration-300"
@@ -181,6 +182,7 @@ onBeforeUnmount(() => {
           </el-dropdown-menu>
         </template>
       </el-dropdown>
+      -->
     </div>
 
     <div class="login-container">
@@ -206,7 +208,7 @@ onBeforeUnmount(() => {
               <el-form-item prop="user_name">
                 <el-input
                   v-model="ruleForm.user_name"
-                  :placeholder="t('login.username')"
+                  placeholder="请输入用户名"
                   :prefix-icon="useRenderIcon(User)"
                   clearable
                 />
@@ -217,7 +219,7 @@ onBeforeUnmount(() => {
               <el-form-item prop="password1">
                 <el-input
                   v-model="ruleForm.password1"
-                  :placeholder="t('login.password')"
+                  placeholder="请输入密码"
                   :prefix-icon="useRenderIcon(Lock)"
                   clearable
                   show-password
@@ -228,7 +230,7 @@ onBeforeUnmount(() => {
               <el-form-item prop="password2">
                 <el-input
                   v-model="ruleForm.password2"
-                  :placeholder="t('login.password')"
+                  placeholder="再次输入确认密码"
                   :prefix-icon="useRenderIcon(Lock)"
                   clearable
                   show-password

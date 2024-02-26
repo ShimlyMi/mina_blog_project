@@ -2,30 +2,25 @@
 import Search from "../search/index.vue";
 import Notice from "../notice/index.vue";
 import SidebarItem from "./sidebarItem.vue";
-import {isAllEmpty} from "@pureadmin/utils";
-import {ref, nextTick, computed} from "vue";
-import {useNav} from "@/layout/hooks/useNav";
-import {useTranslationLang} from "../../hooks/useTranslationLang";
-import {usePermissionStoreHook} from "@/store/modules/permission";
-import globalization from "@/assets/svg/globalization.svg?component";
+import { isAllEmpty } from "@pureadmin/utils";
+import { ref, nextTick, computed } from "vue";
+import { useNav } from "@/layout/hooks/useNav";
+import { useTranslationLang } from "../../hooks/useTranslationLang";
+import { usePermissionStoreHook } from "@/store/modules/permission";
 import LogoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
 import Setting from "@iconify-icons/ri/settings-3-line";
-import Check from "@iconify-icons/ep/check";
 
 const menuRef = ref();
 
-const {t, route, locale, translationCh, translationEn} =
-  useTranslationLang(menuRef);
+const { t, route } = useTranslationLang(menuRef);
 const {
   title,
   logout,
   backTopMenu,
   onPanel,
-  username,
+  user_name,
   userAvatar,
-  avatarsStyle,
-  getDropdownItemStyle,
-  getDropdownItemClass
+  avatarsStyle
 } = useNav();
 
 const defaultActive = computed(() =>
@@ -43,7 +38,7 @@ nextTick(() => {
     class="horizontal-header"
   >
     <div class="horizontal-header-left" @click="backTopMenu">
-      <img alt="logo" src="/logo.svg"/>
+      <img alt="logo" src="/logo.svg" />
       <span>{{ title }}</span>
     </div>
     <el-menu
@@ -62,44 +57,15 @@ nextTick(() => {
     </el-menu>
     <div class="horizontal-header-right">
       <!-- 菜单搜索 -->
-      <Search/>
+      <Search />
       <!-- 通知 -->
-      <Notice id="header-notice"/>
+      <Notice id="header-notice" />
       <!-- 国际化 -->
-      <el-dropdown id="header-translation" trigger="click">
-        <globalization
-          class="navbar-bg-hover w-[40px] h-[48px] p-[11px] cursor-pointer outline-none"
-        />
-        <template #dropdown>
-          <el-dropdown-menu class="translation">
-            <el-dropdown-item
-              :class="['dark:!text-white', getDropdownItemClass(locale, 'zh')]"
-              :style="getDropdownItemStyle(locale, 'zh')"
-              @click="translationCh"
-            >
-              <span v-show="locale === 'zh'" class="check-zh">
-                <IconifyIconOffline :icon="Check"/>
-              </span>
-              简体中文
-            </el-dropdown-item>
-            <el-dropdown-item
-              :class="['dark:!text-white', getDropdownItemClass(locale, 'en')]"
-              :style="getDropdownItemStyle(locale, 'en')"
-              @click="translationEn"
-            >
-              <span v-show="locale === 'en'" class="check-en">
-                <IconifyIconOffline :icon="Check"/>
-              </span>
-              English
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
         <span class="el-dropdown-link navbar-bg-hover">
-          <img :src="userAvatar" :style="avatarsStyle"/>
-          <p v-if="username" class="dark:text-white">{{ username }}</p>
+          <img :src="userAvatar" :style="avatarsStyle" />
+          <p v-if="user_name" class="dark:text-white">{{ user_name }}</p>
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
@@ -108,7 +74,7 @@ nextTick(() => {
                 :icon="LogoutCircleRLine"
                 style="margin: 5px"
               />
-              {{ t("buttons.hsLoginOut") }}
+              退出系统
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -118,7 +84,7 @@ nextTick(() => {
         class="set-icon navbar-bg-hover"
         @click="onPanel"
       >
-        <IconifyIconOffline :icon="Setting"/>
+        <IconifyIconOffline :icon="Setting" />
       </span>
     </div>
   </div>

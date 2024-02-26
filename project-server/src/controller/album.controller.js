@@ -1,5 +1,6 @@
 const {addAlbum, getAlbumList, getAllAlbumList, deleteAlbum} = require("../service/album.service")
-const {albumAlreadyExisted, getAlbumListError, deleteAlbumError} = require("../constant/err.type")
+const {result, throwError, ERRORCODE} = require("../constant/err.type")
+const errorCode =  ERRORCODE.ALBUM
 
 class AlbumController {
     /** 新增相册 */
@@ -8,14 +9,10 @@ class AlbumController {
             const {album_name} = ctx.request.body
             let res = await addAlbum(ctx.request.body)
             // console.log(res)
-            ctx.body = {
-                code: 0,
-                message: "添加相册成功",
-                result: res
-            }
+            ctx.body = result("新增相册成功", res)
         } catch (err) {
             console.error(err)
-            return ctx.app.emit("error", albumAlreadyExisted, ctx)
+            return ctx.app.emit("error", throwError(errorCode, "新增相册失败"), ctx)
 
         }
     }
@@ -27,14 +24,10 @@ class AlbumController {
         try {
             const {id} = ctx.params
             let res = await deleteAlbum(id)
-            ctx.body = {
-                code: 0,
-                message: "删除相册成功",
-                result: ""
-            }
+            ctx.body = result("删除相册成功", "")
         } catch (err) {
             console.error(err)
-            return ctx.app.emit("error", deleteAlbumError, ctx)
+            return ctx.app.emit("error", throwError(errorCode, "删除相册失败"), ctx)
         }
     }
 
@@ -44,14 +37,10 @@ class AlbumController {
             // 解析 pageNum pageSize
             const {pageNum = 1, pageSize = 10} = ctx.request.query;
             let res = await getAlbumList(pageNum, pageSize)
-            ctx.body = {
-                code: 0,
-                message: "分页查询相册列表成功",
-                result: res
-            }
+            ctx.body = result("分页查询成功", res)
         } catch (err) {
             console.error(err)
-            return ctx.app.emit("error", getAlbumListError, ctx)
+            return ctx.app.emit("error", throwError(errorCode, "分页查询失败"), ctx)
         }
     }
 
@@ -59,14 +48,10 @@ class AlbumController {
     async getAllAlbum(ctx) {
         try {
             const res = await getAllAlbumList()
-            ctx.body = {
-                code: 0,
-                message: "获取所有相册列表成功",
-                result: res
-            }
+            ctx.body = result("获取相册列表成功", res)
         } catch (err) {
             console.error(err)
-            return ctx.app.emit("error", getAlbumListError, ctx)
+            return ctx.app.emit("error", throwError(errorCode, "获取相册列表失败"), ctx)
         }
     }
 }

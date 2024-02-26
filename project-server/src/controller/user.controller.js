@@ -2,18 +2,25 @@ const path = require("path");
 // 导入 JWT
 const jwt = require('jsonwebtoken');
 
-const { JWT_SECRET } = require("../config/config.default")
+const { JWT_SECRET, ADMIN_PASSWORD } = require("../config/config.default")
 
-const { createUser, getOneUserInfo, updateById } = require("../service/user.service")
+const {
+    createUser, getOneUserInfo,
+    updatePassword, updateRole,
+    updateIp, getUserList,
+    updateOwnUserInfo, adminUpdateUserInfo,
+    getAuthorNameById, getUserCount
+} = require("../service/user.service")
 const { decryptToken }  = require("../service/auth.service")
+const { getIpAddress } = require("../utils/tools")
 
-const { userRegisterError, unSupportedFileType, fileUploadError } = require("../constant/err.type")
-
-
+const { ERRORCODE, throwError, result } = require("../constant/err.type")
+const errorCode = ERRORCODE.USER
 
 
 class UserController {
-    async register(ctx, next) {
+    /** 注册函数 */
+    async register(ctx) {
         // 1. 获取数据
         // console.log(ctx.request.body);
         // const { user_name, password } = ctx.request.body
@@ -22,71 +29,113 @@ class UserController {
         try {
             const res = await createUser(ctx.request.body);
             // 3. 返回数据
-            ctx.body = {
-                code: 0,
-                message: '用户注册成功',
-                result: {
-                    id: res.id,
-                    user_name: res.user_name,
-                }
-            };
+            ctx.body = result("用户注册成功", { id: res.id, user_name: res.user_name })
         } catch (err) {
             console.log(err);
-            ctx.app.emit('userRegisterError', userRegisterError, ctx);
+            ctx.app.emit("error", throwError(errorCode, "用户注册失败"), ctx);
         }
 
 
     }
-
-    async login(ctx, next) {
-        const { user_name } = ctx.request.body;
+    /** 登录函数 */
+    async login(ctx) {
+        const { user_name, password } = ctx.request.body;
         // 1. 获取用户信息(在 token 的 payload 中 记录 id, user_name, is_admin)
         // console.log("ctx", ctx.request.body);
         try {
-            // 从 返回结果 剔除掉 password ，把剩下的结果 放在 res 中
-            const { password, ...res } = await getOneUserInfo({ user_name });
-            // console.log("res", res);
-            ctx.body = {
-                code: 0,
-                message: '用户登录成功',
-                result: {
-                    /* 调用 jwt.sign() 方法生成 JWT 字符串
-                     * 第一个参数：用户信息对象
-                     * 第二个参数：加密的密钥
-                     * 第三个参数：配置对象，配置token有效期
-                     * */
-                    token: jwt.sign(res, JWT_SECRET, { expiresIn: '1h' }),
-                    user_name: res.user_name,
-                    nick_name: res.nick_name,
-                    id: res.id,
-                    avatar: res.avatar
+            if (user_name == 'admin') {
+                if (password == ADMIN_PASSWORD) {
+                    ctx.body = result("超级管理员登录成功", {
+                        token: jwt.sign({ nick_name: '超级管理员', id: 1, role: 1, user_name: 'admin'}, JWT_SECRET, { expiresIn: "1d" }),
+                        user_name: "超级管理员",
+                        role: 1,
+                        id: 1
+                    })
+                } else {
+                    return ctx.app.emit("error", throwError(errorCode, "密码错误"), ctx)
                 }
+            } else {
+                // 从返回的对象中剔除password属性，将剩下的属性放到res对象
+                const { password, ...res } = await getOneUserInfo({ user_name });
+                // 保存用户ip地址
+                let ip = ctx.get("X-Real-IP") || ctx.get("X-Forwarded-For") || ctx.ip;
+                await updateIp(res.id, ip.split(":").pop());
+                const ipAddress = getIpAddress(ip.split(":").pop());
+                ctx.body = result("用户登录成功", {
+                    /* 调用 jwt.sign() 方法生成 JWT 字符串
+                        * 第一个参数：用户信息对象
+                        * 第二个参数：加密的密钥
+                        * 第三个参数：配置对象，配置token有效期
+                        * */
+                    token: jwt.sign(res,JWT_SECRET,{ expiresIn: '1d' }),
+                    user_name: res.user_name,
+                    role: res.role,
+                    id: res.id,
+                    ipAddress
+                })
             }
 
         } catch (err) {
             console.error("用户登录失败", err);
+            return ctx.app.emit("error", throwError(errorCode, "用户登陆失败"), ctx)
         }
     }
 
     /** 修改密码 */
-    async changePassword(ctx, next) {
-        /** 获取数据 */
-        const id = ctx.stale.user.id;
-        const password = ctx.request.body.password;
+    async updatePassword(ctx) {
+        try {
+            /** 获取数据 */
+            const { id } = ctx.stale.user;
+            const { password1 } = ctx.request.body;
 
-        /** 操作数据库 */
-        if (await updateById({ id, password, })) {
-            ctx.body = {
-                code: 0,
-                message: '修改密码成功',
-                result: '',
+            /** 操作数据库 */
+            if (id == 2) {
+                return ctx.app.emit("error~", throwError(errorCode, "测试用户密码不可以修改哦~"), ctx)
             }
-        } else {
-            ctx.body = {
-                code: '10007',
-                message: '修改密码失败',
-                result: '',
-            }
+            const res = await updatePassword(id, password1)
+            ctx.body = result("修改密码成功", res)
+        } catch (err) {
+            console.error(err);
+            return ctx.app.emit('error', throwError(errorCode, "修改用户密码失败"), ctx)
+        }
+    }
+
+    /** 用户修改自己的用户信息 */
+    async updateOwnUserInfo(ctx) {
+        try {
+            const { id } = ctx.state.user
+            const res = await updateOwnUserInfo(id, ctx.result.body)
+            ctx.body = result("修改用户成功", res)
+
+        } catch (err) {
+            console.error(err)
+            return ctx.app.emit("error", throwError(errorCode, "修改用户失败"), ctx)
+        }
+    }
+
+    /**
+     * 管理员根据id修改用户信息
+     * @param {*} ctx
+     * */
+    async adminUpdateUserInfo(ctx) {
+        try {
+            let res = await adminUpdateUserInfo(ctx.request.body)
+            ctx.body = result("修改用户信息成功", res)
+        } catch (err) {
+            console.error(err)
+            return ctx.app.emit("error", throwError(errorCode, "修改用户信息失败"), ctx)
+        }
+    }
+
+    /** 修改用户角色 */
+    async updateRole(ctx) {
+        try {
+            const { id, role } = ctx.params
+            const res = await updateRole(id, role)
+            ctx.body = result("修改角色成功", res)
+        } catch (err) {
+            console.error(err);
+            return ctx.app.emit('error', throwError(errorCode, "修改角色失败"), ctx)
         }
     }
 
@@ -99,20 +148,17 @@ class UserController {
             /** 拿到 token 并去掉 token前面的 “Bearer ” */
             const token = authorization.replace("Bearer ", "");
             let res = await decryptToken(token);
-            console.log("userInfo",res.id)
+            // console.log("userInfo",res.id)
             // console.log("userInfo",res)
-            ctx.body = {
-                code: 0,
-                message: "查询用户成功",
-                result: {
-                    id: res.id,
-                    nick_name: res.nick_name,
-                    avatar: res.avatar
-                }
-            }
+            ctx.body = result("获取个人信息成功", {
+                id: res.id,
+                nick_name: res.nick_name,
+                avatar: res.avatar
+            })
 
         } catch (err) {
             console.error(err)
+            return ctx.app.emit("error", throwError(errorCode, "获取个人信息失败"), ctx)
         }
     }
 
@@ -121,29 +167,36 @@ class UserController {
         try {
             if (ctx.params.id) {
                 if (ctx.params.id == 1) {
-                    ctx.body = {
-                        code: 0,
-                        message: "获取用户信息成功",
-                        result: {
-                            id: 76743,
-                            nick_name: "超级管理员",
-                            role: 1
-                        }
-                    }
+                    ctx.body = result("此账号为超级管理员", {
+                        nick_name: "超级管理员",
+                        role: 1
+                    })
                 } else {
                     let res = await getOneUserInfo({id: ctx.params.id})
-                    const {password, user_name, ...resInfo} = res;
-                    ctx.body = {
-                        code: 0,
-                        message: "获取用户信息成功",
-                        result: resInfo
-                    }
+                    const {password, user_name, ip,...resInfo} = res;
+                    const ipAddress = getIpAddress(ip);
+                    resInfo.ipAddress = ipAddress;
+                    ctx.body = result("获取用户信息成功", resInfo)
                 }
             }
         } catch (err) {
             console.error(err)
+            return ctx.app.emit("error", throwError(errorCode, "获取信息失败"), ctx)
         }
     }
+
+    /** 分页获取用户信息 */
+    async getUserList(ctx) {
+        try {
+            const { current, size, nick_name, role } = ctx.request.body
+            const res = await getUserList({ current, size, nick_name, role })
+            ctx.body = result("获取用户列表成功", res)
+        } catch (err) {
+            console.error(err)
+            return ctx.app.emit("error", throwError(errorCode, "获取用户列表失败"), ctx)
+        }
+    }
+
 }
 
 

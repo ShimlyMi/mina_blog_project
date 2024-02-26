@@ -2,30 +2,31 @@
 import Search from "./search/index.vue";
 import Notice from "./notice/index.vue";
 import mixNav from "./sidebar/mixNav.vue";
-import {useNav} from "@/layout/hooks/useNav";
+import { useNav } from "@/layout/hooks/useNav";
 import Breadcrumb from "./sidebar/breadCrumb.vue";
 import topCollapse from "./sidebar/topCollapse.vue";
-import {useTranslationLang} from "../hooks/useTranslationLang";
-import globalization from "@/assets/svg/globalization.svg?component";
+import { useTranslationLang } from "../hooks/useTranslationLang";
+// import globalization from "@/assets/svg/globalization.svg?component";
 import LogoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
 import Setting from "@iconify-icons/ri/settings-3-line";
-import Check from "@iconify-icons/ep/check";
+// import Check from "@iconify-icons/ep/check";
 
 const {
   layout,
   device,
   logout,
   onPanel,
-  pureApp,
-  username,
+  minaApp,
+  user_name,
   userAvatar,
   avatarsStyle,
-  toggleSideBar,
-  getDropdownItemStyle,
-  getDropdownItemClass
+  toggleSideBar
+  // getDropdownItemStyle,
+  // getDropdownItemClass
 } = useNav();
 
-const {t, locale, translationCh, translationEn} = useTranslationLang();
+// const { t, locale, translationCh, translationEn } = useTranslationLang();
+const { t } = useTranslationLang();
 </script>
 
 <template>
@@ -34,7 +35,7 @@ const {t, locale, translationCh, translationEn} = useTranslationLang();
   >
     <topCollapse
       v-if="device === 'mobile'"
-      :is-active="pureApp.sidebar.opened"
+      :is-active="minaApp.sidebar.opened"
       class="hamburger-container"
       @toggleClick="toggleSideBar"
     />
@@ -44,50 +45,20 @@ const {t, locale, translationCh, translationEn} = useTranslationLang();
       class="breadcrumb-container"
     />
 
-    <mixNav v-if="layout === 'mix'"/>
+    <mixNav v-if="layout === 'mix'" />
 
     <div v-if="layout === 'vertical'" class="vertical-header-right">
       <!-- 菜单搜索 -->
-      <Search/>
+      <Search />
       <!-- 通知 -->
-      <Notice id="header-notice"/>
+      <Notice id="header-notice" />
       <!-- 国际化 -->
-      <el-dropdown id="header-translation" trigger="click">
-        <globalization
-          class="navbar-bg-hover w-[40px] h-[48px] p-[11px] cursor-pointer outline-none"
-        />
-        <template #dropdown>
-          <el-dropdown-menu class="translation">
-            <el-dropdown-item
-              :class="['dark:!text-white', getDropdownItemClass(locale, 'zh')]"
-              :style="getDropdownItemStyle(locale, 'zh')"
-              @click="translationCh"
-            >
-              <IconifyIconOffline
-                v-show="locale === 'zh'"
-                :icon="Check"
-                class="check-zh"
-              />
-              简体中文
-            </el-dropdown-item>
-            <el-dropdown-item
-              :class="['dark:!text-white', getDropdownItemClass(locale, 'en')]"
-              :style="getDropdownItemStyle(locale, 'en')"
-              @click="translationEn"
-            >
-              <span v-show="locale === 'en'" class="check-en">
-                <IconifyIconOffline :icon="Check"/>
-              </span>
-              English
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
         <span class="el-dropdown-link navbar-bg-hover select-none">
-          <img :src="userAvatar" :style="avatarsStyle"/>
-          <p v-if="username" class="dark:text-white">{{ username }}</p>
+          <img :src="userAvatar" :style="avatarsStyle" />
+          <p v-if="user_name" class="dark:text-white">{{ user_name }}</p>
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
@@ -106,7 +77,7 @@ const {t, locale, translationCh, translationEn} = useTranslationLang();
         class="set-icon navbar-bg-hover"
         @click="onPanel"
       >
-        <IconifyIconOffline :icon="Setting"/>
+        <IconifyIconOffline :icon="Setting" />
       </span>
     </div>
   </div>

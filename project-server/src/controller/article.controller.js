@@ -1,7 +1,8 @@
 
 const { createArticle, updateArticleById, removeArticleById, revertArticle, toggleArticlePublic, getArticleInfoByTitle, findArticle } = require("../service/article/article.service");
-const { publishArticleError, invalidArticle, invalidArticleID, listArticleError } = require("../constant/err.type");
+const { ERRORCODE, result, throwError } = require("../constant/err.type");
 const tty = require("tty");
+const errorCode = ERRORCODE
 
 class ArticleController {
     // 新增文章
@@ -9,14 +10,10 @@ class ArticleController {
         // 直接调用 service 里的 createArticle 方法
         try {
            let { createdAt, updatedAt, ...res } =  await createArticle(ctx.request.body);
-           ctx.body = {
-               code: 0,
-               message: "文章发布成功",
-               result: res,
-           }
+           ctx.body = result("文章发布成功", res)
         } catch (err) {
             console.error(err);
-            return ctx.app.emit('error', publishArticleError, ctx);
+            return ctx.app.emit('error', throwError(errorCode, "文章发布失败"), ctx);
         }
 
     }
@@ -25,13 +22,9 @@ class ArticleController {
         try {
             const res = await updateArticleById(ctx.request.body);
             if (res) {
-                ctx.body = {
-                    code: 0,
-                    message: "修改商品成功",
-                    result: "",
-                }
+                ctx.body = result("修改商品成功", res)
             } else {
-                return ctx.app.emit('error',invalidArticle,ctx);
+                return ctx.app.emit('error',throwError(errorCode, "修改商品失败"),ctx);
             }
         } catch (err) {
             console.error(err);
@@ -44,28 +37,20 @@ class ArticleController {
             const { id } = ctx.params;
             const res = await removeArticleById(id);
             console.log(res)
-            ctx.body = {
-                code: 0,
-                message: "文章下架成功",
-                result: "",
-            }
+            ctx.body = result("文章下架成功", "")
         } catch (err) {
             console.error(err);
-            return ctx.app.emit("error", invalidArticleID, ctx);
+            return ctx.app.emit("error", throwError(errorCode, "文章下架失败"), ctx);
         }
     }
     // 恢复文章
     async restore(ctx) {
         try {
             const res = await revertArticle(ctx.params.id);
-            ctx.body = {
-                code: 0,
-                message: "文章恢复成功",
-                result: '',
-            }
+            ctx.body = result("文章恢复成功", "")
         } catch (err) {
             console.error(err);
-            return ctx.app.emit("error", invalidArticleID, ctx);
+            return ctx.app.emit("error", throwError(errorCode, "恢复文章失败"), ctx);
         }
     }
     // 公开或隐藏文章
@@ -74,11 +59,7 @@ class ArticleController {
             const { id, status } = ctx.params;
             let res = await toggleArticlePublic(id, status);
             let message = Number(status) === 1 ? "隐藏文章" : "公开文章";
-            ctx.body = {
-                code: 0,
-                message: message + "成功",
-                result: res,
-            }
+            ctx.body = result(`${message}成功`, res)
         } catch (err) {
             console.error(err);
         }
@@ -91,14 +72,10 @@ class ArticleController {
             // 调用数据处理方法
             let res = await  findArticle(pageNum, pageSize);
             // 返回结果
-            ctx.body = {
-                code: 0,
-                message: "文章列表查询成功",
-                result: res,
-            }
+            ctx.body = result("文章列表查询成功", res)
         } catch (err) {
             console.error(err);
-            return ctx.app.emit('error', listArticleError, ctx);
+            return ctx.app.emit('error', throwError(errorCode, "查询失败"), ctx);
         }
 
 

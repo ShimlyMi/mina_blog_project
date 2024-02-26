@@ -2,7 +2,7 @@
 import path from "path";
 import { getConfig } from "@/config";
 import { menuType } from "../../types";
-import extraIcon from "./extraIcon.vue";
+// import extraIcon from "./extraIcon.vue";
 import { useNav } from "@/layout/hooks/useNav";
 import { transformI18n } from "@/plugins/i18n";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
@@ -28,7 +28,18 @@ const props = defineProps({
     default: ""
   }
 });
-
+const getExtraIconStyle = computed((): CSSProperties => {
+  if (!isCollapse.value) {
+    return {
+      position: "absolute",
+      right: "10px"
+    };
+  } else {
+    return {
+      position: "static"
+    };
+  }
+});
 const getSpanStyle = computed((): CSSProperties => {
   return {
     width: "100%",
@@ -250,7 +261,15 @@ function resolvePath(routePath) {
             {{ transformI18n(onlyOneChild.meta.title) }}
           </span>
         </el-tooltip>
-        <extraIcon :extraIcon="onlyOneChild.meta.extraIcon" />
+        <!--        <extraIcon :extraIcon="onlyOneChild.meta.extraIcon" />-->
+        <FontIcon
+          v-if="onlyOneChild.meta.extraIcon"
+          width="30px"
+          height="30px"
+          :style="getExtraIconStyle"
+          :icon="onlyOneChild.meta.extraIcon.name"
+          :svg="onlyOneChild.meta.extraIcon.svg"
+        />
       </div>
     </template>
   </el-menu-item>
@@ -304,7 +323,15 @@ function resolvePath(routePath) {
             }}
           </span>
         </el-tooltip>
-        <extraIcon v-if="!isCollapse" :extraIcon="props.item.meta.extraIcon" />
+        <FontIcon
+          v-if="props.item.meta.extraIcon"
+          width="30px"
+          height="30px"
+          style="position: absolute; right: 10px"
+          :icon="props.item.meta.extraIcon.name"
+          :svg="props.item.meta.extraIcon.svg"
+        />
+        <!--        <extraIcon v-if="!isCollapse" :extraIcon="props.item.meta.extraIcon" />-->
       </div>
     </template>
     <sidebar-item

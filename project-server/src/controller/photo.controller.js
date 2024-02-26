@@ -1,4 +1,4 @@
-const {addPictureError, getPictureListError, deletePictureError, revertPictureError} = require("../constant/err.type")
+
 const {
     addPic,
     getPicByAlbumId,
@@ -7,6 +7,8 @@ const {
     deletePicByAlbumId,
     getAllPicByAlbumId
 } = require("../service/photo.service")
+const { ERRORCODE, throwError, result } = require("../constant/err.type")
+const errorCode = ERRORCODE.USER
 
 class PhotoController {
     /** 批量添加图片 */
@@ -14,14 +16,10 @@ class PhotoController {
         try {
             let {photoList} = ctx.request.body
             const res = await addPic(photoList)
-            ctx.body = {
-                code: 0,
-                message: "批量新增图片成功",
-                result: res
-            }
+            ctx.body = result("批量新增图片成功", res)
         } catch (err) {
             console.error(err)
-            return ctx.app.emit("error", addPictureError, ctx)
+            return ctx.app.emit("error", throwError(errorCode, "批量新增图片失败"), ctx)
         }
     }
 
@@ -31,15 +29,11 @@ class PhotoController {
             const {imgList, status} = ctx.request.body
             let idList = imgList.map(v => v.id)
             const res = await deletePic(idList, status)
-            ctx.body = {
-                code: 0,
-                message: "批量删除图片成功",
-                result: res
-            }
+            ctx.body = result("批量删除图片成功", res)
 
         } catch (err) {
             console.error(err)
-            return ctx.app.emit('error', deletePictureError, ctx)
+            return ctx.app.emit('error', throwError(errorCode, "批量删除图片失败"), ctx)
         }
     }
 
@@ -48,14 +42,10 @@ class PhotoController {
         try {
             const {idList} = ctx.request.body
             let res = await revertPic(idList)
-            ctx.body = {
-                code: 0,
-                message: "批量恢复图片成功",
-                result: res
-            }
+            ctx.body = result("批量恢复图片成功", res)
         } catch (err) {
             console.error(err)
-            return ctx.app.emit('error', revertPictureError, ctx)
+            return ctx.app.emit('error', throwError(errorCode, "批量恢复图片失败"), ctx)
         }
     }
 
@@ -66,14 +56,10 @@ class PhotoController {
             let res = await getPicByAlbumId({ pageNum,pageSize,id})*/
             // console.log("iiii")
             const res = await getPicByAlbumId(ctx.request.body)
-            ctx.body = {
-                code: 0,
-                message: "分页获取相册图片成功",
-                result: res
-            }
+            ctx.body = result("分页获取图片成功", res)
         } catch (err) {
             console.error(err)
-            return ctx.app.emit('error', getPictureListError, ctx)
+            return ctx.app.emit('error', throwError(errorCode, "分页获取图片失败"), ctx)
         }
     }
 
@@ -81,14 +67,10 @@ class PhotoController {
     async getAllPicByAlbumId(ctx) {
         try {
             const res = await getAllPicByAlbumId(ctx.params.id)
-            ctx.body = {
-                code: 0,
-                message: "获取相册图片成功",
-                result: res
-            }
+            ctx.body = result("获取图片成功", res)
         } catch (err) {
             console.error(err)
-            return ctx.app.emit('error', getPictureListError, ctx)
+            return ctx.app.emit('error', throwError(errorCode, "获取图片失败"), ctx)
         }
     }
 }
