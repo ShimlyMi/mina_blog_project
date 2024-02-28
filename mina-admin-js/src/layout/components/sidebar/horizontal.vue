@@ -9,6 +9,7 @@ import { useTranslationLang } from "../../hooks/useTranslationLang";
 import { usePermissionStoreHook } from "@/store/modules/permission";
 import LogoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
 import Setting from "@iconify-icons/ri/settings-3-line";
+import User from "@iconify-icons/ri/user-3-fill";
 
 const menuRef = ref();
 
@@ -76,6 +77,12 @@ nextTick(() => {
               />
               退出系统
             </el-dropdown-item>
+            <router-link to="/personal">
+              <el-dropdown-item>
+                <IconifyIconOffline :icon="User" style="margin: 5px" />
+                个人中心
+              </el-dropdown-item>
+            </router-link>
           </el-dropdown-menu>
         </template>
       </el-dropdown>

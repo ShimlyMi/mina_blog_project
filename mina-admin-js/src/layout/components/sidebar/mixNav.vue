@@ -14,6 +14,7 @@ import globalization from "@/assets/svg/globalization.svg?component";
 import LogoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
 import Setting from "@iconify-icons/ri/settings-3-line";
 import Check from "@iconify-icons/ep/check";
+import User from "@iconify-icons/ri/user-3-fill";
 
 const menuRef = ref();
 const defaultActive = ref(null);
@@ -143,6 +144,12 @@ watch(
               <IconifyIconOffline :icon="LogoutCircleRLine" />
               退出系统
             </el-dropdown-item>
+            <router-link to="/personal">
+              <el-dropdown-item>
+                <IconifyIconOffline :icon="User" style="margin: 5px" />
+                个人中心
+              </el-dropdown-item>
+            </router-link>
           </el-dropdown-menu>
         </template>
       </el-dropdown>

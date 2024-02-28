@@ -15,18 +15,18 @@ import {
   storageLocal,
   storageSession
 } from "@pureadmin/utils";
-import {getConfig} from "@/config";
-import {useRouter} from "vue-router";
+import { getConfig } from "@/config";
+import { useRouter } from "vue-router";
 import panel from "../panel/index.vue";
-import {emitter} from "@/utils/mitt";
-import {resetRouter} from "@/router";
-import {removeToken} from "@/utils/auth";
-import {routerArrays} from "@/layout/types";
-import {useNav} from "@/layout/hooks/useNav";
-import {useAppStoreHook} from "@/store/modules/app";
-import {toggleTheme} from "@pureadmin/theme/dist/browser-utils";
-import {useMultiTagsStoreHook} from "@/store/modules/multiTags";
-import {useDataThemeChange} from "@/layout/hooks/useDataThemeChange";
+import { emitter } from "@/utils/mitt";
+import { resetRouter } from "@/router";
+import { removeToken } from "@/utils/auth";
+import { routerArrays } from "@/layout/types";
+import { useNav } from "@/layout/hooks/useNav";
+import { useAppStoreHook } from "@/store/modules/app";
+import { toggleTheme } from "@pureadmin/theme/dist/browser-utils";
+import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
+import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
 
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
@@ -34,9 +34,9 @@ import Check from "@iconify-icons/ep/check";
 import Logout from "@iconify-icons/ri/logout-circle-r-line";
 
 const router = useRouter();
-const {isDark} = useDark();
-const {device, tooltipEffect} = useNav();
-const {$storage} = useGlobal<GlobalPropertiesApi>();
+const { isDark } = useDark();
+const { device, tooltipEffect } = useNav();
+const { $storage } = useGlobal<GlobalPropertiesApi>();
 
 const mixRef = ref();
 const verticalRef = ref();
@@ -77,7 +77,7 @@ const settings = reactive({
 
 const getThemeColorStyle = computed(() => {
   return color => {
-    return {background: color};
+    return { background: color };
   };
 });
 
@@ -96,7 +96,7 @@ function storageConfigureChange<T>(key: string, val: T): void {
 
 function toggleClass(flag: boolean, clsName: string, target?: HTMLElement) {
   const targetEl = target || document.body;
-  let {className} = targetEl;
+  let { className } = targetEl;
   className = className.replace(clsName, "").trim();
   targetEl.className = flag ? `${className} ${clsName} ` : className;
 }
@@ -134,7 +134,7 @@ function onReset() {
   removeToken();
   storageLocal().clear();
   storageSession().clear();
-  const {Grey, Weak, MultiTagsCache, EpThemeColor, Layout} = getConfig();
+  const { Grey, Weak, MultiTagsCache, EpThemeColor, Layout } = getConfig();
   useAppStoreHook().setLayout(Layout);
   setEpThemeColor(EpThemeColor);
   useMultiTagsStoreHook().multiTagsCacheChange(MultiTagsCache);
@@ -176,7 +176,7 @@ const getThemeColor = computed(() => {
       current === layoutTheme.value.theme &&
       layoutTheme.value.theme === "light"
     ) {
-      return "#1d2b45";
+      return "#304156";
     } else {
       return "transparent";
     }
@@ -197,7 +197,7 @@ function setLayoutModel(layout: string) {
   useAppStoreHook().setLayout(layout);
 }
 
-watch($storage, ({layout}) => {
+watch($storage, ({ layout }) => {
   switch (layout["layout"]) {
     case "vertical":
       toggleClass(true, "is-select", unref(verticalRef));
@@ -221,9 +221,9 @@ onBeforeMount(() => {
   /* 初始化项目配置 */
   nextTick(() => {
     settings.greyVal &&
-    document.querySelector("html")?.setAttribute("class", "html-grey");
+      document.querySelector("html")?.setAttribute("class", "html-grey");
     settings.weakVal &&
-    document.querySelector("html")?.setAttribute("class", "html-weakness");
+      document.querySelector("html")?.setAttribute("class", "html-weakness");
     settings.tabsVal && tagsChange();
   });
 });
@@ -255,8 +255,8 @@ onBeforeMount(() => {
           :class="layoutTheme.layout === 'vertical' ? 'is-select' : ''"
           @click="setLayoutModel('vertical')"
         >
-          <div/>
-          <div/>
+          <div />
+          <div />
         </li>
       </el-tooltip>
 
@@ -273,8 +273,8 @@ onBeforeMount(() => {
           :class="layoutTheme.layout === 'horizontal' ? 'is-select' : ''"
           @click="setLayoutModel('horizontal')"
         >
-          <div/>
-          <div/>
+          <div />
+          <div />
         </li>
       </el-tooltip>
 
@@ -291,8 +291,8 @@ onBeforeMount(() => {
           :class="layoutTheme.layout === 'mix' ? 'is-select' : ''"
           @click="setLayoutModel('mix')"
         >
-          <div/>
-          <div/>
+          <div />
+          <div />
         </li>
       </el-tooltip>
     </ul>
@@ -311,7 +311,7 @@ onBeforeMount(() => {
           :size="17"
           style="margin: 0.1em 0.1em 0 0"
         >
-          <IconifyIconOffline :icon="Check"/>
+          <IconifyIconOffline :icon="Check" />
         </el-icon>
       </li>
     </ul>
@@ -385,7 +385,7 @@ onBeforeMount(() => {
       </li>
     </ul>
 
-    <el-divider/>
+    <el-divider />
     <el-button
       style="width: 90%; margin: 24px 15px"
       type="danger"

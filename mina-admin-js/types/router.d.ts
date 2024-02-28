@@ -1,6 +1,8 @@
 // 全局路由类型声明
 
 import {type RouteComponent, type RouteLocationNormalized} from "vue-router";
+import {IconifyIcon} from "@iconify/vue";
+import {FunctionalComponent} from "vue";
 
 declare global {
   interface ToRouteType extends RouteLocationNormalized {
@@ -22,7 +24,7 @@ declare global {
     /** 是否显示父级菜单 `可选` */
     showParent?: boolean;
     /** 页面级别权限设置 `可选` */
-    roles?: Array<string>;
+    role?: Array<string>;
     /** 按钮级别权限设置 `可选` */
     auths?: Array<string>;
     /** 路由组件缓存（开启 `true`、关闭 `false`）`可选` */
