@@ -2,8 +2,18 @@
 defineOptions({
   name: "Welcome"
 });
+import Line from "./components/figures.vue";
+import PanelGroup from "./components/panel.vue";
 </script>
 
 <template>
-  <h1>Pure-Admin-Thin（国际化版本）</h1>
+  <div class="home">
+<!--    <template #header>首页</template>-->
+    <panel-group />
+    <el-row style="background: #fff; padding: 16px 16px 0; margin-bottom: 32px">
+      <el-col :span="24">
+        <Line />
+      </el-col>
+    </el-row>
+  </div>
 </template>

@@ -50,6 +50,7 @@
     "responsive-storage": "^2.2.0",
     "sortablejs": "^1.15.0",
     "vue": "^3.3.4",
+    "vue-class-component": "^7.2.6",
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.2.2",
     "vue-types": "^5.1.0"

@@ -1,8 +1,8 @@
-import {store} from "@/store";
-import {appType} from "./types";
-import {defineStore} from "pinia";
-import {getConfig, responsiveStorageNameSpace} from "@/config";
-import {deviceDetection, storageLocal} from "@pureadmin/utils";
+import { store } from "@/store";
+import { appType } from "./types";
+import { defineStore } from "pinia";
+import { getConfig, responsiveStorageNameSpace } from "@/config";
+import { deviceDetection, storageLocal } from "@pureadmin/utils";
 
 export const useAppStore = defineStore({
   id: "mina-app",

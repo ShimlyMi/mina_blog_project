@@ -38,7 +38,7 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
     // 服务端渲染
     server: {
       // 自动开浏览器
-      open: false,
+      open: true,
       // 热更新
       hmr: {
         overlay: false
