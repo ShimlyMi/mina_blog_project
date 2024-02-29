@@ -1,7 +1,34 @@
-<script setup lang="ts" name="PanelGroup"></script>
+<script setup lang="ts" name="PanelGroup">
+import CountTo from 'vue-count-to'
+
+</script>
 
 <template>
   <el-row :gutter="40" class="panel-group">
+    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+      <div class="card-panel">
+        <div class="card-panel-icon-wrapper" />
+        <div class="card-panel-description">
+          <div class="card-panel-text">访客</div>
+        </div>
+      </div>
+    </el-col>
+    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+      <div class="card-panel">
+        <div class="card-panel-icon-wrapper" />
+        <div class="card-panel-description">
+          <div class="card-panel-text">访客</div>
+        </div>
+      </div>
+    </el-col>
+    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+      <div class="card-panel">
+        <div class="card-panel-icon-wrapper" />
+        <div class="card-panel-description">
+          <div class="card-panel-text">访客</div>
+        </div>
+      </div>
+    </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper" />

@@ -96,7 +96,7 @@ setOptions({
       },
       animationDuration: 2800,
       animationEasing: "quadraticOut",
-      data: [522, 636, 901, 934, 678, 855, 666]
+      data: [522, 693, 901, 934, 678, 855, 666]
     }
   ]
 });
