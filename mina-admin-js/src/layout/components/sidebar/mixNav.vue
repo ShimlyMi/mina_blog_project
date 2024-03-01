@@ -140,16 +140,17 @@ watch(
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
-            <el-dropdown-item @click="logout">
-              <IconifyIconOffline :icon="LogoutCircleRLine" />
-              退出系统
-            </el-dropdown-item>
             <router-link to="/personal">
               <el-dropdown-item>
                 <IconifyIconOffline :icon="User" style="margin: 5px" />
                 个人中心
               </el-dropdown-item>
             </router-link>
+            <el-dropdown-item @click="logout">
+              <IconifyIconOffline :icon="LogoutCircleRLine" />
+              退出系统
+            </el-dropdown-item>
+
           </el-dropdown-menu>
         </template>
       </el-dropdown>
