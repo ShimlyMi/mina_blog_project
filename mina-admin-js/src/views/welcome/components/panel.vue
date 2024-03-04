@@ -1,6 +1,4 @@
 <script setup lang="ts" name="PanelGroup">
-import CountTo from 'vue-count-to';
-
 
 </script>
 
@@ -9,7 +7,7 @@ import CountTo from 'vue-count-to';
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon icon-class="icon-people" class-name="card-panel-icon" />
+          <svg-icon name="peoples" class="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">访客</div>

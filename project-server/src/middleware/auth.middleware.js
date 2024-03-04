@@ -33,8 +33,8 @@ const auth = async(ctx, next) => {
 };
 
 /** 管理员权限 */
-const hadAdminPermission = async (ctx, next) => {
-    const { role } = ctx.state.user;
+const needAdminPermission = async (ctx, next) => {
+    const { role, user_name } = ctx.state.user;
     if (Number(role) !== 1) {
         console.error("普通用户仅限查看哦~", ctx.state.user);
         return ctx.app.emit('error', throwError(errorCode, "普通用户仅限查看哦"), ctx);
@@ -45,6 +45,8 @@ const hadAdminPermission = async (ctx, next) => {
     }
     await next();
 }
+
+
 
 // 对需要管理员权限的进行操作进行提示
 const needAdminAuth = async (ctx, next) => {
@@ -68,7 +70,7 @@ const isSuperAmin = async (ctx, next) => {
 
 module.exports = {
     auth,
-    hadAdminPermission,
+    needAdminPermission,
     needAdminAuth,
     isSuperAmin
 }
