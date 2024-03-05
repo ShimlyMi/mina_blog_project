@@ -132,7 +132,6 @@ class TalkService {
             limit,
             offset,
             where: whereOpt,
-            order: [["is_top", "ASC"], ["createAt","DESC"]]
         })
         let promiseList = [];
         promiseList = rows.map(async (v) => {
@@ -183,11 +182,7 @@ class TalkService {
         const limit = size * 1
         const { rows, count } = await Talk.findAndCountAll({
             limit, offset,
-            where: { status: 1 },
-            order: [
-                ["is_top", "ASC"],
-                ["createdAt", "DESC"],
-            ]
+            where: { status: 1 }
         })
         let promiseList = [];
         promiseList = rows.map(async (v) => {
