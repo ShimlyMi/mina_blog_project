@@ -2,8 +2,12 @@
 import { useRouter } from "vue-router";
 import { useNav } from "@/layout/hooks/useNav";
 import zhiding from "@/assets/svg/zhiding.svg?component";
-import {onMounted, reactive, ref} from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { getTalkList } from "@/api/talk";
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import Plus from "@iconify-icons/ep/plus";
+import Delete from "@iconify-icons/ep/delete";
+
 
 const router = useRouter();
 const { avatar, nick_name } = useNav();
@@ -81,7 +85,29 @@ onMounted(async () => {
 </script>
 
 <template>
-  <el-card class="table-container">
+  <el-card class="talk-card">
+    <template #header>
+      <div class="flex justify-end items-center">
+        <el-button
+          v-waves
+          type="primary"
+          plain
+          style="margin-left: 10px"
+          :icon="useRenderIcon(Plus)"
+        >
+          发表说说
+        </el-button>
+        <el-button
+          v-waves
+          type="danger"
+          plain
+          style="margin-left: 10px"
+          :icon="useRenderIcon(Delete)"
+        >
+          批量删除
+        </el-button>
+      </div>
+    </template>
     <el-tabs @tab-click="tabChange">
       <template v-for="item of talkTab" :key="item.key">
         <el-tab-pane :lazy="true">
@@ -104,6 +130,9 @@ onMounted(async () => {
         </div>
       </template>
     </el-card>
+    <div class="observer">
+      {{ talkList.length >= total ? "暂无更多" : "下拉加载更多" }}
+    </div>
   </el-card>
 </template>
 
@@ -112,7 +141,9 @@ onMounted(async () => {
   height: calc(100vh - 130px);
   overflow: auto;
 }
-
+.filter-container {
+  padding-bottom: 10px;
+}
 .talk-card::-webkit-scrollbar {
   display: none;
 }
@@ -179,9 +210,11 @@ onMounted(async () => {
 }
 
 .observer {
+  display: flex;
+  justify-content: center;
   text-align: center;
   margin-top: 10px;
   font-size: 12px;
-  width: 284px;
+  width: 100%;
 }
 </style>

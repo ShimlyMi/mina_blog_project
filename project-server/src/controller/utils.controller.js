@@ -4,7 +4,7 @@ const { ERRORCODE, throwError, result } = require("../constant/err.type")
 const errorCode = ERRORCODE.UPLOAD
 
 class UtilsController {
-    /** 头像上传 */
+    /** 图片上传 */
     async upload(ctx, next) {
         const { file } = ctx.request.files;
         // console.log(file);
@@ -15,16 +15,12 @@ class UtilsController {
                 console.log(ctx.request.files.file.mimetype)
                 return ctx.app.emit('error', throwError(errorCode, "文件格式错误"), ctx)
             }
-            ctx.body = {
-                code: 0,
-                message: '商品图片上传成功',
-                result: {
-                    avatar: path.basename(file.filepath),
-                },
-            }
-            console.log("头像上传成功");
+            ctx.body = result("图片上传成功", {
+                url: "http://127.0.0.1:8888/local/" + path.basename(file.filepath),
+            })
+            console.log("图片上传成功");
         } else {
-            return ctx.app.emit('error', throwError(errorCode, "头像上传失败"), ctx)
+            return ctx.app.emit('error', throwError(errorCode, "图片上传失败"), ctx)
         }
     }
 }
