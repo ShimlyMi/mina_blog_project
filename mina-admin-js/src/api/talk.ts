@@ -17,7 +17,7 @@ export const addTalk = (data?: object) => {
 };
 
 /** 修改说说 */
-export const edit = (data?: object) => {
+export const editTalk = (data?: object) => {
   return http.request<TalkResult>("post", "/api/talk/updateTalk", { data });
 };
 

@@ -1,5 +1,6 @@
 <script setup lang="ts" name="TalkList">
 import { useRouter } from "vue-router";
+import Upload from "@/components/Upload/index.vue";
 import { useNav } from "@/layout/hooks/useNav";
 import zhiding from "@/assets/svg/zhiding.svg?component";
 import { onMounted, reactive, ref } from "vue";
@@ -8,9 +9,8 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Plus from "@iconify-icons/ep/plus";
 import Delete from "@iconify-icons/ep/delete";
 
-
 const router = useRouter();
-const { avatar, nick_name } = useNav();
+const { nick_name } = useNav();
 
 const param = reactive({
   current: 1,
@@ -19,6 +19,7 @@ const param = reactive({
 });
 const talkList = ref([]);
 let observe;
+
 const total = ref(0);
 const talkTab = [
   {
@@ -38,6 +39,17 @@ const talkTab = [
   }
 ];
 
+const talkFormRef = ref();
+const talkForm = reactive({
+  id: null,
+  content: "", //说说内容
+  is_top: 2, // 置顶 2 取消置顶 3
+  status: 1, // 1 公开 2 私密
+  talkImgList: [],
+  user_id: 0
+});
+const dialogVisible = ref(false);
+const primaryTalkForm = reactive({ ...talkForm });
 const tabChange = async (val: any) => {
   param.status = val.index ? Number(val.index) + 1 : null;
   param.current = 1;
@@ -76,6 +88,21 @@ const observeTalkBottom = () => {
   observe.observe(box);
 };
 
+const closeDialog = () => {
+  talkFormRef.value.resetFields();
+  Object.assign(talkForm, primaryTalkForm);
+  dialogVisible.value = false;
+};
+const operate = (type, val?) => {
+  switch (type) {
+    case "add":
+      dialogVisible.value = true;
+      break;
+    default:
+      return;
+  }
+};
+
 onMounted(async () => {
   await pageGetTalkList();
   if (talkList.value.length < total.value) {
@@ -94,8 +121,9 @@ onMounted(async () => {
           plain
           style="margin-left: 10px"
           :icon="useRenderIcon(Plus)"
+          @click="operate('add')"
         >
-          发表说说
+          发布说说
         </el-button>
         <el-button
           v-waves
@@ -130,6 +158,59 @@ onMounted(async () => {
         </div>
       </template>
     </el-card>
+
+    <!--  DIALOG  -->
+    <el-dialog
+      :title="talkForm.id ? '编辑说说' : '新增说说'"
+      v-model="dialogVisible"
+      :width="400"
+      :before-close="closeDialog"
+    >
+      <el-form
+        ref="talkFormRef"
+        :model="talkForm"
+        label-width="60px"
+        label-suffix=":"
+      >
+        <el-form-item label="内容">
+          <el-input
+            type="textarea"
+            v-model="talkForm.content"
+            clearable
+            class="max-w-[300px]"
+          />
+        </el-form-item>
+        <el-form-item label="图片">
+          <Upload
+            v-model:fileListt="talkForm.talkImgList"
+            :width="200"
+            :height="200"
+            :limit="1"
+          />
+        </el-form-item>
+        <el-form-item label="置顶">
+          <el-switch
+            v-model="talkForm.is_top"
+            inline-prompt
+            active-text="on"
+            :active-value="2"
+            :inactive-value="1"
+            inactive-text="off"
+          />
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-select v-model="talkForm.status" class="w-[120px]">
+            <el-option label="公开" :value="1" />
+            <el-option label="私密" :value="2" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button size="small" type="danger" @click="closeDialog()" plain>取消</el-button>
+        <el-button size="small" plain>保存</el-button>
+      </template>
+    </el-dialog>
+
     <div class="observer">
       {{ talkList.length >= total ? "暂无更多" : "下拉加载更多" }}
     </div>

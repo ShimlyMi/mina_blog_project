@@ -13,6 +13,24 @@ export default {
       meta: {
         title: "说说列表"
       }
+    },
+    {
+      path: "/talk/add",
+      mame: "addTalk",
+      component: () => import("@/views/talk/add-edit-talk/index.vue"),
+      meta: {
+        title: "发布说说",
+        showLink: false
+      }
+    },
+    {
+      path: "/talk/edit",
+      mame: "editTalk",
+      component: () => import("@/views/talk/add-edit-talk/index.vue"),
+      meta: {
+        title: "修改说说",
+        showLink: false
+      }
     }
   ]
 } as RouteConfigsTable;

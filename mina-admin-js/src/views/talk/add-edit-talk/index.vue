@@ -1,13 +1,16 @@
 <script setup lang="ts" name="AddEditTalk">
-import { reactive } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElLoading } from "element-plus";
 import { conversion, imgUpload } from "@/api/site";
 import { message } from "@/utils/message";
+import { useUserStoreHook } from "@/store/modules/user";
+import { addTalk, editTalk, getTalkById } from "@/api/talk";
 
 const route = useRoute();
 const router = useRouter();
 
+const formRef = ref();
 const form = reactive({
   id: null,
   content: "", //说说内容
@@ -69,10 +72,59 @@ const save = async () => {
       });
     });
     imgUpLoading.close();
+
+    /** 新增 / 修改说说  */
+    form.talkImgList = resetList;
+    if (!route.query.id) {
+      const userId = useUserStoreHook()?.getUserId;
+      Object.assign(form, { user_id: userId });
+    }
+    const res = route.query.id ? await editTalk(form) : await addTalk(form);
+    if (res.code == 0) {
+      message(route.query.id ? "修改成功" : "发布成功");
+      router.go(-1);
+    }
+  } else {
+    message("说说图片或说说内容不能都为空", { type: "warning" });
   }
 };
+
+const cancel = () => {
+  router.go(-1);
+};
+
+const getTalkDetailById = async id => {
+  const res = await getTalkById(id);
+  if (res.code == 0) {
+    res.result.talkImgList = res.result.talkImgList.map(img => {
+      return { id: id, url: img };
+    });
+    Object.assign(form, res.result);
+  }
+};
+
+onMounted(() => {
+  if (route.query.id) {
+    getTalkDetailById(route.query.id);
+  }
+});
 </script>
 
-<template />
+<template>
+  <el-dialog :title="route.query.id ? '编辑说说' : '新增说说'">
+    <el-form ref="formRef" :model="form" label-width="60px" label-suffix=":">
+      <el-form-item label="内容">
+        <el-input
+          type="textarea"
+          v-model="form.content"
+          clearable
+          class="max-w-[300px]"
+        />
+      </el-form-item>
+      <el-form-item label="图片" class="img-form">
 
+      </el-form-item>
+    </el-form>
+  </el-dialog>
+</template>
 <style scoped lang="scss"></style>
