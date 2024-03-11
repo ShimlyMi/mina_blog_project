@@ -38,7 +38,7 @@ export const useUserStore = defineStore({
       return (
         this.id || storageSession().getItem<userInfoType>("blogCurrentUser")?.id
       );
-    },
+    }
   },
   actions: {
     /** 存储用户名 */

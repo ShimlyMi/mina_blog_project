@@ -1,16 +1,29 @@
 <script setup lang="ts" name="TalkList">
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import Upload from "@/components/Upload/index.vue";
+import TextOverflow from "@/components/TextOverflow/index.vue";
 import { useNav } from "@/layout/hooks/useNav";
 import zhiding from "@/assets/svg/zhiding.svg?component";
 import { onMounted, reactive, ref } from "vue";
-import { getTalkList } from "@/api/talk";
+import {
+  getTalkList,
+  revertTalk,
+  deleteTalkById,
+  editTalk,
+  getTalkById,
+  addTalk,
+  togglePublic,
+  toggleTop
+} from "@/api/talk";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Plus from "@iconify-icons/ep/plus";
 import Delete from "@iconify-icons/ep/delete";
+import More from "@iconify-icons/ep/more";
+import { message } from "@/utils/message";
 
+const route = useRoute();
 const router = useRouter();
-const { nick_name } = useNav();
+const { nick_name, avatar } = useNav();
 
 const param = reactive({
   current: 1,
@@ -66,11 +79,85 @@ const pageGetTalkList = async (e?) => {
         ? res.result.list
         : talkList.value.concat(res.result.list);
     total.value = res.result.total;
+    // console.log(talkList);
     if (e && talkList.value.length >= total.value) {
       observe.unobserve(e.target); // 停止监听
     }
   }
 };
+
+/** 公开 / 隐藏 */
+const toggleP = async (id, status) => {
+  const res = await togglePublic(id, status == 1 ? 2 : 1);
+  if (res.code == 0) {
+    message(`已将说说设置为${status == 1 ? "仅自己可见" : "所有人可见"}`, {
+      type: "success"
+    });
+    pageGetTalkList();
+  }
+};
+/** 置顶与否 */
+const toggleT = async (id, is_top) => {
+  const res = await toggleTop(id, is_top == 1 ? 2 : 1);
+  if (res.code == 0) {
+    message(`${is_top == 1 ? "取消置顶" : "置顶"}成功`, { type: "success" });
+    pageGetTalkList();
+  }
+};
+/** 编辑 */
+const edit = async id => {
+  const res = await getTalkById(id);
+  if (res.code == 0) {
+    res.result.talkImgList = res.result.talkImgList.map(img => {
+      return { id: id, url: img };
+    });
+    Object.assign(talkForm, res.result);
+  }
+};
+/** 恢复 */
+const revertT = async id => {
+  const res = await revertTalk(id);
+  if (res.code == 0) {
+    message("恢复成功", { type: "success" });
+    pageGetTalkList();
+  }
+};
+
+/** 删除 */
+const deleteT = async (id, status) => {
+  const res = await deleteTalkById(id, status);
+  if (res.code == 0) {
+    message(`${status == 3 ? "彻底删除成功" : "说说已经入回收站"}`, {
+      type: "success"
+    });
+    param.current = 1;
+    pageGetTalkList();
+  }
+};
+
+/** 处理下拉函数 */
+const handleCommand = async (command, talk) => {
+  switch (command) {
+    case "toggleTop":
+      toggleT(talk.id, talk.is_top);
+      break;
+    case "togglePublic":
+      toggleP(talk.id, talk.status);
+      break;
+    case "revert":
+      revertT(talk.id);
+      break;
+    case "edit":
+      edit(talk.id);
+      break;
+    case "delete":
+      deleteT(talk.id, talk.status);
+      break;
+    default:
+      break;
+  }
+};
+
 const observeTalkBottom = () => {
   // 获取要监听的元素
   const box = document.querySelector(".observer");
@@ -147,17 +234,97 @@ onMounted(async () => {
         </el-tab-pane>
       </template>
     </el-tabs>
-    <el-card
-      :class="[index ? 'mt-[20px]' : '', 'w-[284px', 'talk-list']"
-      v-for="(talk, index) in talkList"
-      :key="talk.id"
-    >
-      <template #header>
-        <div class="flex justify-between">
-          <div><zhiding v-if="talk.status == 1 && talk.is_top == 1" /></div>
+    <!-- 主题内容 -->
+    <div class="talk-card__list">
+      <el-card
+        :class="[index ? 'mt-[20px]' : '', 'w-[500px]', 'talk-list']"
+        v-for="(talk, index) in talkList"
+        :key="talk.id"
+      >
+        <template #header>
+          <div class="flex justify-between">
+            <div class="hiding">
+<!--              <zhiding v-if="talk.status == 1 && talk.is_top == 1" />-->
+            </div>
+            <el-dropdown
+              @command="
+                val => {
+                  handleCommand(val, talk);
+                }
+              "
+              trigger="click"
+            >
+              <span class="el-dropdown-link">
+                <el-icon class="el-icon--right"><arrow-down /></el-icon>
+              </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item
+                    v-if="[1, 2].includes(talk.status)"
+                    command="edit"
+                    >编辑</el-dropdown-item
+                  >
+                  <el-dropdown-item v-if="talk.status == 1" command="toggleTop">
+                    {{ talk.is_top == 1 ? "取消置顶" : "置顶" }}
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    v-if="[1, 2].includes(talk.status)"
+                    command="togglePublic"
+                    >{{
+                      talk.status == 1 ? "仅自己可见" : "所有人可见"
+                    }}</el-dropdown-item
+                  >
+                  <el-dropdown-item v-if="talk.status == 3" command="revert"
+                    >恢复说说</el-dropdown-item
+                  >
+                  <el-dropdown-item command="delete">删除</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+        </template>
+        <div class="talk-header">
+          <el-avatar
+            class="talk-header__left"
+            :size="40"
+            :src="talk.avatar || avatar"
+            shape="square"
+          />
+          <div class="talk-header__right">
+            <span class="nick-name">{{ nick_name }}</span>
+            <TextOverflow
+                class="mt-[5px]"
+                :text="talk.content"
+                :width="199"
+                :maxLines="8"
+                :font-size="13"
+            >
+              <template v-slot:default="{ clickToggle, expanded }">
+                <button @click="clickToggle" class="btn">
+                  {{ expanded ? "收起" : "展开" }}
+                </button>
+              </template>
+            </TextOverflow>
+          </div>
         </div>
-      </template>
-    </el-card>
+        <div
+          class="talk-img"
+          v-if="Array.isArray(talk.talkImgList) && talk.talkImgList.length > 1"
+        >
+          <el-image
+            v-for="(url, index) in talk.talkImgList"
+            :key="index"
+            :src="url"
+            class="w-[80px] h-[80px]"
+            loading="lazy"
+            preview-teleported
+            :initial-index="index"
+            fit="cover"
+            :preview-src-list="talk.talkImgList.map(v => v)"
+          />
+        </div>
+      </el-card>
+    </div>
 
     <!--  DIALOG  -->
     <el-dialog
@@ -165,6 +332,7 @@ onMounted(async () => {
       v-model="dialogVisible"
       :width="400"
       :before-close="closeDialog"
+      draggable
     >
       <el-form
         ref="talkFormRef"
@@ -182,7 +350,7 @@ onMounted(async () => {
         </el-form-item>
         <el-form-item label="图片">
           <Upload
-            v-model:fileListt="talkForm.talkImgList"
+            v-model:fileList="talkForm.talkImgList"
             :width="200"
             :height="200"
             :limit="1"
@@ -193,20 +361,22 @@ onMounted(async () => {
             v-model="talkForm.is_top"
             inline-prompt
             active-text="on"
-            :active-value="2"
-            :inactive-value="1"
+            :active-value="1"
+            :inactive-value="2"
             inactive-text="off"
           />
         </el-form-item>
         <el-form-item label="状态">
           <el-select v-model="talkForm.status" class="w-[120px]">
-            <el-option label="公开" :value="1" />
-            <el-option label="私密" :value="2" />
+            <el-option label="仅自己可见" :value="1" />
+            <el-option label="所有人可见" :value="2" />
           </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button size="small" type="danger" @click="closeDialog()" plain>取消</el-button>
+        <el-button size="small" type="danger" @click="closeDialog()" plain
+          >取消</el-button
+        >
         <el-button size="small" plain>保存</el-button>
       </template>
     </el-dialog>
@@ -229,9 +399,13 @@ onMounted(async () => {
   display: none;
 }
 
-.zhiding {
+.hiding {
   width: 20px;
   height: 20px;
+}
+.talk-card__list {
+  width: 500px;
+  margin: 0 auto;
 }
 
 .talk {
@@ -266,6 +440,9 @@ onMounted(async () => {
         color: #4091f7;
       }
     }
+  }
+  &-content {
+    margin-left: 40px;
   }
 
   &-img {
