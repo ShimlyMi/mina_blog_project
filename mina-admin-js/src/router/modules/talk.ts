@@ -19,8 +19,8 @@ export default {
       mame: "addTalk",
       component: () => import("@/views/talk/add-edit-talk/index.vue"),
       meta: {
-        title: "发布说说",
-        showLink: false
+        title: "发布说说"
+        // showLink: false
       }
     },
     {

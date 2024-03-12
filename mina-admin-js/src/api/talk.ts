@@ -6,6 +6,8 @@ export type TalkResult = {
   result: any;
 };
 
+export const host = "http://localhost:8888"; // 代理请求
+
 /** 获取说说的列表 */
 export const getTalkList = (data?: object) => {
   return http.request<TalkResult>("post", "/api/talk/getTalkList", { data });
@@ -22,7 +24,7 @@ export const editTalk = (data?: object) => {
 };
 
 /** 删除说说 */
-export const deleteTalkById = (id, status) => {
+export const deleteTalkById = (id: number, status: number) => {
   return http.request<TalkResult>(
     "delete",
     `/api/talk/deleteTalkById/${id}/${status}`,
@@ -31,12 +33,12 @@ export const deleteTalkById = (id, status) => {
 };
 
 /** 恢复说说 */
-export const revertTalk = id => {
+export const revertTalk = (id: number) => {
   return http.request<TalkResult>("put", `/api/talk/revertTalk/${id}`, {});
 };
 
 /** 公开 / 私密说说 */
-export const togglePublic = (id, status) => {
+export const togglePublic = (id: number, status: number) => {
   return http.request<TalkResult>(
     "put",
     `/api/talk/togglePublic/${id}/${status}`,
@@ -45,7 +47,7 @@ export const togglePublic = (id, status) => {
 };
 
 /** 置顶 / 取消置顶说说 */
-export const toggleTop = (id, is_top) => {
+export const toggleTop = (id: number, is_top: number) => {
   return http.request<TalkResult>(
     "put",
     `/api/talk/toggleTop/${id}/${is_top}`,
@@ -54,6 +56,6 @@ export const toggleTop = (id, is_top) => {
 };
 
 /** 获取说说详情 */
-export const getTalkById = id => {
+export const getTalkById = (id: number) => {
   return http.request<TalkResult>("get", `/api/talk/getTalkById/${id}`, {});
 };

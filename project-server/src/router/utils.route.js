@@ -1,6 +1,6 @@
 /**
  * 上传路由
- * @author: F
+ * @author: MINA
  * */
 
 const Router = require('koa-router');
@@ -11,6 +11,6 @@ const { upload } = require("../controller/utils.controller");
 const router = new Router({ prefix: "/upload" });
 
 // 图片上传
-router.post("/img", auth, upload);
+router.post("/", auth, upload);
 
 module.exports = router;

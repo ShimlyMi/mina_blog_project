@@ -6,12 +6,13 @@ import { conversion, imgUpload } from "@/api/site";
 import { message } from "@/utils/message";
 import { useUserStoreHook } from "@/store/modules/user";
 import { addTalk, editTalk, getTalkById } from "@/api/talk";
+import Upload from "@/components/Upload/index.vue";
 
 const route = useRoute();
 const router = useRouter();
 
-const formRef = ref();
-const form = reactive({
+const talkFormRef = ref();
+const talkForm = reactive({
   id: null,
   content: "", //说说内容
   is_top: 2, // 置顶 2 取消置顶 3
@@ -19,20 +20,22 @@ const form = reactive({
   talkImgList: [],
   user_id: 0
 });
+const dialogVisible = ref(false);
+const primaryTalkForm = reactive({ ...talkForm });
 
 const save = async () => {
-  if (form.content || form.talkImgList.length > 0) {
+  if (talkForm.content || talkForm.talkImgList.length > 0) {
     let needUploadList = [];
     const resetList = [];
     if (route.query.id) {
-      needUploadList = form.talkImgList.filter(item => !item.id);
-      form.talkImgList.forEach(img => {
+      needUploadList = talkForm.talkImgList.filter(item => !item.id);
+      talkForm.talkImgList.forEach(img => {
         if (img.id) {
           resetList.push({ id: img.id, url: img.url });
         }
       });
     } else {
-      needUploadList = form.talkImgList;
+      needUploadList = talkForm.talkImgList;
     }
     // 压缩
     const conversionLoading = ElLoading.service({
@@ -74,12 +77,14 @@ const save = async () => {
     imgUpLoading.close();
 
     /** 新增 / 修改说说  */
-    form.talkImgList = resetList;
+    talkForm.talkImgList = resetList;
     if (!route.query.id) {
       const userId = useUserStoreHook()?.getUserId;
-      Object.assign(form, { user_id: userId });
+      Object.assign(talkForm, { user_id: userId });
     }
-    const res = route.query.id ? await editTalk(form) : await addTalk(form);
+    const res = route.query.id
+      ? await editTalk(talkForm)
+      : await addTalk(talkForm);
     if (res.code == 0) {
       message(route.query.id ? "修改成功" : "发布成功");
       router.go(-1);
@@ -90,6 +95,9 @@ const save = async () => {
 };
 
 const cancel = () => {
+  talkFormRef.value.resetFields();
+  Object.assign(talkForm, primaryTalkForm);
+  dialogVisible.value = false;
   router.go(-1);
 };
 
@@ -99,7 +107,7 @@ const getTalkDetailById = async id => {
     res.result.talkImgList = res.result.talkImgList.map(img => {
       return { id: id, url: img };
     });
-    Object.assign(form, res.result);
+    Object.assign(talkForm, res.result);
   }
 };
 
@@ -111,20 +119,59 @@ onMounted(() => {
 </script>
 
 <template>
-  <el-dialog :title="route.query.id ? '编辑说说' : '新增说说'">
-    <el-form ref="formRef" :model="form" label-width="60px" label-suffix=":">
+  <!--  DIALOG  -->
+  <el-dialog
+    :title="talkForm.id ? '编辑说说' : '新增说说'"
+    v-model="dialogVisible"
+    :width="400"
+    :before-close="cancel"
+    draggable
+  >
+    <el-form
+      ref="talkFormRef"
+      :model="talkForm"
+      label-width="60px"
+      label-suffix=":"
+    >
       <el-form-item label="内容">
         <el-input
           type="textarea"
-          v-model="form.content"
+          v-model="talkForm.content"
           clearable
           class="max-w-[300px]"
         />
       </el-form-item>
-      <el-form-item label="图片" class="img-form">
-
+      <el-form-item label="图片">
+        <Upload
+          v-model:fileList="talkForm.talkImgList"
+          :width="200"
+          :height="200"
+          :limit="1"
+        />
+      </el-form-item>
+      <el-form-item label="置顶">
+        <el-switch
+          v-model="talkForm.is_top"
+          inline-prompt
+          active-text="on"
+          :active-value="1"
+          :inactive-value="2"
+          inactive-text="off"
+        />
+      </el-form-item>
+      <el-form-item label="状态">
+        <el-select v-model="talkForm.status" class="w-[120px]">
+          <el-option label="仅自己可见" :value="1" />
+          <el-option label="所有人可见" :value="2" />
+        </el-select>
       </el-form-item>
     </el-form>
+    <template #footer>
+      <el-button size="small" type="danger" @click="cancel()" plain
+        >取消</el-button
+      >
+      <el-button size="small" plain @click="save()">保存</el-button>
+    </template>
   </el-dialog>
 </template>
 <style scoped lang="scss"></style>

@@ -15,7 +15,6 @@ class TalkService {
     async publishTalk(talk) {
         const { talkImgList, ...resTalk } = talk
         const res = await Talk.create(resTalk)
-
         if (res.dataValues.id) {
             let imgList = talkImgList.map((img) => {
                 return {

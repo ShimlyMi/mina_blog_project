@@ -1,16 +1,15 @@
 <script setup lang="ts" name="TalkList">
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import Upload from "@/components/Upload/index.vue";
 import TextOverflow from "@/components/TextOverflow/index.vue";
 import { useNav } from "@/layout/hooks/useNav";
-import zhiding from "@/assets/svg/zhiding.svg?component";
-import { onMounted, reactive, ref } from "vue";
+// import zhiding from "@/assets/svg/zhiding.svg?component";
+import {onMounted, reactive, ref, UnwrapNestedRefs} from "vue";
 import {
   getTalkList,
   revertTalk,
   deleteTalkById,
   editTalk,
-  getTalkById,
   addTalk,
   togglePublic,
   toggleTop
@@ -18,13 +17,14 @@ import {
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Plus from "@iconify-icons/ep/plus";
 import Delete from "@iconify-icons/ep/delete";
-import More from "@iconify-icons/ep/more";
 import { message } from "@/utils/message";
+import { ElLoading, ElMessageBox } from "element-plus";
+import { imgUpload } from "@/api/site";
 
-const route = useRoute();
 const router = useRouter();
 const { nick_name, avatar } = useNav();
 
+/** LIST */
 const param = reactive({
   current: 1,
   size: 5,
@@ -52,17 +52,90 @@ const talkTab = [
   }
 ];
 
+/** DIALOG */
 const talkFormRef = ref();
 const talkForm = reactive({
   id: null,
   content: "", //说说内容
   is_top: 2, // 置顶 2 取消置顶 3
-  status: 1, // 1 公开 2 私密
+  status: 2, // 1 公开 2 私密
   talkImgList: [],
   user_id: 0
 });
 const dialogVisible = ref(false);
 const primaryTalkForm = reactive({ ...talkForm });
+const img = (rule, value, cb) => {
+  if (!talkForm.talkImgList.length) {
+    return new Error("请上传图片");
+  }
+  cb();
+}
+const talkFormRules = reactive({
+  content: {
+    required: true,
+    message: "说说内容不得为空",
+    trigger: ["blur"]
+  },
+  talkImgList: {
+    required: true,
+    message: "图片不得为空",
+    validator: img,
+    trigger: ["change"]
+  }
+});
+
+/** 新增 编辑 有关 */
+const closeDialog = () => {
+  talkFormRef.value.resetFields();
+  Object.assign(talkForm, primaryTalkForm);
+  dialogVisible.value = false;
+};
+
+/** 提交表单 */
+const submitForm = async () => {
+  await talkFormRef.value.validate(async valid => {
+    if (valid) {
+      // 先上传图片
+      if (!talkForm.talkImgList[0].id) {
+        const uploadLoading = ElLoading.service({
+          fullscreen: true,
+          text: "图片上传中"
+        });
+        const imgRes = await imgUpload(talkForm.talkImgList[0]);
+        if (imgRes.code == 0) {
+          const { url } = imgRes.result;
+          talkForm.talkImgList = url;
+        }
+        uploadLoading.close();
+      }
+      // 操作
+      let res;
+      if (talkForm.id) {
+        res = await editTalk(talkForm);
+      } else {
+        res = await addTalk(talkForm);
+      }
+      if (res.code == 0) {
+        await pageGetTalkList();
+        message(`${talkForm.id ? "编辑" : "发布"}成功`, { type: "success" });
+        talkFormRef.value.resetFields();
+        dialogVisible.value = false;
+      }
+    }
+  });
+};
+
+const operate = (type, val?) => {
+  switch (type) {
+    case "add":
+      dialogVisible.value = true;
+      break;
+    default:
+      return;
+  }
+};
+
+/**  */
 const tabChange = async (val: any) => {
   param.status = val.index ? Number(val.index) + 1 : null;
   param.current = 1;
@@ -79,7 +152,7 @@ const pageGetTalkList = async (e?) => {
         ? res.result.list
         : talkList.value.concat(res.result.list);
     total.value = res.result.total;
-    // console.log(talkList);
+    // console.log(talkList.value);
     if (e && talkList.value.length >= total.value) {
       observe.unobserve(e.target); // 停止监听
     }
@@ -87,7 +160,7 @@ const pageGetTalkList = async (e?) => {
 };
 
 /** 公开 / 隐藏 */
-const toggleP = async (id, status) => {
+const toggleP = async (id: number, status: number) => {
   const res = await togglePublic(id, status == 1 ? 2 : 1);
   if (res.code == 0) {
     message(`已将说说设置为${status == 1 ? "仅自己可见" : "所有人可见"}`, {
@@ -97,7 +170,7 @@ const toggleP = async (id, status) => {
   }
 };
 /** 置顶与否 */
-const toggleT = async (id, is_top) => {
+const toggleT = async (id: number, is_top: number) => {
   const res = await toggleTop(id, is_top == 1 ? 2 : 1);
   if (res.code == 0) {
     message(`${is_top == 1 ? "取消置顶" : "置顶"}成功`, { type: "success" });
@@ -105,17 +178,14 @@ const toggleT = async (id, is_top) => {
   }
 };
 /** 编辑 */
-const edit = async id => {
-  const res = await getTalkById(id);
-  if (res.code == 0) {
-    res.result.talkImgList = res.result.talkImgList.map(img => {
-      return { id: id, url: img };
-    });
-    Object.assign(talkForm, res.result);
-  }
+const edit = (id: number) => {
+  router.push({
+    path: "/talk/edit",
+    query: { id: id }
+  });
 };
 /** 恢复 */
-const revertT = async id => {
+const revertT = async (id: number) => {
   const res = await revertTalk(id);
   if (res.code == 0) {
     message("恢复成功", { type: "success" });
@@ -124,7 +194,7 @@ const revertT = async id => {
 };
 
 /** 删除 */
-const deleteT = async (id, status) => {
+const deleteT = async (id: number, status: number) => {
   const res = await deleteTalkById(id, status);
   if (res.code == 0) {
     message(`${status == 3 ? "彻底删除成功" : "说说已经入回收站"}`, {
@@ -136,7 +206,7 @@ const deleteT = async (id, status) => {
 };
 
 /** 处理下拉函数 */
-const handleCommand = async (command, talk) => {
+const handleCommand = async (command: string, talk: any) => {
   switch (command) {
     case "toggleTop":
       toggleT(talk.id, talk.is_top);
@@ -151,7 +221,16 @@ const handleCommand = async (command, talk) => {
       edit(talk.id);
       break;
     case "delete":
-      deleteT(talk.id, talk.status);
+      ElMessageBox.confirm(
+        `${talk.status == 3 ? "确认删除" : "确认回收"}`,
+        "提示",
+        {
+          confirmButtonText: "确认",
+          cancelButtonText: "取消"
+        }
+      ).then(() => {
+        deleteT(talk.id, talk.status);
+      });
       break;
     default:
       break;
@@ -175,20 +254,9 @@ const observeTalkBottom = () => {
   observe.observe(box);
 };
 
-const closeDialog = () => {
-  talkFormRef.value.resetFields();
-  Object.assign(talkForm, primaryTalkForm);
-  dialogVisible.value = false;
-};
-const operate = (type, val?) => {
-  switch (type) {
-    case "add":
-      dialogVisible.value = true;
-      break;
-    default:
-      return;
-  }
-};
+// const operate = () => {
+//   router.push("/talk/add");
+// };
 
 onMounted(async () => {
   await pageGetTalkList();
@@ -244,7 +312,7 @@ onMounted(async () => {
         <template #header>
           <div class="flex justify-between">
             <div class="hiding">
-<!--              <zhiding v-if="talk.status == 1 && talk.is_top == 1" />-->
+              <!--              <zhiding v-if="talk.status == 1 && talk.is_top == 1" />-->
             </div>
             <el-dropdown
               @command="
@@ -293,11 +361,11 @@ onMounted(async () => {
           <div class="talk-header__right">
             <span class="nick-name">{{ nick_name }}</span>
             <TextOverflow
-                class="mt-[5px]"
-                :text="talk.content"
-                :width="199"
-                :maxLines="8"
-                :font-size="13"
+              class="mt-[5px]"
+              :text="talk.content"
+              :width="199"
+              :maxLines="8"
+              :font-size="13"
             >
               <template v-slot:default="{ clickToggle, expanded }">
                 <button @click="clickToggle" class="btn">
@@ -337,6 +405,7 @@ onMounted(async () => {
       <el-form
         ref="talkFormRef"
         :model="talkForm"
+        :rules="talkFormRules"
         label-width="60px"
         label-suffix=":"
       >
@@ -353,7 +422,7 @@ onMounted(async () => {
             v-model:fileList="talkForm.talkImgList"
             :width="200"
             :height="200"
-            :limit="1"
+            :limit="2"
           />
         </el-form-item>
         <el-form-item label="置顶">
@@ -377,7 +446,9 @@ onMounted(async () => {
         <el-button size="small" type="danger" @click="closeDialog()" plain
           >取消</el-button
         >
-        <el-button size="small" plain>保存</el-button>
+        <el-button size="small" plain @click="submitForm()"
+          >保存</el-button
+        >
       </template>
     </el-dialog>
 

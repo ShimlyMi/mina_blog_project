@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { nextTick, ref, watch } from "vue";
 import { Delete, Plus, ZoomIn } from "@element-plus/icons-vue";
 
@@ -29,6 +29,7 @@ const props = defineProps({
     default: 200
   }
 });
+
 const dialogVisible = ref(false);
 const previewIndex = ref(0);
 const uploadFileList = ref([]);
@@ -42,26 +43,27 @@ const uploadChange = () => {
     emit("update:fileList", uploadFileList.value); // 修改父组件的文件值
   });
 };
-
 function handlePictureCardPreview(file: any) {
   // 图片预览
-  previewIndex.value = uploadFileList.value.findIndex(v => v.uid == file.uid);
+  previewIndex.value = uploadFileList.value.findIndex(v => v.id == file.id);
   dialogVisible.value = true;
 }
+
 function closeImgViewer() {
   previewIndex.value = 0;
   dialogVisible.value = false;
 }
 
-const handleRemove = async (file: any) => {
+const handleRemove = async file => {
   if (file) {
     const { url } = file;
     const index = uploadFileList.value.findIndex(file => file.url == url);
+
     if (index != -1) {
       uploadFileList.value.splice(index, 1);
     }
     showUpload.value = true;
-    emit("update:fileList", uploadFileList.value); // 修改父组件文件值
+    emit("update:fileList", uploadFileList.value); // 修改父组件的文件值
   }
 };
 
@@ -84,6 +86,18 @@ watch(
 </script>
 
 <template>
+  <!--
+        action	    必选参数，上传的地址	string
+        list-type	文件列表的类型	   string	text/picture/picture-card	text
+        on-preview	点击文件列表中已上传的文件时的钩子	function(file)
+        on-remove	文件列表移除文件时的钩子	function(file, fileList)
+        on-success	文件上传成功时的钩子	function(response, file, fileList)
+        on-error	文件上传失败时的钩子	function(err, file, fileList)
+        on-change	文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用	function(file, fileList)
+        auto-upload	是否在选取文件后立即进行上传	boolean	—	true
+        on-exceed	文件超出个数限制时的钩子	function(files, fileList)
+        multiple	是否支持多选文件	boolean
+     -->
   <el-upload
     ref="uploadAvatarRef"
     v-model:file-list="uploadFileList"
@@ -129,3 +143,15 @@ watch(
     @close="closeImgViewer"
   />
 </template>
+
+<style lang="scss" scoped>
+.hide-upload {
+  :deep(.el-upload--picture-card) {
+    display: none;
+  }
+}
+
+.el-upload-list--picture-card {
+  display: flex;
+}
+</style>
