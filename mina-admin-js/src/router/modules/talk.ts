@@ -1,7 +1,7 @@
 export default {
   path: "/talk",
   meta: {
-    icon: "list",
+    icon: "menu",
     title: "说说",
     rank: 1
   },
@@ -19,8 +19,8 @@ export default {
       mame: "addTalk",
       component: () => import("@/views/talk/add-edit-talk/index.vue"),
       meta: {
-        title: "发布说说"
-        // showLink: false
+        title: "发布说说",
+        showLink: false
       }
     },
     {

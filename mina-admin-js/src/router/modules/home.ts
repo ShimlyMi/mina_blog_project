@@ -23,14 +23,5 @@ export default {
         showLink: VITE_HIDE_HOME !== "true"
       }
     }
-    // {
-    //   path: "/personal",
-    //   name: "Personal",
-    //   component: () => import("@/views/personal/index.vue"),
-    //   meta: {
-    //     title: "个人中心",
-    //     showLink: VITE_HIDE_HOME !== "false"
-    //   }
-    // }
   ]
 } as RouteConfigsTable;

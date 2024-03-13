@@ -1,16 +1,13 @@
 <script setup lang="ts" name="TalkList">
 import { useRouter } from "vue-router";
-import Upload from "@/components/Upload/index.vue";
 import TextOverflow from "@/components/TextOverflow/index.vue";
 import { useNav } from "@/layout/hooks/useNav";
 // import zhiding from "@/assets/svg/zhiding.svg?component";
-import {onMounted, reactive, ref, UnwrapNestedRefs} from "vue";
+import { onMounted, reactive, ref } from "vue";
 import {
   getTalkList,
   revertTalk,
   deleteTalkById,
-  editTalk,
-  addTalk,
   togglePublic,
   toggleTop
 } from "@/api/talk";
@@ -18,8 +15,7 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Plus from "@iconify-icons/ep/plus";
 import Delete from "@iconify-icons/ep/delete";
 import { message } from "@/utils/message";
-import { ElLoading, ElMessageBox } from "element-plus";
-import { imgUpload } from "@/api/site";
+import { ElMessageBox } from "element-plus";
 
 const router = useRouter();
 const { nick_name, avatar } = useNav();
@@ -52,89 +48,6 @@ const talkTab = [
   }
 ];
 
-/** DIALOG */
-const talkFormRef = ref();
-const talkForm = reactive({
-  id: null,
-  content: "", //说说内容
-  is_top: 2, // 置顶 2 取消置顶 3
-  status: 2, // 1 公开 2 私密
-  talkImgList: [],
-  user_id: 0
-});
-const dialogVisible = ref(false);
-const primaryTalkForm = reactive({ ...talkForm });
-const img = (rule, value, cb) => {
-  if (!talkForm.talkImgList.length) {
-    return new Error("请上传图片");
-  }
-  cb();
-}
-const talkFormRules = reactive({
-  content: {
-    required: true,
-    message: "说说内容不得为空",
-    trigger: ["blur"]
-  },
-  talkImgList: {
-    required: true,
-    message: "图片不得为空",
-    validator: img,
-    trigger: ["change"]
-  }
-});
-
-/** 新增 编辑 有关 */
-const closeDialog = () => {
-  talkFormRef.value.resetFields();
-  Object.assign(talkForm, primaryTalkForm);
-  dialogVisible.value = false;
-};
-
-/** 提交表单 */
-const submitForm = async () => {
-  await talkFormRef.value.validate(async valid => {
-    if (valid) {
-      // 先上传图片
-      if (!talkForm.talkImgList[0].id) {
-        const uploadLoading = ElLoading.service({
-          fullscreen: true,
-          text: "图片上传中"
-        });
-        const imgRes = await imgUpload(talkForm.talkImgList[0]);
-        if (imgRes.code == 0) {
-          const { url } = imgRes.result;
-          talkForm.talkImgList = url;
-        }
-        uploadLoading.close();
-      }
-      // 操作
-      let res;
-      if (talkForm.id) {
-        res = await editTalk(talkForm);
-      } else {
-        res = await addTalk(talkForm);
-      }
-      if (res.code == 0) {
-        await pageGetTalkList();
-        message(`${talkForm.id ? "编辑" : "发布"}成功`, { type: "success" });
-        talkFormRef.value.resetFields();
-        dialogVisible.value = false;
-      }
-    }
-  });
-};
-
-const operate = (type, val?) => {
-  switch (type) {
-    case "add":
-      dialogVisible.value = true;
-      break;
-    default:
-      return;
-  }
-};
-
 /**  */
 const tabChange = async (val: any) => {
   param.status = val.index ? Number(val.index) + 1 : null;
@@ -144,7 +57,8 @@ const tabChange = async (val: any) => {
     observeTalkBottom();
   }
 };
-const pageGetTalkList = async (e?) => {
+const pageGetTalkList = async (e?: any) => {
+  // console.log(nick_name, avatar);
   const res = await getTalkList(param);
   if (res.code == 0) {
     talkList.value =
@@ -254,9 +168,25 @@ const observeTalkBottom = () => {
   observe.observe(box);
 };
 
-// const operate = () => {
-//   router.push("/talk/add");
-// };
+const operate = () => {
+  router.push("/talk/add");
+};
+
+const returnTime = (time: any) => {
+  time = time.replace(/-/g, "/"); // 解决ios系统上格式化时间出现NAN的bug
+  const dateTime = new Date().getTime() - new Date(time).getTime();
+  let res;
+  if (dateTime < 6e4) {
+    res = Math.trunc(time / 1000) + "秒";
+  } else if (dateTime >= 6e4 && dateTime < 3.6e6) {
+    res = Math.trunc(dateTime / 6e4) + "分钟";
+  } else if (dateTime >= 3.6e6 && dateTime < 8.64e7) {
+    res = Math.trunc(dateTime / 3.6e6) + "小时";
+  } else {
+    res = Math.trunc(dateTime / 8.64e7) + "天";
+  }
+  return res;
+};
 
 onMounted(async () => {
   await pageGetTalkList();
@@ -276,7 +206,7 @@ onMounted(async () => {
           plain
           style="margin-left: 10px"
           :icon="useRenderIcon(Plus)"
-          @click="operate('add')"
+          @click="operate"
         >
           发布说说
         </el-button>
@@ -391,66 +321,26 @@ onMounted(async () => {
             :preview-src-list="talk.talkImgList.map(v => v)"
           />
         </div>
+        <div
+          class="talk-img-one"
+          v-else-if="
+            Array.isArray(talk.talkImgList) && talk.talkImgList.length == 1
+          "
+        >
+          <el-image
+            :key="index"
+            :src="talk.talkImgList[0]"
+            class="w-[120px] h-[120px]"
+            loading="lazy"
+            preview-teleported
+            :initial-index="index"
+            fit="cover"
+            :preview-src-list="talk.talkImgList.map(v => v)"
+          />
+        </div>
+        <div class="time">{{ returnTime(talk.createdAt) }}前</div>
       </el-card>
     </div>
-
-    <!--  DIALOG  -->
-    <el-dialog
-      :title="talkForm.id ? '编辑说说' : '新增说说'"
-      v-model="dialogVisible"
-      :width="400"
-      :before-close="closeDialog"
-      draggable
-    >
-      <el-form
-        ref="talkFormRef"
-        :model="talkForm"
-        :rules="talkFormRules"
-        label-width="60px"
-        label-suffix=":"
-      >
-        <el-form-item label="内容">
-          <el-input
-            type="textarea"
-            v-model="talkForm.content"
-            clearable
-            class="max-w-[300px]"
-          />
-        </el-form-item>
-        <el-form-item label="图片">
-          <Upload
-            v-model:fileList="talkForm.talkImgList"
-            :width="200"
-            :height="200"
-            :limit="2"
-          />
-        </el-form-item>
-        <el-form-item label="置顶">
-          <el-switch
-            v-model="talkForm.is_top"
-            inline-prompt
-            active-text="on"
-            :active-value="1"
-            :inactive-value="2"
-            inactive-text="off"
-          />
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="talkForm.status" class="w-[120px]">
-            <el-option label="仅自己可见" :value="1" />
-            <el-option label="所有人可见" :value="2" />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button size="small" type="danger" @click="closeDialog()" plain
-          >取消</el-button
-        >
-        <el-button size="small" plain @click="submitForm()"
-          >保存</el-button
-        >
-      </template>
-    </el-dialog>
 
     <div class="observer">
       {{ talkList.length >= total ? "暂无更多" : "下拉加载更多" }}

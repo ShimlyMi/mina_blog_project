@@ -103,10 +103,10 @@ const register = async (formEl: FormInstance | undefined) => {
       };
       const res = await registerUser(registerObj);
       if (res.code == 0) {
-        const { user_name } = res.result;
+        const { user_name, nick_name } = res.result;
         // console.log(res);
         message("注册成功，请牢记账号密码哦~", { type: "success" });
-        router.push({ path: "/login", query: { user_name } });
+        router.push({ path: "/login", query: { user_name, nick_name } });
       } else {
         loading.value = false;
       }

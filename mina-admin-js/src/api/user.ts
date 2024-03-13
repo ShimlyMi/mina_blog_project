@@ -38,3 +38,10 @@ export const getUserInfoById = () => {
 // export const refreshTokenApi = (data?: object) => {
 //   return http.request<RefreshTokenResult>("post", "/refreshToken", { data });
 // };
+
+/** 用户修改个人信息 */
+export const updateUserInfo = (data?: object) => {
+  return http.request<Result>("put", "/api/users/updateOwnUserInfo", { data });
+};
+
+/**  */

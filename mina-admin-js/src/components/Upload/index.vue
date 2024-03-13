@@ -69,15 +69,15 @@ const handleRemove = async file => {
 
 watch(
   () => props.fileList,
-  newVal => {
-    uploadFileList.value = newVal;
-    if (newVal.length >= props.limit) {
-      showUpload.value = false;
-    }
-    if (!newVal.length) {
-      showUpload.value = true;
-    }
-  },
+  // newVal => {
+  //   uploadFileList.value = newVal;
+  //   if (newVal.length >= props.limit) {
+  //     showUpload.value = false;
+  //   }
+  //   if (!newVal.length) {
+  //     showUpload.value = true;
+  //   }
+  // },
   {
     immediate: true,
     deep: true
@@ -101,7 +101,7 @@ watch(
   <el-upload
     ref="uploadAvatarRef"
     v-model:file-list="uploadFileList"
-    :class="[showUpload && !preview ? '' : 'hide-upload']"
+    :class="[showUpload && !preview ? '' : 'hide-upload', 'uploader']"
     action="#"
     list-type="picture-card"
     :auto-upload="false"
@@ -153,5 +153,18 @@ watch(
 
 .el-upload-list--picture-card {
   display: flex;
+}
+.uploader {
+  .el-upload {
+    border: 1px dashed var(--el-border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: var(--el-transition-duration-fast);
+    &:hover {
+      border-color: var(--el-color-primary);
+    }
+  }
 }
 </style>

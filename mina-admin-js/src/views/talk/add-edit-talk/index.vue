@@ -119,59 +119,118 @@ onMounted(() => {
 </script>
 
 <template>
-  <!--  DIALOG  -->
-  <el-dialog
-    :title="talkForm.id ? '编辑说说' : '新增说说'"
-    v-model="dialogVisible"
-    :width="400"
-    :before-close="cancel"
-    draggable
-  >
+  <el-card>
+    <template #header>
+      <div class="flex justify-between items-center">
+        {{ route.query.id ? "编辑说说" : "新增说说" }}
+      </div>
+    </template>
     <el-form
       ref="talkFormRef"
       :model="talkForm"
-      label-width="60px"
       label-suffix=":"
+      class="talk-form"
     >
       <el-form-item label="内容">
         <el-input
-          type="textarea"
           v-model="talkForm.content"
+          type="textarea"
+          class="max-w=[300px]"
           clearable
-          class="max-w-[300px]"
+          :autosize="{ minRows: 4, mazRows: 8 }"
         />
       </el-form-item>
-      <el-form-item label="图片">
+      <el-form-item label="图片" class="img-form">
+        <!--
+        action	    必选参数，上传的地址	string
+        list-type	文件列表的类型	   string	text/picture/picture-card	text
+        on-preview	点击文件列表中已上传的文件时的钩子	function(file)
+        on-remove	文件列表移除文件时的钩子	function(file, fileList)
+        on-success	文件上传成功时的钩子	function(response, file, fileList)
+        on-error	文件上传失败时的钩子	function(err, file, fileList)
+        on-change	文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用	function(file, fileList)
+        auto-upload	是否在选取文件后立即进行上传	boolean	—	true
+        on-exceed	文件超出个数限制时的钩子	function(files, fileList)
+        multiple	是否支持多选文件	boolean
+     -->
         <Upload
           v-model:fileList="talkForm.talkImgList"
-          :width="200"
-          :height="200"
-          :limit="1"
+          :width="80"
+          :height="80"
+          :limit="9"
+          :multiple="true"
+          :preview="false"
         />
       </el-form-item>
       <el-form-item label="置顶">
         <el-switch
           v-model="talkForm.is_top"
-          inline-prompt
-          active-text="on"
           :active-value="1"
           :inactive-value="2"
+          active-text="on"
           inactive-text="off"
+          inline-prompt
         />
       </el-form-item>
       <el-form-item label="状态">
-        <el-select v-model="talkForm.status" class="w-[120px]">
-          <el-option label="仅自己可见" :value="1" />
-          <el-option label="所有人可见" :value="2" />
+        <el-select class="w-[120px]" v-model="talkForm.status">
+          <el-option label="所有人可见" :value="1" />
+          <el-option label="仅自己可见" :value="2" />
         </el-select>
       </el-form-item>
     </el-form>
-    <template #footer>
-      <el-button size="small" type="danger" @click="cancel()" plain
-        >取消</el-button
-      >
-      <el-button size="small" plain @click="save()">保存</el-button>
-    </template>
-  </el-dialog>
+    <div class="flex justify-center items-center talk-form-btn">
+      <el-button type="info" size="small" @click="cancel" plain>取消</el-button>
+      <el-button type="danger" size="small" @click="save">保存</el-button>
+    </div>
+  </el-card>
 </template>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.talk-card {
+  height: calc(100vh - 130px);
+  overflow: auto;
+}
+.talk-form {
+  width: 500px;
+  margin: 0 auto;
+}
+.talk-form-btn {
+  border-top: 1px solid #d5d5d5;
+  width: 100%;
+  :deep(.el-button ) {
+    margin-top: 10px;
+  }
+}
+
+.img-form {
+  :deep(.el-form-item__content) {
+    width: 250px;
+    height: 80px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+// 上传图片展示的大小
+:deep(.el-upload-list__item) {
+  width: 80px !important;
+  height: 80px !important;
+  margin: 3px !important;
+  border: none !important;
+  border-radius: 0;
+}
+
+// 加号背景大小
+:deep(.el-upload--picture-card) {
+  width: 80px !important;
+  height: 80px !important;
+  margin: 3px !important;
+}
+
+// 上传盒子总体的大小
+:deep(.el-upload-list--picture-card) {
+  width: 268px;
+}
+</style>
