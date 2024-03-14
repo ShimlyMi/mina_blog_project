@@ -21,7 +21,7 @@ export const useUserStore = defineStore({
         id: 0, // 登录用户 id
     }),
     getters: {
-        getAavatar() {
+        getAvatar() {
             return (
                 this.avatar || storageSession().getItem<userInfoType>("blogCurrentUser")?.avatar
             );
@@ -35,7 +35,12 @@ export const useUserStore = defineStore({
             return (
                 this.id || storageSession().getItem<userInfoType>("blogCurrentUser")?.id
             )
-        }
+        },
+      getUserName() {
+          return (
+            this.user_name || storageSession().getItem<userInfoType>("blogCurrent")?.user_name
+          )
+      }
     },
     actions: {
         /** 村粗用户名 */
@@ -81,7 +86,9 @@ export const useUserStore = defineStore({
                 this.SET_AVATAR(res.result.avatar);
                 this.SET_NICKNAME(res.result.nick_name);
                 this.SET_ID(res.result.id);
+                this.SET_ROLE(res.result.role);
                 storageSession().setItem<userInfoType>("blogCurrentUser", res.result);
+                console.log(res.result)
             }
         },
         // 前端登出

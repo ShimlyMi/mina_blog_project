@@ -11,6 +11,7 @@ export type UserResult = {
     /** `token` */
     token: string;
     id: number; // 用户id
+    nick_name: string;
   };
 };
 
@@ -30,10 +31,13 @@ export const registerUser = (data?: object) => {
 };
 
 /** 获取当前登录人的信息 */
-export const getUserInfoById = () => {
+export const getUserInfo = () => {
   return http.request<Result>("get", "/api/users/info", {});
 };
-
+/** 根据ID获取用户信息 */
+export const getUserInfoById = (id: number) => {
+  return http.request<Result>("get", `/api/users/getUserInfoById/${id}`);
+};
 /** 刷新token */
 // export const refreshTokenApi = (data?: object) => {
 //   return http.request<RefreshTokenResult>("post", "/refreshToken", { data });

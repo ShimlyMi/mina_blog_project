@@ -20,7 +20,7 @@ export const addTalk = (data?: object) => {
 
 /** 修改说说 */
 export const editTalk = (data?: object) => {
-  return http.request<TalkResult>("post", "/api/talk/updateTalk", { data });
+  return http.request<TalkResult>("put", "/api/talk/updateTalk", { data });
 };
 
 /** 删除说说 */

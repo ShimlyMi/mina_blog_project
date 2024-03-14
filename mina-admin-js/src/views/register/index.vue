@@ -104,7 +104,7 @@ const register = async (formEl: FormInstance | undefined) => {
       const res = await registerUser(registerObj);
       if (res.code == 0) {
         const { user_name, nick_name } = res.result;
-        // console.log(res);
+        console.log(res);
         message("注册成功，请牢记账号密码哦~", { type: "success" });
         router.push({ path: "/login", query: { user_name, nick_name } });
       } else {
@@ -149,40 +149,6 @@ onBeforeUnmount(() => {
         inline-prompt
         @change="dataThemeChange"
       />
-      <!-- 国际化 -->
-      <!--
-      <el-dropdown trigger="click">
-        <globalization
-          class="hover:text-primary hover:!bg-[transparent] w-[20px] h-[20px] ml-1.5 cursor-pointer outline-none duration-300"
-        />
-        <template #dropdown>
-          <el-dropdown-menu class="translation">
-            <el-dropdown-item
-              :class="['dark:!text-white', getDropdownItemClass(locale, 'zh')]"
-              :style="getDropdownItemStyle(locale, 'zh')"
-              @click="translationCh"
-            >
-              <IconifyIconOffline
-                v-show="locale === 'zh'"
-                :icon="Check"
-                class="check-zh"
-              />
-              简体中文
-            </el-dropdown-item>
-            <el-dropdown-item
-              :class="['dark:!text-white', getDropdownItemClass(locale, 'en')]"
-              :style="getDropdownItemStyle(locale, 'en')"
-              @click="translationEn"
-            >
-              <span v-show="locale === 'en'" class="check-en">
-                <IconifyIconOffline :icon="Check" />
-              </span>
-              English
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-      -->
     </div>
 
     <div class="login-container">
@@ -214,7 +180,16 @@ onBeforeUnmount(() => {
                 />
               </el-form-item>
             </Motion>
-
+            <Motion :delay="150">
+              <el-form-item prop="nickname">
+                <el-input
+                  v-model="ruleForm.nick_name"
+                  :prefix-icon="useRenderIcon(User)"
+                  clearable
+                  placeholder="昵称"
+                />
+              </el-form-item>
+            </Motion>
             <Motion :delay="150">
               <el-form-item prop="password1">
                 <el-input
@@ -237,16 +212,7 @@ onBeforeUnmount(() => {
                 />
               </el-form-item>
             </Motion>
-            <Motion :delay="150">
-              <el-form-item prop="nickname">
-                <el-input
-                  v-model="ruleForm.nick_name"
-                  :prefix-icon="useRenderIcon(User)"
-                  clearable
-                  placeholder="昵称"
-                />
-              </el-form-item>
-            </Motion>
+
             <Motion :delay="250" class="register">
               <div>
                 已有账号？<span class="line" @click="goLogin">

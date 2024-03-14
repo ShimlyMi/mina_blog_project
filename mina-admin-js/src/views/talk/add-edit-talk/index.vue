@@ -24,6 +24,7 @@ const dialogVisible = ref(false);
 const primaryTalkForm = reactive({ ...talkForm });
 
 const save = async () => {
+  // console.log("talkForm.talkImgList.length", talkForm.talkImgList.length);
   if (talkForm.content || talkForm.talkImgList.length > 0) {
     let needUploadList = [];
     const resetList = [];
@@ -37,6 +38,7 @@ const save = async () => {
     } else {
       needUploadList = talkForm.talkImgList;
     }
+
     // 压缩
     const conversionLoading = ElLoading.service({
       fullscreen: true,
@@ -85,8 +87,9 @@ const save = async () => {
     const res = route.query.id
       ? await editTalk(talkForm)
       : await addTalk(talkForm);
+    console.log("route.query.id", route.query.id);
     if (res.code == 0) {
-      message(route.query.id ? "修改成功" : "发布成功");
+      message(route.query.id ? "修改成功" : "发布成功", { type: "success" });
       router.go(-1);
     }
   } else {
@@ -101,10 +104,10 @@ const cancel = () => {
   router.go(-1);
 };
 
-const getTalkDetailById = async id => {
+const getTalkDetailById = async (id: any) => {
   const res = await getTalkById(id);
   if (res.code == 0) {
-    res.result.talkImgList = res.result.talkImgList.map(img => {
+    res.result.talkImgList = res.result.talkImgList.map((img: any) => {
       return { id: id, url: img };
     });
     Object.assign(talkForm, res.result);
@@ -137,7 +140,7 @@ onMounted(() => {
           type="textarea"
           class="max-w=[300px]"
           clearable
-          :autosize="{ minRows: 4, mazRows: 8 }"
+          :autosize="{ minRows: 4, maxRows: 8 }"
         />
       </el-form-item>
       <el-form-item label="图片" class="img-form">

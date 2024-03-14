@@ -4,7 +4,7 @@ import { userType, userInfoType } from "./types";
 import { routerArrays } from "@/layout/types";
 import { router, resetRouter } from "@/router";
 import { storageSession } from "@pureadmin/utils";
-import { getLogin, getUserInfoById } from "@/api/user";
+import {getLogin, getUserInfo, getUserInfoById} from "@/api/user";
 import { UserResult } from "@/api/user";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { type DataInfo, setToken, removeToken, sessionKey } from "@/utils/auth";
@@ -18,7 +18,8 @@ export const useUserStore = defineStore({
     // 页面级别权限
     role: storageSession().getItem<DataInfo<number>>(sessionKey)?.role,
     avatar: "",
-    nick_name: "",
+    nick_name:
+      storageSession().getItem<DataInfo<number>>(sessionKey)?.nick_name,
     id: 0 // 登录用户的id
   }),
   getters: {
@@ -58,18 +59,19 @@ export const useUserStore = defineStore({
     SET_NICKNAME(nick_name: string) {
       this.nick_name = nick_name;
     },
-    SET_ID(id: string) {
+    SET_ID(id: number) {
       this.id = id;
     },
     /** 登入 */
-    async loginByUsername(data) {
+    async loginByUsername(data: any) {
       return new Promise<UserResult>((resolve, reject) => {
         getLogin(data)
           .then(async res => {
             if (res.code == 0) {
+              // console.log(res.result);
               setToken(res.result);
               this.SET_TOKEN(Number(res.result.id));
-              await this.savaUserInfo(res.result.id);
+              await this.savaUserInfo();
               // 获取用户信息进行存储
               resolve(res);
             }
@@ -81,12 +83,13 @@ export const useUserStore = defineStore({
     },
     // 保存当前登录人信息
     async savaUserInfo() {
-      const res = await getUserInfoById();
+      const res = await getUserInfo();
       if (res.code == 0) {
         this.SET_AVATAR(res.result.avatar);
         this.SET_NICKNAME(res.result.nick_name);
-        this.SET_ID(Number(res.result.id));
+        this.SET_ID(res.result.id);
         storageSession().setItem<userInfoType>("blogCurrentUser", res.result);
+        // console.log(res.result);
       }
     },
     /** 前端登出（不调用接口） */

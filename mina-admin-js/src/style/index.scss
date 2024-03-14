@@ -20,3 +20,83 @@
 .html-weakness {
   filter: invert(80%);
 }
+
+
+.flex_center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.flex_r_between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.flex_r_around {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.flex_c_center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.flex_c_between {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.flex_c_around {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.flex_1 {
+  flex: 1;
+}
+.flex_c_start {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.flex_r_start {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.flex_wrap {
+  flex-wrap: wrap;
+}
+
+.inline_block {
+  display: inline-block;
+}
+
+.text_overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scale {
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.pad_5 {
+  padding: 5px;
+}
+
+.iconfont {
+  cursor: pointer;
+}
+
+svg {
+  cursor: pointer;
+}

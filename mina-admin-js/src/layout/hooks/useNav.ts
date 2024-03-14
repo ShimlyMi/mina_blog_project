@@ -45,6 +45,9 @@ export function useNav() {
     return useUserStoreHook()?.getAvatar;
   });
   const userId = useUserStoreHook()?.getUserId;
+  const role = computed(() => {
+    return useUserStoreHook()?.role;
+  });
 
   /** 设置国际化选中后的样式 */
   const getDropdownItemStyle = computed(() => {
@@ -178,6 +181,7 @@ export function useNav() {
     avatar,
     userAvatar,
     userId,
+    role,
     avatarsStyle,
     tooltipEffect,
     getDropdownItemStyle,

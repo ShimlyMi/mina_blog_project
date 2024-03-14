@@ -10,9 +10,6 @@ const route = useRoute();
 const userStore = useUserStore();
 const { getUserInfo } = storeToRefs(userStore);
 
-const logoSrc = {
-  url: 'http://localhost:8888/cd933314a585d1a78f8d65100.jpg'
-}
 
 const getPath = computed(() => {
   return route.path;
@@ -24,7 +21,7 @@ const getPath = computed(() => {
   <div class="mi-header__menu flex_r_between">
     <div class="sub-avatar">
       <router-link to="/">
-        <el-avatar :src="logoSrc.url" class="el-avatar" />
+        <el-avatar src="" class="el-avatar" />
       </router-link>
     </div>
     <div class="flex_r_around">

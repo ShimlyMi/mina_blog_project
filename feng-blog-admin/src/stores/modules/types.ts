@@ -45,7 +45,9 @@ export type userType = {
 };
 
 export type userInfoType = {
-    nick_name: string;
-    avatar: string;
-    id?: number;
+  user_name?: string;
+  role: number;
+  avatar: string;
+  nick_name: string;
+  id?: number;
 };

@@ -69,15 +69,15 @@ const handleRemove = async file => {
 
 watch(
   () => props.fileList,
-  // newVal => {
-  //   uploadFileList.value = newVal;
-  //   if (newVal.length >= props.limit) {
-  //     showUpload.value = false;
-  //   }
-  //   if (!newVal.length) {
-  //     showUpload.value = true;
-  //   }
-  // },
+  newVal => {
+    uploadFileList.value = newVal;
+    if (newVal.length >= props.limit) {
+      showUpload.value = false;
+    }
+    if (!newVal.length) {
+      showUpload.value = true;
+    }
+  },
   {
     immediate: true,
     deep: true

@@ -9,6 +9,8 @@ export interface DataInfo<T> {
   user_name?: string;
   /** 当前登陆用户的角色 */
   role?: number;
+  /** 昵称 */
+  nick_name?: string;
 }
 
 export const sessionKey = "user-info";

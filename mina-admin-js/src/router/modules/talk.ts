@@ -1,7 +1,7 @@
 export default {
   path: "/talk",
   meta: {
-    icon: "menu",
+    icon: "list",
     title: "说说",
     rank: 1
   },

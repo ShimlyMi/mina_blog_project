@@ -8,6 +8,8 @@ export type UserResult = {
         user_name: string,
         role: number,
         id: number,
+        avatar: string,
+        nick_name: string
     }
 };
 

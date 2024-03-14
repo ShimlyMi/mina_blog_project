@@ -18,7 +18,7 @@ import { message } from "@/utils/message";
 import { ElMessageBox } from "element-plus";
 
 const router = useRouter();
-const { nick_name, avatar } = useNav();
+const { nick_name, avatar, role } = useNav();
 
 /** LIST */
 const param = reactive({
@@ -177,7 +177,7 @@ const returnTime = (time: any) => {
   const dateTime = new Date().getTime() - new Date(time).getTime();
   let res;
   if (dateTime < 6e4) {
-    res = Math.trunc(time / 1000) + "秒";
+    res = Math.trunc(dateTime / 1000) + "秒";
   } else if (dateTime >= 6e4 && dateTime < 3.6e6) {
     res = Math.trunc(dateTime / 6e4) + "分钟";
   } else if (dateTime >= 3.6e6 && dateTime < 8.64e7) {
@@ -198,7 +198,7 @@ onMounted(async () => {
 
 <template>
   <el-card class="talk-card">
-    <template #header>
+    <template #header v-if="role == 1">
       <div class="flex justify-end items-center">
         <el-button
           v-waves
@@ -209,15 +209,6 @@ onMounted(async () => {
           @click="operate"
         >
           发布说说
-        </el-button>
-        <el-button
-          v-waves
-          type="danger"
-          plain
-          style="margin-left: 10px"
-          :icon="useRenderIcon(Delete)"
-        >
-          批量删除
         </el-button>
       </div>
     </template>
@@ -289,11 +280,11 @@ onMounted(async () => {
             shape="square"
           />
           <div class="talk-header__right">
-            <span class="nick-name">{{ nick_name }}</span>
+            <span class="nick-name">{{ talk.nick_name || nick_name }}</span>
             <TextOverflow
               class="mt-[5px]"
               :text="talk.content"
-              :width="199"
+              :width="273"
               :maxLines="8"
               :font-size="13"
             >

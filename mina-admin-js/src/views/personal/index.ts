@@ -127,7 +127,7 @@ export function useSite() {
 
   /** 初始化个人信息 */
   async function initMyInfo() {
-    const res = await getUserInfoById();
+    const res = await getUserInfoById(useUserStoreHook().getUserId);
     if (res.code == 0) {
       const { avatar, nick_name } = res.result;
       if (useUserStoreHook()?.getNickName != nick_name) {

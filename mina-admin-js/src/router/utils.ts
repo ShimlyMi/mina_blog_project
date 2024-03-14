@@ -5,9 +5,9 @@ import {
   createWebHistory,
   createWebHashHistory
 } from "vue-router";
-import {router} from "./index";
-import {isProxy, toRaw} from "vue";
-import {useTimeoutFn} from "@vueuse/core";
+import { router } from "./index";
+import { isProxy, toRaw } from "vue";
+import { useTimeoutFn } from "@vueuse/core";
 import {
   isString,
   cloneDeep,
@@ -16,25 +16,25 @@ import {
   storageSession,
   isIncludeAllChildren
 } from "@pureadmin/utils";
-import {getConfig} from "@/config";
-import {menuType} from "@/layout/types";
-import {buildHierarchyTree} from "@/utils/tree";
-import {sessionKey, type DataInfo} from "@/utils/auth";
-import {useMultiTagsStoreHook} from "@/store/modules/multiTags";
-import {usePermissionStoreHook} from "@/store/modules/permission";
+import { getConfig } from "@/config";
+import { menuType } from "@/layout/types";
+import { buildHierarchyTree } from "@/utils/tree";
+import { sessionKey, type DataInfo } from "@/utils/auth";
+import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
+import { usePermissionStoreHook } from "@/store/modules/permission";
 
 const IFrame = () => import("@/layout/frameView.vue");
 // https://cn.vitejs.dev/guide/features.html#glob-import
 const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
 
 // 动态路由
-import {getAsyncRoutes} from "@/api/routes";
+import { getAsyncRoutes } from "@/api/routes";
 
 function handRank(routeInfo: any) {
-  const {name, path, parentId, meta} = routeInfo;
+  const { name, path, parentId, meta } = routeInfo;
   return isAllEmpty(parentId)
     ? isAllEmpty(meta?.rank) ||
-    (meta?.rank === 0 && name !== "Home" && path !== "/")
+      (meta?.rank === 0 && name !== "Home" && path !== "/")
       ? true
       : false
     : false;
@@ -74,7 +74,7 @@ function filterChildrenTree(data: RouteComponent[]) {
 }
 
 /** 判断两个数组彼此是否存在相同值 */
-function isOneOfArray(a: Array<string>, b: Array<string>) {
+function isOneOfArray(a: Array<string>, b: Array<number>) {
   return Array.isArray(a) && Array.isArray(b)
     ? intersection(a, b).length > 0
       ? true
@@ -85,9 +85,9 @@ function isOneOfArray(a: Array<string>, b: Array<string>) {
 /** 从sessionStorage里取出当前登陆用户的角色roles，过滤无权限的菜单 */
 function filterNoPermissionTree(data: RouteComponent[]) {
   const currentRoles =
-    storageSession().getItem<DataInfo<number>>(sessionKey)?.roles ?? [];
+    storageSession().getItem<DataInfo<number>>(sessionKey)?.role;
   const newTree = cloneDeep(data).filter((v: any) =>
-    isOneOfArray(v.meta?.roles, currentRoles)
+    isOneOfArray(v.meta?.role, [currentRoles])
   );
   newTree.forEach(
     (v: any) => v.children && (v.children = filterNoPermissionTree(v.children))
@@ -195,7 +195,7 @@ function initRouter() {
       });
     } else {
       return new Promise(resolve => {
-        getAsyncRoutes().then(({data}) => {
+        getAsyncRoutes().then(({ data }) => {
           handleAsyncRoutes(cloneDeep(data));
           storageSession().setItem(key, data);
           resolve(router);
@@ -204,7 +204,7 @@ function initRouter() {
     }
   } else {
     return new Promise(resolve => {
-      getAsyncRoutes().then(({data}) => {
+      getAsyncRoutes().then(({ data }) => {
         handleAsyncRoutes(cloneDeep(data));
         resolve(router);
       });
@@ -250,14 +250,14 @@ function formatTwoStageRoutes(routesList: RouteRecordRaw[]) {
         children: []
       });
     } else {
-      newRoutesList[0]?.children.push({...v});
+      newRoutesList[0]?.children.push({ ...v });
     }
   });
   return newRoutesList;
 }
 
 /** 处理缓存路由（添加、删除、刷新） */
-function handleAliveRoute({name}: ToRouteType, mode?: string) {
+function handleAliveRoute({ name }: ToRouteType, mode?: string) {
   switch (mode) {
     case "add":
       usePermissionStoreHook().cacheOperate({

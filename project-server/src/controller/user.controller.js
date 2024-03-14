@@ -29,7 +29,7 @@ class UserController {
         try {
             const res = await createUser(ctx.request.body);
             // 3. 返回数据
-            ctx.body = result("用户注册成功", { id: res.id, user_name: res.user_name })
+            ctx.body = result("用户注册成功", { id: res.id, user_name: res.user_name, nick_name: res.nick_name })
         } catch (err) {
             console.log(err);
             ctx.app.emit("error", throwError(errorCode, "用户注册失败"), ctx);
@@ -40,7 +40,7 @@ class UserController {
     /** 登录函数 */
     async login(ctx) {
         const { user_name, password } = ctx.request.body;
-        // 1. 获取用户信息(在 token 的 payload 中 记录 id, user_name, is_admin)
+        // 1. 获取用户信息(在 token 的 payload 中 记录 id, user_name, role, nick_name)
         // console.log("ctx", ctx.request.body);
         try {
             if (user_name == 'admin') {
@@ -57,6 +57,7 @@ class UserController {
             } else {
                 // 从返回的对象中剔除password属性，将剩下的属性放到res对象
                 const { password, ...res } = await getOneUserInfo({ user_name });
+                // console.log("getUser-res", res)
                 // 保存用户ip地址
                 let ip = ctx.get("X-Real-IP") || ctx.get("X-Forwarded-For") || ctx.ip;
                 await updateIp(res.id, ip.split(":").pop());
@@ -71,6 +72,7 @@ class UserController {
                     user_name: res.user_name,
                     role: res.role,
                     id: res.id,
+                    nick_name: res.nick_name,
                     ipAddress
                 })
             }
@@ -173,9 +175,10 @@ class UserController {
                     })
                 } else {
                     let res = await getOneUserInfo({id: ctx.params.id})
+                    // console.log(ctx.params.id)
                     const {password, user_name, ip,...resInfo} = res;
-                    const ipAddress = getIpAddress(ip);
-                    resInfo.ipAddress = ipAddress;
+                    // console.log("resInfo",resInfo)
+                    // resInfo.ipAddress = getIpAddress(ip);
                     ctx.body = result("获取用户信息成功", resInfo)
                 }
             }

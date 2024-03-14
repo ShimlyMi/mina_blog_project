@@ -8,10 +8,10 @@ const router = new Router({prefix: "/album"})
 router.post("/add", auth, needAdminPermission, addAlbum)
 
 /** 删除相册 */
-router.delete("/delete", auth, needAdminPermission, deleteAlbum)
+router.delete("/delete/:id", auth, needAdminPermission, deleteAlbum)
 
 /** 分页获取相册列表 */
-router.post("/", getAlbumList)
+router.post("/getAlbumList", getAlbumList)
 
 /** 获取所有相册列表 */
 router.get('/getAllAlbumList', getAllAlbum)

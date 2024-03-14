@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config/config.default");
-const { decryptToken } = require("../controller/auth.controller")
 const { ERRORCODE, throwError, result } = require("../constant/err.type")
 const errorCode = ERRORCODE.AUTH; // 用户权限不足
 const tokenErrorCode = ERRORCODE.TOKEN; // 用户登录过期
@@ -15,7 +14,7 @@ const auth = async(ctx, next) => {
         return ctx.app.emit("error", throwError(tokenErrorCode, "您没有权限访问，请先登录"), ctx);
     }
     try {
-        /** user 包含了 payload 的信息(id,user_name,is_admin) */
+        /** user 包含了 payload 的信息(id,user_name,role,nick_name) */
         const user = jwt.verify(token, JWT_SECRET);
         ctx.state.user = user;
         // console.log("token-user",user)

@@ -17,11 +17,6 @@ const Talk = seq.define('mi_talk', {
             require: true,
             comment: "发布说说的用户id"
         },
-        nick_name: {
-            type: DataTypes.STRING(255),
-            require: true,
-            comment: "发布说说的用户昵称"
-        },
         status: {
             type: DataTypes.INTEGER,
             require: true,

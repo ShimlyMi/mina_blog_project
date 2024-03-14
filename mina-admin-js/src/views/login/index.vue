@@ -88,6 +88,10 @@ function onkeypress({ code }: KeyboardEvent) {
   }
 }
 
+const changeAccount = () => {
+  ruleForm.value.password = "";
+}
+
 const goRegister = () => {
   router.push("/register");
 };
@@ -159,8 +163,8 @@ onBeforeUnmount(() => {
                 <el-input
                   v-model="ruleForm.user_name"
                   placeholder="账号"
+                  @clear="changeAccount"
                   :prefix-icon="useRenderIcon(User)"
-                  clearable
                 />
               </el-form-item>
             </Motion>

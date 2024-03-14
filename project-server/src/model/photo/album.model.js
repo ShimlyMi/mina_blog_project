@@ -39,6 +39,6 @@ const Album = seq.define(
     }
 )
 
-// Album.sync({ alter: true }) // 同步数据库表
+// album.sync({ alter: true }) // 同步数据库表
 
 module.exports = Album
