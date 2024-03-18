@@ -1,4 +1,4 @@
-const {addAlbum, getAlbumList, getAllAlbumList, deleteAlbum} = require("../service/album.service")
+const {addAlbum, getAlbumList, getAllAlbumList, deleteAlbum, updateAlbum, getOneAlbum} = require("../service/album.service")
 const {result, throwError, ERRORCODE} = require("../constant/err.type")
 const errorCode =  ERRORCODE.ALBUM
 
@@ -52,6 +52,22 @@ class AlbumController {
         } catch (err) {
             console.error(err)
             return ctx.app.emit("error", throwError(errorCode, "获取相册列表失败"), ctx)
+        }
+    }
+
+    /** 编辑相册 */
+    async updateAlbum(ctx) {
+        try {
+            const { id, album_name } = ctx.request.body
+            let one = await getOneAlbum({ album_name });
+            if (one && one.id != id) {
+                return ctx.app.emit("error", throwError(errorCode, "该相册名称已经被使用了，换一个试试~"), ctx)
+            }
+            const res = updateAlbum(ctx.request.body);
+            ctx.body = result("修改相册成功", res)
+        } catch (err) {
+            console.error(err);
+            return ctx.app.emit("error", throwError(errorCode, "修改相册失败"), ctx)
         }
     }
 }

@@ -21,6 +21,11 @@ export const deleteAlbum = (id: number) => {
   return http.request<photoResult>("delete", "/api/album/delete" + id, {});
 };
 
+/** 修改相册 */
+export const updateAlbum = (data?: any) => {
+  return http.request<photoResult>("put", "/api/album/update", { data });
+};
+
 /** 批量新增图片 */
 export const addPhotos = (data?: any) => {
   return http.request<photoResult>("post", "/api/photo/add", { data });
@@ -42,3 +47,4 @@ export const deletePictures = (data?: any) => {
 export const revertPictures = (data?: any) => {
   return http.request<photoResult>("get", "/api/photo/revert", { data });
 };
+

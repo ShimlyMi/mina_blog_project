@@ -54,6 +54,18 @@ class AlbumService {
         })
         return res
     }
+
+    /**
+     * 编辑相册
+     * @param {*} param0 id param1 相册名称 param2 相册描述
+     * */
+    async updateAlbum({ id, album_name, album_cover, description }) {
+        let res = await Album.update(
+            { album_name, album_cover, description },
+            { where: { id } }
+        )
+        return res[0] > 0;
+    }
 }
 
 module.exports = new AlbumService()

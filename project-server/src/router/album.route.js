@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 
-const {addAlbum, getAlbumList, deleteAlbum, getAllAlbum} = require("../controller/album.controller")
+const {addAlbum, getAlbumList, deleteAlbum, getAllAlbum, updateAlbum} = require("../controller/album.controller")
 const {auth, needAdminPermission} = require("../middleware/auth.middleware")
 const router = new Router({prefix: "/album"})
 
@@ -15,6 +15,9 @@ router.post("/getAlbumList", getAlbumList)
 
 /** 获取所有相册列表 */
 router.get('/getAllAlbumList', getAllAlbum)
+
+/** 修改相册 */
+router.put("/update", auth, needAdminPermission, updateAlbum)
 
 
 module.exports = router
