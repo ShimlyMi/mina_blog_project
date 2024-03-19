@@ -13,7 +13,6 @@ import {
 } from "@/api/talk";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Plus from "@iconify-icons/ep/plus";
-import Delete from "@iconify-icons/ep/delete";
 import { message } from "@/utils/message";
 import { ElMessageBox } from "element-plus";
 

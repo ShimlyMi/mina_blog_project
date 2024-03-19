@@ -5,7 +5,8 @@ const {
     deletePic,
     revertPic,
     deletePicByAlbumId,
-    getAllPicByAlbumId
+    getAllPicByAlbumId,
+    deleteOnePic
 } = require("../service/photo.service")
 const { ERRORCODE, throwError, result } = require("../constant/err.type")
 const errorCode = ERRORCODE.USER
@@ -25,8 +26,8 @@ class PhotoController {
 
     /** 批量删除图片 */
     async deletePicture(ctx) {
+        const { imgList, status } = ctx.request.body
         try {
-            const {imgList, status} = ctx.request.body
             let idList = imgList.map(v => v.id)
             const res = await deletePic(idList, status)
             ctx.body = result("批量删除图片成功", res)

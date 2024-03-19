@@ -1,70 +1,68 @@
 <script setup lang="ts" name="PhotoAlbum">
-import { useRoute, useRouter } from "vue-router";
 import { onMounted, reactive, ref } from "vue";
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Plus from "@iconify-icons/ep/plus";
 import EditPen from "@iconify-icons/ep/edit-pen";
-import CirlcleCheck from "@iconify-icons/ep/circle-check";
 import Delete from "@iconify-icons/ep/delete";
+import CircleCheck from "@iconify-icons/ep/circle-check";
 import RefreshLeft from "@iconify-icons/ep/refresh-left";
-import ToiletPaper from "@iconify-icons/ep/toilet-paper";
-import {
-  deletePictures,
-  getPicListByAlbumId,
-  revertPictures
-} from "@/api/photo";
-import { message } from "@/utils/message";
-import { cloneDeep } from "@pureadmin/utils";
-import {useStaticStoreHook} from "@/store/modules/static";
-import {useRenderIcon} from "@/components/ReIcon/src/hooks";
+import DeleteFilled from "@iconify-icons/ep/delete-filled";
+import { useNav } from "@/layout/hooks/useNav";
+import { useStaticStoreHook } from "@/store/modules/static";
+import {deletePictures, getPicListByAlbumId, revertPictures} from "@/api/photo";
+import {useRoute, useRouter} from "vue-router";
+import {cloneDeep} from "@pureadmin/utils";
+import {message} from "@/utils/message";
 
 const route = useRoute();
 const router = useRouter();
+const { role } = useNav();
 const photoTab = useStaticStoreHook().photoTab;
-const photoList = ref([]);
-const photoTotal = ref(0);
+
+/** LIST */
 const param = reactive({
   current: 1,
   size: 50,
   status: 1,
   id: null
 });
+/** 图库名称 */
 const currentAlbumName = ref(null);
+/** 图片相关 */
+const photoList = ref([]);
+const photoTotal = ref(0);
 const isEdit = ref(false);
-
-const previewShow = ref(false);
+/** 图片视图有关 */
 const previewList = ref([]);
+const previewShow = ref(false);
 const previewIndex = ref(0);
 
-/** 与图片视图有关 */
-const showPreview = (index: any) => {
+/** 点击  查看图片 */
+const showPreview = index => {
   previewIndex.value = index;
   previewShow.value = true;
 };
-const closeImgViewer = () => {
+/** 关闭图片查看器 */
+const closeImgPreview = () => {
   previewShow.value = false;
 };
 
-/** 与 分页 有关 */
-const handleSizeChange = (val: any) => {
-  param.size = val;
-  pageGetPhoto();
-};
-const handleCurrentChange = (val: any) => {
-  param.size = val;
-  pageGetPhoto();
+const tabChange = async (val: any) => {
+  param.status = val.index ? Number(val.index) + 1 : null;
+  await pageGetPics();
+  // if (talkList.value.length < total.value) {
+  //   observeTalkBottom();
+  // }
 };
 
-/** 根据相册id获取图片列表 */
-const pageGetPhoto = async () => {
+/** 获取图片列表 */
+const pageGetPics = async () => {
   const res = await getPicListByAlbumId(param);
+  console.log("获取相册列表", res);
   if (res.code == 0) {
     const { list, total } = res.result;
-    photoList.value = list.map((l: any) => {
-      return {
-        id: l.id,
-        url: l.url,
-        checked: false
-      };
+    photoList.value = list.map(l => {
+      return { id: l.id, url: l.url, checked: false };
     });
     previewList.value = list.map(l => {
       return l.url;
@@ -72,30 +70,12 @@ const pageGetPhoto = async () => {
     photoTotal.value = total;
   }
 };
+/** 新增 */
 
-/** 切换 tabs */
-const tabChange = (val: any) => {
-  param.status = val.index ? Number(val.index) + 1 : null;
-  pageGetPhoto();
-};
-
-/** 与操作有关 */
-const edit = () => {
-  isEdit.value = true;
-};
-const add = () => {
-  router.push({
-    path: "/photo/addPhoto",
-    query: { id: param.id, albumName: currentAlbumName.value }
-  });
-};
-const cancle = () => {
-  isEdit.value = false;
-};
 /** 批量删除 */
 const deleteBatch = async () => {
   const list = photoList.value.filter(p => p.checked);
-  if (!list.length) {
+  if (list.length) {
     message("请选择需要删除的图片", { type: "warning" });
     return;
   }
@@ -108,13 +88,13 @@ const deleteBatch = async () => {
   if (res.code == 0) {
     message("删除成功", { type: "success" });
     isEdit.value = false;
-    await pageGetPhoto();
+    await pageGetPics();
   }
 };
 /** 批量恢复 */
 const revertBatch = async () => {
   const list = photoList.value.filter(p => p.checked);
-  if (!list.length) {
+  if (list.length) {
     message("请选择需要恢复的图片", { type: "warning" });
     return;
   }
@@ -123,10 +103,9 @@ const revertBatch = async () => {
   });
   if (res.code == 0) {
     message("恢复成功", { type: "success" });
-    await pageGetPhoto();
+    await pageGetPics();
   }
 };
-
 /** 清空回收站 */
 const clear = async () => {
   const res = await deletePictures({
@@ -137,80 +116,70 @@ const clear = async () => {
   });
   if (res.code == 0) {
     message("清空回收站成功", { type: "success" });
-    await pageGetPhoto();
+    await pageGetPics();
   }
 };
-onMounted(async () => {
-  // 初始化
+onMounted(() => {
   if (route.query.id && route.query.albumName) {
     const { id, albumName } = route.query;
     currentAlbumName.value = albumName;
     param.id = Number(cloneDeep(id));
   }
-  await pageGetPhoto();
+  pageGetPics();
 });
 </script>
 
 <template>
   <el-card class="album">
+    <template #header>
+      <div class="flex_r_b">
+        <span>图库名称 - {{ currentAlbumName }}</span>
+        <!-- 按钮区分 -->
+        <div v-show="role == 1">
+          <div v-if="param.status == 1">
+            <template v-if="!isEdit">
+              <el-button type="primary" plain :icon="useRenderIcon(Plus)"
+                >新增</el-button
+              >
+              <el-button type="success" :icon="useRenderIcon(EditPen)"
+                >编辑</el-button
+              >
+            </template>
+            <template>
+              <el-button type="danger" :icon="useRenderIcon(Delete)"
+                >批量删除</el-button
+              >
+              <el-button type="info" plain :icon="useRenderIcon(CircleCheck)"
+                >取消</el-button
+              >
+            </template>
+          </div>
+          <div>
+            <el-button type="danger" :icon="useRenderIcon(Delete)"
+              >批量删除</el-button
+            >
+            <el-button type="success" :icon="useRenderIcon(RefreshLeft)"
+              >批量恢复</el-button
+            >
+            <el-button type="info" :icon="useRenderIcon(DeleteFilled)"
+              >清空回收站</el-button
+            >
+          </div>
+        </div>
+      </div>
+    </template>
     <el-tabs @tab-click="tabChange">
       <template v-for="item of photoTab" :key="item.key">
         <el-tab-pane :lazy="true">
           <template #label>
             <el-tooltip :content="item.content" placement="top-end">
-              <span>{{ item.content }}</span>
+              <span>{{ item.title }}</span>
             </el-tooltip>
           </template>
         </el-tab-pane>
       </template>
     </el-tabs>
-    <template #header>
-      <div class="flex_r_between">
-        <span>图库名称 - {{ currentAlbumName }}</span>
-      </div>
-      <div class="flex_r_between mt-[5px]">
-        <div />
-        <div v-if="param.status == 1">
-          <template>
-            <el-button type="primary" :icon="useRenderIcon(Plus)">新增</el-button>
-            <el-button type="success" :icon="useRenderIcon(EditPen)">编辑</el-button>
-          </template>
-          <template>
-            <el-button type="danger" :icon="useRenderIcon(CirlcleCheck)">批量删除</el-button>
-            <el-button type="info" :icon="useRenderIcon(CirlcleCheck)">取消</el-button>
-          </template>
-        </div>
-        <div>
-          <el-button type="danger" :icon="useRenderIcon(Delete)">批量删除</el-button>
-          <el-button type="success" :icon="useRenderIcon(RefreshLeft)">批量恢复</el-button>
-          <el-button type="info" :icon="useRenderIcon(ToiletPaper)">清空回收站</el-button>
-        </div>
-      </div>
-    </template>
-    <div class="album_upload">
-      <template v-if="!photoList.length">
-        <div>没有图片了~ 快去添加图片吧~</div>
-      </template>
-      <template v-else>
-        <div class="retrieve-box" v-for="(item, index) in photoList" :key="item.id">
-          <el-checkbox class="retrieve-box__checkbox" v-model="item.checked" v-if="(isEdit && param.status == 1) || param.status == 2" />
-          <el-image class="retrieve-box__img" fit="cover" :data-src="item.url"  :src="item.url" @click="showPreview"/>
-        </div>
-      </template>
-    </div>
-    <el-pagination
-      class="pagination"
-      layout="total, sizes, prev, pager, next, jumper"
-      v-model:current-page="param.current"
-      v-model:page-size="param.size"
-      :page-size="[50, 100, 200, 999]"
-      :small="true"
-      :disabled="false"
-      :background="false"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
-    <el-image-viewer v-if="previewShow" :url-list="previewList" :initial-index="previewIndex" @close="closeImgViewer" />
+    <div class="observer" />
   </el-card>
 </template>
 
@@ -218,18 +187,20 @@ onMounted(async () => {
 .album-upload {
   height: calc(100vh - 280px);
   overflow: auto;
+  margin-bottom: 20px;
 }
 
 .album-upload::-webkit-scrollbar {
   display: none;
 }
 
-:deep(.el-card__body) {
-  padding: 5px 5px 0 5px !important;
-}
+//:deep(.el-card__body) {
+//  padding: 20px 20px 0 20px !important;
+//}
 
 .pagination {
-  margin: 0 0 10px 10px;
+  margin: 10px;
+  justify-content: center;
 }
 
 .flex_r_b {
@@ -264,5 +235,14 @@ onMounted(async () => {
     width: 100%;
     height: 100%;
   }
+}
+
+.observer {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 12px;
+  width: 100%;
 }
 </style>

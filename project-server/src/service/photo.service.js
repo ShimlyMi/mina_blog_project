@@ -25,6 +25,7 @@ class PhotoService {
         return res
     }
 
+
     /** 根据 相册 id 删除图片 */
     async deletePicByAlbumId(album_id) {
         let res = await Photo.destroy({where: album_id})
@@ -38,18 +39,13 @@ class PhotoService {
     }
 
     /** 分页获取图片列表 */
-    async getPicByAlbumId({pageNum, pageSize, id, status}) {
-        const offset = (pageNum - 1) * pageSize
-        let {count, rows} = await Photo.findAndCountAll(
-            {
-                offset: offset,
-                limit: pageSize * 1,
-                where: {album_id: id}
-            },
-        )
+    async getPicByAlbumId({current, size, id, status}) {
+        const offset = (current - 1) * size
+        const limit = size * 1
+        let { count, rows } = await Photo.findAndCountAll({ offset, limit, where: {album_id: id, status } })
         return {
-            pageNum,
-            pageSize,
+            current,
+            size,
             list: rows,
             total: count
         }

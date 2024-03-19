@@ -5,7 +5,8 @@ const {
     getPhotosByAlbumId,
     deletePicture,
     revertPicture,
-    getAllPicByAlbumId
+    getAllPicByAlbumId,
+    deleteOnePic
 } = require("../controller/photo.controller")
 const {auth, needAdminPermission} = require("../middleware/auth.middleware")
 

@@ -19,7 +19,7 @@ const Photo = seq.define(
             type: DataTypes.INTEGER,
             require: true,
             defaultValue: 1,
-            comment: "状态 1 正常 2 回收站"
+            comment: "状态 1 正常 2 回收站 3 彻底删除"
         },
         createAt: {
             type: DataTypes.DATE,
@@ -40,6 +40,6 @@ const Photo = seq.define(
     }
 )
 
-//Photo.sync({ alter: true }) // 同步数据库表
+// Photo.sync({ alter: true }) // 同步数据库表
 
 module.exports = Photo

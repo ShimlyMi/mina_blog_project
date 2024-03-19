@@ -33,18 +33,18 @@ export const addPhotos = (data?: any) => {
 
 /** 分页获取相册 */
 export const getPicListByAlbumId = (data?: any) => {
-  return http.request<photoResult>("get", "/api/photo/getPicListByAlbumId", {
+  return http.request<photoResult>("post", "/api/photo/getPicListByAlbumId", {
     data
   });
 };
 
 /** 批量删除图片 */
 export const deletePictures = (data?: any) => {
-  return http.request<photoResult>("get", "/api/photo/delete", { data });
+  return http.request<photoResult>("put", "/api/photo/delete", { data });
 };
 
 /** 批量恢复图片 */
 export const revertPictures = (data?: any) => {
-  return http.request<photoResult>("get", "/api/photo/revert", { data });
+  return http.request<photoResult>("put", "/api/photo/revert", { data });
 };
 

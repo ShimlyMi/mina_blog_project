@@ -22,7 +22,7 @@ const coverV = (rule, value, callback) => {
 };
 
 const router = useRouter();
-const albumList = ref();
+const albumList = ref([]);
 const albumTotal = ref(0);
 const param = reactive({
   current: 1,
@@ -188,61 +188,67 @@ onMounted(async () => {
     </template>
     <!-- 主体内容 -->
     <el-row class="album">
-      <el-col
-        style="padding: 10px"
-        :xs="24"
-        :sm="6"
-        v-for="item in albumList"
-        :key="item.id"
-      >
-        <div class="album-card">
-          <div class="flex_r_between pad_5">
-            <!-- 相册标题 -->
-            <div class="album-title">
-              <span :title="item.album_name">{{ item.album_name }}</span>
+      <template v-if="!albumList.length">
+        <div class="observer">还未新增相册，请先添加相册哦~</div>
+      </template>
+      <template v-else>
+        <el-col
+          style="padding: 10px"
+          :xs="24"
+          :sm="6"
+          v-for="item in albumList"
+          :key="item.id"
+        >
+          <div class="album-card">
+            <div class="flex_r_between pad_5">
+              <!-- 相册标题 -->
+              <div class="album-title">
+                <span :title="item.album_name">{{ item.album_name }}</span>
+              </div>
+              <div class="operator flex_r_between">
+                <el-icon
+                  class="mr-[5px]"
+                  color="#67c23a"
+                  size="18"
+                  @click="operate('edit', item)"
+                  ><IconifyIconOffline :icon="Edit"
+                /></el-icon>
+                <el-popconfirm
+                  :title="`删除相册-${item.album_name}?`"
+                  icon-color="#66b1ff"
+                  @click="operate('delete', item)"
+                >
+                  <template #reference>
+                    <el-icon color="#f56c6c" size="16"
+                      ><IconifyIconOffline :icon="Delete"
+                    /></el-icon>
+                  </template>
+                </el-popconfirm>
+                <el-icon
+                  color="#66b1ff"
+                  size="18"
+                  @click="operate('details', item)"
+                  ><IconifyIconOffline :icon="More"
+                /></el-icon>
+              </div>
             </div>
-            <div class="operator flex_r_between">
-              <el-icon
-                class="mr-[5px]"
-                color="#67c23a"
-                size="18"
-                @click="operate('edit', item)"
-                ><IconifyIconOffline :icon="Edit"
-              /></el-icon>
-              <el-popconfirm
-                :title="`删除相册-${item.album_name}?`"
-                icon-color="#66b1ff"
-                @click="operate('delete', item)"
-              >
-                <template #reference>
-                  <el-icon color="#f56c6c" size="16"
-                    ><IconifyIconOffline :icon="Delete"
-                  /></el-icon>
-                </template>
-              </el-popconfirm>
-              <el-icon
-                color="#66b1ff"
-                size="18"
-                @click="operate('details', item)"
-                ><IconifyIconOffline :icon="More"
-              /></el-icon>
-            </div>
+            <span class="album-desc" :title="item.desc">{{
+              item.description
+            }}</span>
+            <el-image
+              class="album-image animate__animated animate__fadeIn"
+              :src="item.album_cover"
+              fit="cover"
+              loading="lazy"
+              preview-teleported
+              :preview-src-list="[item.album_cover]"
+            />
           </div>
-          <span class="album-desc" :title="item.desc">{{
-            item.description
-          }}</span>
-          <el-image
-            class="album-image animate__animated animate__fadeIn"
-            :src="item.album_cover"
-            fit="cover"
-            loading="lazy"
-            preview-teleported
-            :preview-src-list="[item.album_cover]"
-          />
-        </div>
-      </el-col>
+        </el-col>
+      </template>
     </el-row>
     <el-pagination
+      v-show="albumTotal > 0"
       class="pagination"
       v-model:current-page="param.current"
       v-model:page-size="param.size"
@@ -440,5 +446,14 @@ onMounted(async () => {
   .album-image {
     height: 200px;
   }
+}
+
+.observer {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 12px;
+  width: 100%;
 }
 </style>

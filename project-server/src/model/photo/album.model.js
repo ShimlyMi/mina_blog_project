@@ -36,9 +36,10 @@ const Album = seq.define(
     },
     {
         freezeTableName: true, // 强制表明不转复数
+        paranoid: true,
     }
 )
 
-// album.sync({ alter: true }) // 同步数据库表
+// Album.sync({ alter: true }) // 同步数据库表
 
 module.exports = Album

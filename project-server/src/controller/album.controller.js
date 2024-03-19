@@ -22,9 +22,9 @@ class AlbumController {
      * */
     async deleteAlbum(ctx) {
         try {
-            const {id} = ctx.params
+            const { id } = ctx.params
             let res = await deleteAlbum(id)
-            ctx.body = result("删除相册成功", "")
+            ctx.body = result("删除相册成功", res)
         } catch (err) {
             console.error(err)
             return ctx.app.emit("error", throwError(errorCode, "删除相册失败"), ctx)
@@ -35,8 +35,8 @@ class AlbumController {
     async getAlbumList(ctx) {
         try {
             // 解析 pageNum pageSize
-            const {pageNum = 1, pageSize = 10} = ctx.request.query;
-            let res = await getAlbumList(pageNum, pageSize)
+            const { current, size, album_name } = ctx.request.body;
+            let res = await getAlbumList({ current, size, album_name })
             ctx.body = result("分页查询成功", res)
         } catch (err) {
             console.error(err)
