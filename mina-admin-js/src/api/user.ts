@@ -48,4 +48,12 @@ export const updateUserInfo = (data?: object) => {
   return http.request<Result>("put", "/api/users/updateOwnUserInfo", { data });
 };
 
-/**  */
+/** 条件分页获取用户列表 */
+export const getUserList = (data?: object) => {
+  return http.request<Result>("post", "/api/users/getUserList", { data });
+};
+
+/** 管理员修改用户角色 */
+export const updateUserRole = (id: any, role: any) => {
+  return http.request<Result>("put", `/api/users/updateRole/${id}/${role}`, {});
+};

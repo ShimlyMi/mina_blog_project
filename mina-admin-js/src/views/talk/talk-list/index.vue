@@ -198,7 +198,8 @@ onMounted(async () => {
 <template>
   <el-card class="talk-card">
     <template #header v-if="role == 1">
-      <div class="flex justify-end items-center">
+      <div class="flex justify-between items-center">
+        <span>说说列表</span>
         <el-button
           v-waves
           type="primary"

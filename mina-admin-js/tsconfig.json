@@ -35,7 +35,8 @@
       "element-plus/global",
       "@pureadmin/table/volar",
       "@pureadmin/descriptions/volar"
-    ]
+    ],
+    "typeRoots": ["./node_modules/@types/", "./types"]
   },
   "include": [
     "mock/*.ts",

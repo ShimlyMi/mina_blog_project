@@ -1,5 +1,5 @@
-import {useEpThemeStoreHook} from "@/store/modules/epTheme";
-import {defineComponent, ref, computed, type PropType, nextTick} from "vue";
+import { useEpThemeStoreHook } from "@/store/modules/epTheme";
+import { defineComponent, ref, computed, type PropType, nextTick } from "vue";
 import {
   delay,
   cloneDeep,
@@ -36,7 +36,7 @@ export default defineComponent({
   name: "PureTableBar",
   props,
   emits: ["refresh"],
-  setup(props, {emit, slots, attrs}) {
+  setup(props, { emit, slots, attrs }) {
     const buttonRef = ref();
     const size = ref("default");
     const isExpandAll = ref(true);
@@ -169,7 +169,7 @@ export default defineComponent({
         Sortable.create(wrapper, {
           animation: 300,
           handle: ".drag-btn",
-          onEnd: ({newIndex, oldIndex, item}) => {
+          onEnd: ({ newIndex, oldIndex, item }) => {
             const targetThElem = item;
             const wrapperElem = targetThElem.parentNode as HTMLElement;
             const oldColumn = dynamicColumns.value[oldIndex];
@@ -237,7 +237,7 @@ export default defineComponent({
                       onClick={() => onExpand()}
                     />
                   </el-tooltip>
-                  <el-divider direction="vertical"/>
+                  <el-divider direction="vertical" />
                 </>
               ) : null}
               <el-tooltip effect="dark" content="刷新" placement="top">
@@ -250,18 +250,18 @@ export default defineComponent({
                   onClick={() => onReFresh()}
                 />
               </el-tooltip>
-              <el-divider direction="vertical"/>
+              <el-divider direction="vertical" />
               <el-tooltip effect="dark" content="密度" placement="top">
                 <el-dropdown v-slots={dropdown} trigger="click">
-                  <CollapseIcon class={["w-[16px]", iconClass.value]}/>
+                  <CollapseIcon class={["w-[16px]", iconClass.value]} />
                 </el-dropdown>
               </el-tooltip>
-              <el-divider direction="vertical"/>
+              <el-divider direction="vertical" />
 
               <el-popover
                 v-slots={reference}
                 placement="bottom-start"
-                popper-style={{padding: 0}}
+                popper-style={{ padding: 0 }}
                 width="160"
                 trigger="click"
               >
