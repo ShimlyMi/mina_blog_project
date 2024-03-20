@@ -34,7 +34,7 @@ class PhotoService {
 
     /** 批量恢复图片 */
     async revertPic(idList) {
-        let re = await Photo.update({status: 1}, {where: {id: idList}})
+        let res = await Photo.update({status: 1}, {where: {id: idList}})
         return res
     }
 

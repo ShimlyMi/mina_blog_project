@@ -9,10 +9,14 @@ import RefreshLeft from "@iconify-icons/ep/refresh-left";
 import DeleteFilled from "@iconify-icons/ep/delete-filled";
 import { useNav } from "@/layout/hooks/useNav";
 import { useStaticStoreHook } from "@/store/modules/static";
-import {deletePictures, getPicListByAlbumId, revertPictures} from "@/api/photo";
-import {useRoute, useRouter} from "vue-router";
-import {cloneDeep} from "@pureadmin/utils";
-import {message} from "@/utils/message";
+import {
+  deletePictures,
+  getPicListByAlbumId,
+  revertPictures
+} from "@/api/photo";
+import { useRoute, useRouter } from "vue-router";
+import { cloneDeep } from "@pureadmin/utils";
+import { message } from "@/utils/message";
 
 const route = useRoute();
 const router = useRouter();
@@ -22,7 +26,7 @@ const photoTab = useStaticStoreHook().photoTab;
 /** LIST */
 const param = reactive({
   current: 1,
-  size: 50,
+  size: 30,
   status: 1,
   id: null
 });
@@ -38,7 +42,7 @@ const previewShow = ref(false);
 const previewIndex = ref(0);
 
 /** 点击  查看图片 */
-const showPreview = index => {
+const showPreview = (index: any) => {
   previewIndex.value = index;
   previewShow.value = true;
 };
@@ -58,20 +62,36 @@ const tabChange = async (val: any) => {
 /** 获取图片列表 */
 const pageGetPics = async () => {
   const res = await getPicListByAlbumId(param);
-  console.log("获取相册列表", res);
+  // console.log("获取相册列表", res);
   if (res.code == 0) {
     const { list, total } = res.result;
-    photoList.value = list.map(l => {
+    photoList.value = list.map((l: any) => {
       return { id: l.id, url: l.url, checked: false };
     });
-    previewList.value = list.map(l => {
+    previewList.value = list.map((l: any) => {
       return l.url;
     });
     photoTotal.value = total;
   }
 };
 /** 新增 */
-
+const add = () => {
+  router.push({
+    path: "/photo/addPhoto",
+    query: {
+      id: param.id,
+      albumName: currentAlbumName.value
+    }
+  });
+};
+/** 修改 */
+const edit = () => {
+  isEdit.value = true;
+};
+/** 取消 */
+const cancel = () => {
+  isEdit.value = false;
+};
 /** 批量删除 */
 const deleteBatch = async () => {
   const list = photoList.value.filter(p => p.checked);
@@ -94,7 +114,7 @@ const deleteBatch = async () => {
 /** 批量恢复 */
 const revertBatch = async () => {
   const list = photoList.value.filter(p => p.checked);
-  if (list.length) {
+  if (!list.length) {
     message("请选择需要恢复的图片", { type: "warning" });
     return;
   }
@@ -119,6 +139,16 @@ const clear = async () => {
     await pageGetPics();
   }
 };
+/** 处理分页器相关函数 */
+const handleSizeChange = (val: any) => {
+  param.size = val;
+  pageGetPics();
+};
+const handleCurrentChange = (val: any) => {
+  param.current = val;
+  pageGetPics();
+};
+
 onMounted(() => {
   if (route.query.id && route.query.albumName) {
     const { id, albumName } = route.query;
@@ -138,30 +168,53 @@ onMounted(() => {
         <div v-show="role == 1">
           <div v-if="param.status == 1">
             <template v-if="!isEdit">
-              <el-button type="primary" plain :icon="useRenderIcon(Plus)"
+              <el-button
+                type="primary"
+                plain
+                :icon="useRenderIcon(Plus)"
+                @click="add"
                 >新增</el-button
               >
-              <el-button type="success" :icon="useRenderIcon(EditPen)"
+              <el-button
+                type="success"
+                :icon="useRenderIcon(EditPen)"
+                @click="edit"
                 >编辑</el-button
               >
             </template>
-            <template>
-              <el-button type="danger" :icon="useRenderIcon(Delete)"
+            <template v-else>
+              <el-button
+                type="danger"
+                :icon="useRenderIcon(Delete)"
+                @click="deleteBatch"
                 >批量删除</el-button
               >
-              <el-button type="info" plain :icon="useRenderIcon(CircleCheck)"
+              <el-button
+                type="info"
+                plain
+                :icon="useRenderIcon(CircleCheck)"
+                @click="cancel"
                 >取消</el-button
               >
             </template>
           </div>
-          <div>
-            <el-button type="danger" :icon="useRenderIcon(Delete)"
+          <div v-else>
+            <el-button
+              type="danger"
+              :icon="useRenderIcon(Delete)"
+              @click="deleteBatch"
               >批量删除</el-button
             >
-            <el-button type="success" :icon="useRenderIcon(RefreshLeft)"
+            <el-button
+              type="success"
+              :icon="useRenderIcon(RefreshLeft)"
+              @click="revertBatch"
               >批量恢复</el-button
             >
-            <el-button type="info" :icon="useRenderIcon(DeleteFilled)"
+            <el-button
+              type="info"
+              :icon="useRenderIcon(DeleteFilled)"
+              @click="clear"
               >清空回收站</el-button
             >
           </div>
@@ -179,15 +232,61 @@ onMounted(() => {
         </el-tab-pane>
       </template>
     </el-tabs>
-    <div class="observer" />
+    <div class="album-upload">
+      <template v-if="!photoList.length">
+        <div class="observer">
+          {{ photoList.length >= photoTotal ? "还没有照片哦~" : "加载更多" }}
+        </div>
+      </template>
+      <template v-else>
+        <div
+          class="retrieve-box"
+          v-for="(item, index) in photoList"
+          :key="item.id"
+        >
+          <el-checkbox
+            class="retrieve-box__checkbox"
+            v-model="item.checked"
+            v-if="(isEdit && param.status == 1) || param.status == 2"
+          />
+          <el-image
+            class="retrieve-box__img"
+            fit="cover"
+            :data-src="item.url"
+            :src="item.url"
+            @click="showPreview(index)"
+          />
+        </div>
+      </template>
+    </div>
+    <!-- 分页器 -->
+    <el-pagination
+      class="pagination"
+      v-model:current-page="param.current"
+      v-model:page-size="param.size"
+      :small="true"
+      :disabled="false"
+      :background="false"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="photoTotal"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
+    <!-- 图片查看器 -->
+    <el-image-viewer
+      v-if="previewShow"
+      :url-list="previewList"
+      :initial-index="previewIndex"
+      @close="closeImgPreview"
+    />
   </el-card>
 </template>
 
 <style scoped lang="scss">
 .album-upload {
-  height: calc(100vh - 280px);
+  height: calc(100vh - 350px);
   overflow: auto;
-  margin-bottom: 20px;
+  //margin-bottom: 20px;
 }
 
 .album-upload::-webkit-scrollbar {

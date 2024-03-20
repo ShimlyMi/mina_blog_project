@@ -14,7 +14,7 @@ import { updateAlbum, addAlbum, deleteAlbum, getAlbumList } from "@/api/photo";
 import { message } from "@/utils/message";
 import { cloneDeep } from "@pureadmin/utils";
 
-const coverV = (rule, value, callback) => {
+const coverV = (callback: any) => {
   if (!albumForm.coverList.length) {
     return new Error("请上传相册封面");
   }
@@ -26,7 +26,7 @@ const albumList = ref([]);
 const albumTotal = ref(0);
 const param = reactive({
   current: 1,
-  size: 8,
+  size: 10,
   album_name: ""
 });
 
@@ -153,7 +153,7 @@ const pageGetAlbum = async () => {
   const res = await getAlbumList(param);
   if (res.code == 0) {
     const { list, total } = res.result;
-    albumList.value = list.map(l => {
+    albumList.value = list.map((l: any) => {
       return {
         id: l.id,
         album_name: l.album_name,
@@ -252,7 +252,7 @@ onMounted(async () => {
       class="pagination"
       v-model:current-page="param.current"
       v-model:page-size="param.size"
-      :page-size="[8, 12, 16]"
+      :page-size="[10, 12, 16]"
       :small="true"
       :disabled="false"
       :background="false"
@@ -322,7 +322,7 @@ onMounted(async () => {
 
   &-card {
     position: relative;
-    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.12);
     padding: 5px;
   }
 
@@ -345,7 +345,7 @@ onMounted(async () => {
   &-desc {
     font-size: 0.8em;
     display: inline-block;
-    padding: 0px 10px;
+    padding: 0 10px;
     width: 95%;
     color: #606266;
     overflow: hidden;
@@ -375,6 +375,7 @@ onMounted(async () => {
 
 .pagination {
   margin: 0 0 10px 10px;
+  justify-content: center;
 }
 
 .flex_r_b {
