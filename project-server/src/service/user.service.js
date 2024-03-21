@@ -110,14 +110,6 @@ class UserService {
         nick_name && Object.assign(whereOpt, { nick_name: { [Op.like]: `%${nick_name}%` } })
         const { count, rows } = await User.findAndCountAll(
             { offset, limit, attributes: { exclude: ["password"], where: whereOpt } })
-
-        // rows.forEach((v) => {
-        //     if (v.dataValues.ip) {
-        //         v.dataValues.ip.address = getIpAddress(v.dataValues.ip)
-        //     } else {
-        //         v.dataValues.ip.address = "外星"
-        //     }
-        // })
         return { current, size, total: count, list: rows }
     }
 

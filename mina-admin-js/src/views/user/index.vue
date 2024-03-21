@@ -57,7 +57,7 @@ const {
           class="!w-[100px]"
         />
       </el-form-item>
-      <el-form-item label="用户角色" prop="nick_name">
+      <el-form-item label="用户角色" prop="role">
         <el-select
           v-model="param.role"
           placeholder="选择用户角色"
