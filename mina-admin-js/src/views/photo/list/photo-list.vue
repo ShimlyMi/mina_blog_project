@@ -95,12 +95,12 @@ const cancel = () => {
 /** 批量删除 */
 const deleteBatch = async () => {
   const list = photoList.value.filter(p => p.checked);
-  if (list.length) {
+  if (!list.length) {
     message("请选择需要删除的图片", { type: "warning" });
     return;
   }
   const res = await deletePictures({
-    type: param.status,
+    status: param.status,
     imgList: list.map(l => {
       return { id: l.id, url: l.url };
     })

@@ -1,7 +1,9 @@
-import { reactive, ref, toRaw } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { LoadingConfig, PaginationProps } from "@pureadmin/table";
-import {getUserList, updateUserRole} from "@/api/user";
+import { adminUpdateUserInfo, getUserList, updateUserRole } from "@/api/user";
 import { message } from "@/utils/message";
+import { ElLoading } from "element-plus";
+import { imgUpload } from "@/api/site";
 
 export function useColumns() {
   const param = reactive({
@@ -49,11 +51,6 @@ export function useColumns() {
       prop: "role",
       minWidth: 100,
       slot: "role"
-    },
-    {
-      label: "IP",
-      prop: "ip_address",
-      minWidth: 100
     },
     {
       label: "创建日期",
@@ -142,45 +139,79 @@ export function useColumns() {
   }
   /** 角色更改函数 */
   async function roleChange(user: any) {
-      const { id, role } = user;
-      const res = await updateUserRole(id, role);
-      if (res.code == 0) {
-          message("修改用户角色成功", { type: "success" });
-          await getPageUserList();
-      }
+    const { id, role } = user;
+    const res = await updateUserRole(id, role);
+    if (res.code == 0) {
+      message("修改用户角色成功", { type: "success" });
+      await getPageUserList();
+    }
   }
   /** 修改用户 */
   const editUser = (row: any) => {
-      Object.assign(tableForm, row);
-      if (row.avatar) {
-          tableForm.avatarList = [
-              {
-                  id: 1,
-                  url: row.avatar
-              }
-          ];
-      }
-      dialogVisible.value = true;
+    Object.assign(tableForm, row);
+    if (row.avatar) {
+      tableForm.avatarList = [
+        {
+          id: 1,
+          url: row.avatar
+        }
+      ];
+    }
+    dialogVisible.value = true;
   };
   /** 重置表格 */
   const resetForm = (formEl: any) => {
-      if (!formEl) return;
-      formEl.resetFields();
+    if (!formEl) return;
+    formEl.resetFields();
   };
   /** 关闭对话框 */
   function closeDialog() {
-      Object.assign(tableForm, primaryTableForm);
-      dialogVisible.value = false;
+    Object.assign(tableForm, primaryTableForm);
+    dialogVisible.value = false;
   }
   /** 表格提交 */
   async function submitForm(formEl) {
-      if (!formEl) return;
-      await formEl.validate(async valid => {
-          if (valid) {
-              // 先上传
+    if (!formEl) return;
+    await formEl.validate(async valid => {
+      if (valid) {
+        // 先上传图片
+        if (tableForm.avatarList.length) {
+          if (!tableForm.avatarList[0].id) {
+            const uploadLoading = ElLoading.service({
+              fullscreen: true,
+              text: "图片正在上传中"
+            });
+            const res = await imgUpload(tableForm.avatarList[0]);
+            if (res.code == 0) {
+              const { url } = res.result;
+              tableForm.avatar = url;
+            }
+            uploadLoading.close();
+          } else {
+            tableForm.avatar = tableForm.avatarList[0].url;
           }
-      })
+        } else {
+          tableForm.avatar = "";
+        }
+
+        /** 修改用户 */
+        const { id, nick_name, avatar } = tableForm;
+        const res = await adminUpdateUserInfo({ id, nick_name, avatar });
+        if (res.code == 0) {
+          message("修改成功", { type: "success" });
+          dialogVisible.value = false;
+          resetForm(formEl);
+          Object.assign(tableForm, primaryTableForm);
+          await getPageUserList();
+        } else {
+          message(res.message, { type: "error" });
+        }
+      }
+    });
   }
+  onMounted(async () => {
+    await getPageUserList();
+  });
 
   return {
     param,
@@ -193,6 +224,15 @@ export function useColumns() {
     dataList,
     dialogVisible,
     loading,
-    pagination
+    loadingConfig,
+    pagination,
+    resetParam,
+    onSizeChange,
+    onCurrentChange,
+    roleChange,
+    closeDialog,
+    editUser,
+    submitForm,
+    onSearch
   };
 }

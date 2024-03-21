@@ -57,3 +57,8 @@ export const getUserList = (data?: object) => {
 export const updateUserRole = (id: any, role: any) => {
   return http.request<Result>("put", `/api/users/updateRole/${id}/${role}`, {});
 };
+
+/** 管理员修改用户信息 */
+export const adminUpdateUserInfo = (data?: any) => {
+  return http.request<Result>("put", "/api/users/adminUpdateUserInfo", { data });
+};

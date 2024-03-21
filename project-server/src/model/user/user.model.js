@@ -51,12 +51,6 @@ const User = seq.define('mi_user', {
         defaultValue: 'http://localhost:8888/11d9bb8bf54125a26464b5c00.jpg',
         comment: '用户头像'
     },
-    ip: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      defaultValue: "",
-      comment: "ip属地"
-    },
     createdAt: {
         type: DataTypes.DATE,
         get() {
