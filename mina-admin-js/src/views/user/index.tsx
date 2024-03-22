@@ -132,7 +132,7 @@ export function useColumns() {
       dataList.value = res.result.list;
       pagination.total = res.result.total;
       loading.value = false;
-      console.log(dataList.value);
+      // console.log(dataList.value);
     } else {
       loading.value = false;
       message("请求失败", { type: "error" });
@@ -210,8 +210,8 @@ export function useColumns() {
       }
     });
   }
-  onMounted(async () => {
-    await getPageUserList();
+  onMounted(() => {
+    getPageUserList();
   });
 
   return {

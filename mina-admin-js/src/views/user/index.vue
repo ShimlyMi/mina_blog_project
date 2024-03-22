@@ -148,8 +148,8 @@ const {
         <el-form-item label="头像" class="user-avatar">
           <Upload
             v-model:file-list="tableForm.avatarList"
-            :width="80"
-            :height="80"
+            :width="146"
+            :height="146"
             :limit="1"
           />
         </el-form-item>

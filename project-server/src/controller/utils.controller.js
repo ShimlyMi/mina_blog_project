@@ -18,6 +18,7 @@ class UtilsController {
             ctx.body = result("图片上传成功", {
                 url: "http://127.0.0.1:8888/" + path.basename(file.filepath),
             })
+            // console.log(file.filepath);
             console.log("图片上传成功");
         } else {
             return ctx.app.emit('error', throwError(errorCode, "图片上传失败"), ctx)

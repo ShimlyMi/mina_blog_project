@@ -1,5 +1,5 @@
 const User = require("../model/user/user.model")
-const {randomNickname, getIpAddress } = require("../utils/tools");
+const { randomNickname } = require("../utils/tools");
 const bcrypt = require("bcryptjs"); // 密码加盐加密
 const { Op } = require("sequelize")
 
@@ -82,7 +82,7 @@ class UserService {
         id && Object.assign(whereOpt, {id});
         user_name && Object.assign(whereOpt, {user_name});
         password && Object.assign(whereOpt, {password});
-        nick_name && Object.assign((whereOpt, {nick_name}));
+        nick_name && Object.assign(whereOpt, {nick_name});
         avatar && Object.assign(whereOpt, {avatar})
         role && Object.assign(whereOpt, { role })
         // console.log(whereOpt)
@@ -91,7 +91,7 @@ class UserService {
         const res = await User.findOne({
             // attributes: { exclude: ["createdAt", "updatedAt"] },
             attributes: ['id', 'user_name', 'password', 'role', 'nick_name', 'avatar'],
-            where: whereOpt,
+            where: whereOpt
         });
         return res ? res.dataValues : null;
     }
@@ -103,11 +103,14 @@ class UserService {
 
         // 条件
         const whereOpt = {}
+
         if (typeof  role === "number") {
-            role && Object.assign(whereOpt, { role: {[Op.eq]: role} })
             console.log("查询role成功",role)
         }
+        role && Object.assign(whereOpt, { role: {[Op.eq]: role} })
         nick_name && Object.assign(whereOpt, { nick_name: { [Op.like]: `%${nick_name}%` } })
+
+
         const { count, rows } = await User.findAndCountAll(
             { offset, limit, attributes: { exclude: ["password"], where: whereOpt } })
         return { current, size, total: count, list: rows }
@@ -124,8 +127,7 @@ class UserService {
 
     /** 获取用户总数 */
     async getUserCount() {
-        let res = await User.count()
-        return res
+        return await User.count()
     }
 
     /** 管理元修改用户信息 */

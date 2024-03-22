@@ -19,7 +19,7 @@ const {
   onPanel,
   minaApp,
   user_name,
-  userAvatar,
+  avatar,
   avatarsStyle,
   toggleSideBar
   // getDropdownItemStyle,
@@ -57,10 +57,10 @@ const { t } = useTranslationLang();
 
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
-        <span class="el-dropdown-link navbar-bg-hover select-none">
-          <img :src="userAvatar" :style="avatarsStyle" />
+        <div class="el-dropdown-link navbar-bg-hover select-none">
+          <img :src="avatar" :style="avatarsStyle" :alt="user_name" />
           <p v-if="user_name" class="dark:text-white">{{ user_name }}</p>
-        </span>
+        </div>
         <template #dropdown>
           <el-dropdown-menu class="logout">
             <router-link to="/personal">
@@ -76,7 +76,6 @@ const { t } = useTranslationLang();
               />
               {{ t("buttons.hsLoginOut") }}
             </el-dropdown-item>
-
           </el-dropdown-menu>
         </template>
       </el-dropdown>

@@ -14,15 +14,8 @@ import User from "@iconify-icons/ri/user-3-fill";
 const menuRef = ref();
 
 const { t, route } = useTranslationLang(menuRef);
-const {
-  title,
-  logout,
-  backTopMenu,
-  onPanel,
-  user_name,
-  userAvatar,
-  avatarsStyle
-} = useNav();
+const { title, logout, backTopMenu, onPanel, user_name, avatar, avatarsStyle } =
+  useNav();
 
 const defaultActive = computed(() =>
   !isAllEmpty(route.meta?.activePath) ? route.meta.activePath : route.path
@@ -64,10 +57,10 @@ nextTick(() => {
       <!-- 国际化 -->
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
-        <span class="el-dropdown-link navbar-bg-hover">
-          <img :src="userAvatar" :style="avatarsStyle" />
+        <div class="el-dropdown-link navbar-bg-hover">
+          <img :src="avatar" :style="avatarsStyle" :alt="user_name" />
           <p v-if="user_name" class="dark:text-white">{{ user_name }}</p>
-        </span>
+        </div>
         <template #dropdown>
           <el-dropdown-menu class="logout">
             <router-link to="/personal">
@@ -83,7 +76,6 @@ nextTick(() => {
               />
               退出系统
             </el-dropdown-item>
-
           </el-dropdown-menu>
         </template>
       </el-dropdown>

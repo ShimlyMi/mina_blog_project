@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import {type CSSProperties, computed} from "vue";
-import {hasAuth, getAuths} from "@/router/utils";
+import { type CSSProperties, computed } from "vue";
+import { hasAuth, getAuths } from "@/router/utils";
 
 defineOptions({
   name: "PermissionButton"

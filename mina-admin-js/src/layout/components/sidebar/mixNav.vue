@@ -10,28 +10,23 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { getParentPaths, findRouteByPath } from "@/router/utils";
 import { useTranslationLang } from "../../hooks/useTranslationLang";
 import { usePermissionStoreHook } from "@/store/modules/permission";
-import globalization from "@/assets/svg/globalization.svg?component";
 import LogoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
 import Setting from "@iconify-icons/ri/settings-3-line";
-import Check from "@iconify-icons/ep/check";
 import User from "@iconify-icons/ri/user-3-fill";
 
 const menuRef = ref();
 const defaultActive = ref(null);
 
-const { t, route, locale, translationCh, translationEn } =
-  useTranslationLang(menuRef);
+const { t, route } = useTranslationLang(menuRef);
 const {
   device,
   logout,
   onPanel,
   resolvePath,
   user_name,
-  userAvatar,
+  avatar,
   getDivStyle,
-  avatarsStyle,
-  getDropdownItemStyle,
-  getDropdownItemClass
+  avatarsStyle
 } = useNav();
 
 function getDefaultActive(routePath) {
@@ -134,10 +129,10 @@ watch(
       -->
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
-        <span class="el-dropdown-link navbar-bg-hover select-none">
-          <img :src="userAvatar" :style="avatarsStyle" />
+        <div class="el-dropdown-link navbar-bg-hover select-none">
+          <img :src="avatar" :style="avatarsStyle" :alt="user_name" />
           <p v-if="user_name" class="dark:text-white">{{ user_name }}</p>
-        </span>
+        </div>
         <template #dropdown>
           <el-dropdown-menu class="logout">
             <router-link to="/personal">
@@ -150,7 +145,6 @@ watch(
               <IconifyIconOffline :icon="LogoutCircleRLine" />
               退出系统
             </el-dropdown-item>
-
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -194,7 +188,6 @@ watch(
     display: inline-flex;
     flex-wrap: wrap;
     min-width: 100%;
-
   }
 }
 </style>
