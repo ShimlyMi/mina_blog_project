@@ -11,6 +11,7 @@ import Lollipop from "@iconify-icons/ep/lollipop";
 import List from "@iconify-icons/ep/list";
 import PictureFilled from "@iconify-icons/ep/picture-filled";
 import UserFilled from "@iconify-icons/ep/user-filled";
+import Setting from "@iconify-icons/ri/settings-3-line";
 
 addIcon("homeFilled", HomeFilled);
 addIcon("informationLine", InformationLine);
@@ -18,3 +19,4 @@ addIcon("lollipop", Lollipop);
 addIcon("list", List);
 addIcon("pictureFilled", PictureFilled);
 addIcon("user", UserFilled);
+addIcon("setting", Setting);

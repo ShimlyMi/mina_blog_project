@@ -8,7 +8,7 @@ export const routerArrays: Array<RouteConfigs> =
         {
           path: "/welcome",
           meta: {
-            title: "menus.hshome",
+            title: "首页",
             icon: "homeFilled"
           }
         }
@@ -23,8 +23,18 @@ export type routeMetaType = {
   auths?: Array<string>;
 };
 
+// export type RouteConfigs = {
+//   path?: string;
+//   query?: object;
+//   params?: object;
+//   meta?: routeMetaType;
+//   children?: RouteConfigs[];
+//   name?: string;
+// };
+
 export type RouteConfigs = {
   path?: string;
+  parentPath?: string;
   query?: object;
   params?: object;
   meta?: routeMetaType;

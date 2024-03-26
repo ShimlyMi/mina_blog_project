@@ -10,7 +10,6 @@ class CommentService {
     /**
      *  新增评论
      * @param {*} comment
-     * @returns Boolean
      * */
     async createComment(comment) {
         const { type, for_id, from_id, from_name, from_avatar, content } = comment;
@@ -21,10 +20,9 @@ class CommentService {
     /**
      * 回复评论
      * @param {*} comment
-     * @returns Boolean
      * */
 
-    async applyComment(comment) {
+    async replyComment(comment) {
         const { parent_id, type, for_id, from_id, from_avatar, from_name, to_id, to_name, to_avatar, content } = comment
         const res = await Comment.create({
             parent_id, type, for_id, from_id, from_avatar, from_name, to_id, to_name, to_avatar, content

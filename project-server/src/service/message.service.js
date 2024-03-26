@@ -1,7 +1,7 @@
 const Message = require("../model/message/message.model");
 const { getOneUserInfo } = require("./user.service");
-const { getIsLikeByIdAndType } = require("like.service");
-const { getCommentTotal } = require("comment.service");
+const { getIsLikeByIdAndType } = require("./like.service");
+const { getCommentTotal } = require("./comment.service");
 const {Op} = require("sequelize");
 
 class MessageService {
