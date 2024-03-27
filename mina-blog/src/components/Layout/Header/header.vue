@@ -1,19 +1,24 @@
 <script setup>
 import { computed, } from 'vue';
-import { useRoute, } from "vue-router";
+import {useRoute, useRouter,} from "vue-router";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/user-store.js";
 
 
-// const router = useRouter();
+const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
-const { getUserInfo } = storeToRefs(userStore);
+const { getUserInfo, getBlogAvatar } = storeToRefs(userStore);
 
 
 const getPath = computed(() => {
   return route.path;
 })
+
+const logout = () => {
+  userStore.clearUserInfo();
+  router.push("/home")
+}
 </script>
 
 <template>
@@ -21,7 +26,7 @@ const getPath = computed(() => {
   <div class="mi-header__menu flex_r_between">
     <div class="sub-avatar">
       <router-link to="/">
-        <el-avatar src="" class="el-avatar" />
+        <el-avatar :src="getBlogAvatar" class="el-avatar" />
       </router-link>
     </div>
     <div class="flex_r_around">
@@ -53,7 +58,7 @@ const getPath = computed(() => {
               <el-avatar :size="30" :src="getUserInfo.avatar">{{ getUserInfo.nick_name }}</el-avatar>
             </template>
             <el-menu-item><el-icon><Avatar /></el-icon>个人中心</el-menu-item>
-            <el-menu-item><el-icon><SwitchButton /></el-icon>退出登录</el-menu-item>
+            <el-menu-item @click="logout"><el-icon><SwitchButton /></el-icon>退出登录</el-menu-item>
           </el-sub-menu>
         </div>
 <!--        <el-menu-item>-->

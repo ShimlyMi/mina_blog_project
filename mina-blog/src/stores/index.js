@@ -1,4 +1,18 @@
-import {defineStore} from "pinia";
+import { defineStore } from "pinia";
+// setLocalItem 封装的缓存本地的方法 remove和get分别对应缓存的删除和获取
+import { getLocalItem, setLocalItem } from "@/utils/tool";
+// 可以去看看vueUse怎么使用useDark 这个可以快速切换主题
+import { useDark, useToggle } from "@vueuse/core";
+
+const isDark = useDark({
+    // 存储到localStorage/sessionStorage中的Key 根据自己的需求更改
+    storageKey: "useDarkKEY",
+    // 暗黑class名字
+    valueDark: "dark",
+    // 高亮class名字
+    valueLight: "light",
+});
+const toggle = useToggle(isDark);
 
 export const staticData = defineStore("staticData", {
     // 数据存到store里刷新页面会重置，持久化就不会了

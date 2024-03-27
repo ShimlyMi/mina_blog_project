@@ -7,9 +7,10 @@ import { ElNotification } from "element-plus";
 const router = useRouter()
 
 const registerFormRef = ref()
-const registerForm = ref({
+const registerForm = reactive({
   user_name: "",
-  password: "",
+  password1: "",
+  password2: "",
   nick_name: "",
 })
 /** 验证用户名 */
@@ -24,7 +25,7 @@ const checkUsername = (rule, value, callback) => {
 /** 定义密码验证 */
 const REGEXP_PWD = /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)]|[()])+$)(?!^.*[\u4E00-\u9FA5].*$)([^(0-9a-zA-Z)]|[()]|[a-z]|[A-Z]|[0-9]){6,18}$/;
 /** 验证密码 */
-const checkPassword = (rule, value, callback) => {
+const checkPassword1 = (rule, value, callback) => {
   if (!value) {
     return callback(new Error('请输入密码'))
   } else if (!REGEXP_PWD.test(value)) {
@@ -33,10 +34,19 @@ const checkPassword = (rule, value, callback) => {
   return callback();
 }
 
+const checkPassword2 = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error('请输入密码'))
+  } else if (value !== registerForm.password1) {
+    return callback(new Error("两次密码不一致，请重新输入"));
+  }
+  return callback();
+}
+
 /** 定义注册表单验证规则 */
 const registerRules = {
   user_name: [{ required: true, validator: checkUsername, trigger: 'blur' }],
-  password: [{ required: true, validator: checkPassword, trigger: 'blur' }],
+  password1: [{ required: true, validator: checkPassword1, trigger: 'blur' }],
 }
 
 /** 用户注册 */
@@ -44,14 +54,18 @@ const userRegister = async () => {
   await registerFormRef.value.validate(async (valid) => {
     if (valid) {
       let res = await reqRegister(registerForm.value);
-      // console.log(res)
+      console.log(res)
       if (res && res.code === 0) {
         ElNotification({
           offset: 60,
           title: "提示",
           message: "注册成功"
         })
-        router.replace({ path: '/login' })
+        const { user_name, nick_name } = res.result;
+        await router.replace({
+          path: '/login',
+          query: {user_name, nick_name}
+        })
       } else {
         ElNotification({
           offset: 60,
@@ -87,7 +101,14 @@ const goTo = (path) => {
             </el-input>
           </el-form-item>
           <el-form-item prop="password" @keyup.enter="userRegister()">
-            <el-input v-model="registerForm.password" autocomplete="off" placeholder="Password" show-password type="password">
+            <el-input v-model="registerForm.password1" autocomplete="off" placeholder="Password1" show-password type="password">
+              <template #prefix>
+                <el-icon><Lock /></el-icon>
+              </template>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="password" @keyup.enter="userRegister()">
+            <el-input v-model="registerForm.password2" autocomplete="off" placeholder="Password2" show-password type="password">
               <template #prefix>
                 <el-icon><Lock /></el-icon>
               </template>

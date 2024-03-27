@@ -30,7 +30,7 @@ export default defineConfig({
     css: {
         preprocessorOptions: {
             scss: {
-                additionalData: `@import "./src/styles/minix.scss";`
+                additionalData: `@import "./src/styles/main.scss";`
             }
         }
     },

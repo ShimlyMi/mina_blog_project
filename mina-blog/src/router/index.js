@@ -29,16 +29,16 @@ const routes = [
         path: '/login',
         name: "Login",
         component: () =>
-            import ("@/views/Login/Login.vue"),
+            import ("@/views/Login/Login-register.vue"),
         meta: {
-            name: "login"
+            name: "Login"
         }
     },
     {
         path: '/register',
         name: "Register",
         component: () =>
-            import ("@/views/Login/Register.vue"),
+            import ("@/views/Login/Login-register.vue"),
         meta: {
             name: "Register"
         }

@@ -1,4 +1,7 @@
 import { defineStore } from "pinia";
+// 本地数据加密解密
+import { encrypt, decrypt } from "@/utils/encipher";
+
 export const useUserStore = defineStore("user", {
     persist: {
         enabled: true, // 数据持久化
@@ -21,6 +24,20 @@ export const useUserStore = defineStore("user", {
             tokenFlag: false,
         };
     },
+    getters: {
+        // 获取当前登陆人头像
+        getBlogAvatar() {
+            return this.blogAvatar;
+        },
+        // 获取当前登陆人的信息
+        getUserInfo() {
+            return this.infoFlag ? JSON.parse(decrypt(this.userInfo)) : "";
+        },
+        // 获取token
+        getToken() {
+            return this.tokenFlag ? decrypt(this.token) : "";
+        },
+    },
     actions: {
         // 设置头像
         setBlogAvatar(avatar) {
@@ -30,12 +47,12 @@ export const useUserStore = defineStore("user", {
         // 设置用户信息
         setUserInfo(userInfo) {
             this.infoFlag = true;
-            this.userInfo = userInfo;
+            this.userInfo = encrypt(userInfo);
         },
         // 设置token
         setToken(token) {
             this.tokenFlag = true;
-            this.token = token
+            this.token = encrypt(token);
 
         },
         // 清除用户信息
@@ -45,21 +62,6 @@ export const useUserStore = defineStore("user", {
             this.tokenFlag = "";
             this.infoFlag = "";
         },
-    },
-    /**  */
-    getters: {
-        // 获取当前登陆人头像
-        getBlogAvatar() {
-            return this.blogAvatar;
-        },
-        // 获取当前登陆人的信息
-        getUserInfo() {
-            return this.infoFlag ? this.userInfo : "";
-        },
-        // 获取token
-        getToken() {
-            return this.tokenFlag ? this.token : "";
-        },
-    },
+    }
 
 });

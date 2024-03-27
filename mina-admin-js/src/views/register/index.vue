@@ -52,7 +52,7 @@ const registerRules = reactive({
         if (value === "") {
           callback(new Error("请输入用户名"));
         } else if (value.length < 4 || value.length > 16) {
-          callback(new Error("用户名程度应该在5-16之间"));
+          callback(new Error("用户名长度应该在5-16之间"));
         } else {
           callback();
         }

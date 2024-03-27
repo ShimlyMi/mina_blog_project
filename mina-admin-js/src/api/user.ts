@@ -38,6 +38,7 @@ export const getUserInfo = () => {
 export const getUserInfoById = (id: number) => {
   return http.request<Result>("get", `/api/users/getUserInfoById/${id}`);
 };
+
 /** 刷新token */
 // export const refreshTokenApi = (data?: object) => {
 //   return http.request<RefreshTokenResult>("post", "/refreshToken", { data });

@@ -19,8 +19,8 @@ http.interceptors.request.use(
     config => {
         const userStore = useUserStore();
         // userStore.getToken error
-        if (userStore.token) {
-            config.headers.Authorization = userStore.token
+        if (userStore.getToken) {
+            config.headers.Authorization = userStore.getToken
         }
         // 在发送请求之前做什么
         return config;

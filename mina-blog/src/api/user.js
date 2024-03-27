@@ -2,17 +2,14 @@
 import http from "@/config/request.js"
 
 /** 登录 */
-export const reqLogin = ({ user_name, password }) => {
+export const reqLogin = (data) => {
     return http({
-        url: '/api/users/login/',
+        url: '/api/users/login',
         method: 'post',
         headers: {
             isToken: true
         },
-        data: {
-            user_name,
-            password
-        }
+        data: data
     })
 };
 /** 注册 */
@@ -30,7 +27,15 @@ export const reqRegister = (data) => {
 /** 获取当前登录人信息 */
 export const getUserInfo = () => {
     return http({
-        url: '/api/users/info/',
+        url: '/api/users/info',
+        method: 'get',
+    })
+}
+
+/** 获取当前登录人信息 */
+export const getUserInfoById = (id) => {
+    return http({
+        url: `/api/users/getUserInfoById/${id}`,
         method: 'get',
     })
 }
