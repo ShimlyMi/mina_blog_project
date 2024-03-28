@@ -58,7 +58,7 @@ const registerRules = {
 
 /** 登录表 */
 const loginFormRef = ref();
-const loginForm = ref({
+const loginForm = reactive({
   user_name: "",
   password: ""
 });
@@ -111,7 +111,7 @@ const userLogin = async (type) => {
     const res = await reqLogin(loginForm);
     if (res && res.code == 0) {
       // 保存token
-      await userStore.setToken(res.result.token);
+      userStore.setToken(res.result.token);
       // 记住密码
       setLocalItem("loginForm", encrypt(loginForm));
       ElNotification({
@@ -122,8 +122,8 @@ const userLogin = async (type) => {
       // 获取并保存当前用户信息
       const userRes = await getUserInfoById(res.result.id);
       if (userRes.code == 0) {
-        // await userStore.setUserInfo(userRes.result)
-        console.log("userRes", userRes)
+        userStore.setUserInfo(userRes.result)
+        // console.log("userRes", userRes)
         Object.assign(registerForm, primaryRegisterForm);
         if (getLocalItem("blogLastRouter")) {
           await router.push(getLocalItem("blogLastRouter"));
@@ -144,7 +144,7 @@ const userLogin = async (type) => {
         console.log(true);
         let res = await reqLogin(loginForm);
         const token = res.result.token;
-        console.log("登录处理函数",res)
+        // console.log("登录处理函数",res)
         if (res && res.code == 0) {
           // 保存token
           userStore.setToken(token);
@@ -161,9 +161,9 @@ const userLogin = async (type) => {
           }
           // 保存并获取当前用户信息
           let userRes = await getUserInfoById(res.result.id);
-          console.log("userRes",userRes)
+          // console.log("userRes",userRes)
           if (userRes.code == 0) {
-            await userStore.setUserInfo(userRes.data);
+           userStore.setUserInfo(userRes.result);
             Object.assign(loginForm, primaryLoginForm);
             if (getLocalItem("blogLastRouter")) {
               await router.push(getLocalItem("blogLastRouter"));

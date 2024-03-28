@@ -31,7 +31,7 @@ router.get("/getTalkById/:id", getTalkById)
 // 说说点赞
 router.put("/like/:id", talkLike)
 // 取消点赞
-router.put("/concelLike/:id", cancelTalkLike)
+router.put("/cancelLike/:id", cancelTalkLike)
 // 前台获取说说
 router.post("/blogGetTalkList", blogGetTalkList)
 

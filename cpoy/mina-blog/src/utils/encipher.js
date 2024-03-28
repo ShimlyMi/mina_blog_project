@@ -1,32 +1,15 @@
 import CryptoJS from "crypto-js";
 
-/**
- * 密码 `\x00` 填充
- * @param {string} key     密码
- * @param {Number} keySize 填充长度, 值: 128, 256
- */
-// function fillKey(key, keySize) {
-//     keySize = keySize || 128;
-//     let filledKey = Buffer.alloc(keySize / 8);
-//     let keys = Buffer.from(key);
-//     if (keys.length < filledKey.length) {
-//         for (let i = 0; i < filledKey.length; i++) {
-//             filledKey[i] = keys[i];
-//         }
-//     }
-//
-//     return filledKey;
-// }
 // 十六位十六进制数作为密钥
 // const SECRET_KEY = CryptoJS.lib.WordArray.create("202403271144134", 128);
-const SECRET_KEY = CryptoJS.enc.Utf8.parse("202403271144134");// utf8 > WordArray对象
+const SECRET_KEY = CryptoJS.enc.Utf8.parse("2024032711441346");// utf8 > WordArray对象
 // 十六位十六进制数作为密钥偏移量
-const SECRET_IV = CryptoJS.lib.WordArray.create("202403271144134", 128);
+const SECRET_IV = CryptoJS.enc.Utf8.parse("2024032711441346");
 
 /**
- * 加密方法
- * @param data
- * @returns {string}
+ * AES 加密方法
+ * 字符串 SECRET_KEY，SECRET_IV
+ * 返回 base64
  */
 export function encrypt(data) {
     if (typeof data === "object") {
@@ -41,9 +24,10 @@ export function encrypt(data) {
     const encrypted = CryptoJS.AES.encrypt(dataHex, SECRET_KEY, {
         iv: SECRET_IV,
         mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7,
+        padding: CryptoJS.pad.ZeroPadding,
     });
-    return encrypted.ciphertext.toString();
+    // return encrypted.ciphertext.toString();
+    return CryptoJS.enc.Base64.stringify(encrypted.ciphertext)
 }
 
 /**
@@ -52,13 +36,15 @@ export function encrypt(data) {
  * @returns {string}
  */
 export function decrypt(data) {
-    const encryptedHexStr = CryptoJS.enc.Hex.parse(data);
-    const str = CryptoJS.enc.Base64.stringify(encryptedHexStr);
+    let base64 = CryptoJS.enc.Base64.parse(data);
+    let str = CryptoJS.enc.Base64.stringify(base64);
     const decrypt = CryptoJS.AES.decrypt(str, SECRET_KEY, {
         iv: SECRET_IV,
         mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7,
+        padding: CryptoJS.pad.ZeroPadding,
     });
     const decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
+    // console.log("decryptedStr", decrypt)
     return decryptedStr.toString();
+
 }

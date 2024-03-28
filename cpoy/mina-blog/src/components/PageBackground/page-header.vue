@@ -56,7 +56,7 @@ watch(
 <template>
   <div :style="getBgCover" class="page-header fadeIn">
     <div v-image="finalUrl" class="loading"></div>
-    <div v-if="route.path != '/article'">
+    <div v-if="route.path != '/article'" class="route-font animate__animated animate__fadeIn">
 
     </div>
   </div>
