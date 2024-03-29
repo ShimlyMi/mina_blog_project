@@ -30,5 +30,6 @@ router.post("/frontGetParentComment", frontGetParentComment);
 router.post("/frontGetChildrenComment", frontGetChildrenComment);
 // 获取关于当前的评论总数 子评论 + 父级评论
 router.post("/backGetCommentList", backGetCommentList);
-
+// 获取评论总条数
+router.post("/getCommentTotal", getCommentTotal);
 module.exports = router

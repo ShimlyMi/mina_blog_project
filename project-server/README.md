@@ -104,7 +104,7 @@ module.exports = process.env
 ```js
 const Koa = require('koa');
 //导入配置文件
-const { APP_PORT } = require("./config/config.default")
+const { APP_PORT } = require("./website/website.default")
 
 const app = new Koa();
 
@@ -156,7 +156,7 @@ module.exports = router;
 ```js
 const Koa = require('koa');
 
-const { APP_PORT } = require("./config/config.default")
+const { APP_PORT } = require("./website/website.default")
 // 导入 user.route 文件
 const userRouter = require("./router/user.route")
 
@@ -193,7 +193,7 @@ module.exports = app;
 改写 `main.js`
 
 ```js
-const { APP_PORT } = require("./config/config.default")
+const { APP_PORT } = require("./website/website.default")
 // 导入 app
 const app = require("./app")
 
@@ -360,7 +360,7 @@ const {
     MYSQL_USER,
     MYSQL_PWD,
     MYSQL_DB
-} = require("../config/config.default")
+} = require("../website/website.default")
 
 // 实例化对象
 const seq = new Sequelize(MYSQL_DB, MYSQL_USER, MYSQL_PWD, {
@@ -1025,7 +1025,7 @@ npm install jsonwebtoken
 // 导入 JWT
 const jwt = require('jsonwebtoken');
 
-const { JWT_SECRET } = require("../config/config.default")
+const { JWT_SECRET } = require("../website/website.default")
 
 async login(ctx, next) {
         const { user_name } = ctx.request.body;
@@ -1065,7 +1065,7 @@ JWT_SECRET=yezi
 创建 `src/middleware/auth.middleware.js` 文件
 ```javascript
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../config/config.default");
+const { JWT_SECRET } = require("../website/website.default");
 const { tokenExpiredError,invalidToken} = require("../constant/err.type")
 const auth = async (ctx,next) => {
     /** 将 authorization 从 headers里面 去解构出来 */

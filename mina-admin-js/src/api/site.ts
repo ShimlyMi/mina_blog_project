@@ -2,11 +2,21 @@ import imageCompression from "browser-image-compression";
 import { ElMessage } from "element-plus";
 import { getToken } from "@/utils/auth";
 import Axios from "axios";
+import { http } from "@/utils/http";
 
 export type SiteResult = {
   code: number;
   message: string;
   result: any;
+};
+/** 获取网站config */
+export const getConfigDetail = () => {
+  return http.request<SiteResult>("get", "/api/config/detail", {});
+};
+
+/** 修改网站config */
+export const updateConfigDetail = data => {
+  return http.request<SiteResult>("post", "/api/config/update", { data });
 };
 
 /** 图片上传接口 */

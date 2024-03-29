@@ -1,4 +1,4 @@
-import {addIcon} from "@iconify/vue/dist/offline";
+import { addIcon } from "@iconify/vue/dist/offline";
 
 /**
  * 这里存放本地图标，在 src/layout/index.vue 文件中加载，避免在首启动加载
@@ -12,6 +12,7 @@ import List from "@iconify-icons/ep/list";
 import PictureFilled from "@iconify-icons/ep/picture-filled";
 import UserFilled from "@iconify-icons/ep/user-filled";
 import Setting from "@iconify-icons/ri/settings-3-line";
+import Message from "@iconify-icons/ep/message";
 
 addIcon("homeFilled", HomeFilled);
 addIcon("informationLine", InformationLine);
@@ -19,4 +20,5 @@ addIcon("lollipop", Lollipop);
 addIcon("list", List);
 addIcon("pictureFilled", PictureFilled);
 addIcon("user", UserFilled);
+addIcon("message", Message);
 addIcon("setting", Setting);

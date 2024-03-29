@@ -39,7 +39,7 @@ module.exports = app;
 创建 `src/main.js`
 
 ```js
-const { APP_PORT } = require("./config/config.default")
+const { APP_PORT } = require("./website/website.default")
 // 导入 app
 const app = require("./app")
 
