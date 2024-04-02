@@ -2,19 +2,12 @@ const { getOneUserInfo } = require("../service/user.service")
 
 // 加密文件
 const bcrypt = require("bcryptjs")
-    // 引入 错误类型文件
-const {
-    userFormatError,
-    userAlreadyExited,
-    userRegisterError,
-    userDoesNotExist,
-    userLoginError,
-    invalidPassword,
-    usernameFormatError,
-    twoPasswordError,
-    updatePasswordError,
-} = require("../constant/err.type")
+// 引入 错误类型文件
+const { ERRORCODE, throwError, result } = require("../constant/err.type")
+const errorCode = ERRORCODE.USER;
 const {auth} = require("./auth.middleware");
+
+
 
 // 用户验证器
 const userValidator = async(ctx, next) => {
@@ -25,7 +18,7 @@ const userValidator = async(ctx, next) => {
     /* 判断错误 合法性 */
     if (!user_name || !password) {
         console.error("用户名或密码为空", ctx.request.body)
-        return ctx.app.emit('error', userFormatError, ctx);
+        return ctx.app.emit('error', throwError(errorCode, "用户名或密码为空"), ctx);
     }
     // if (!/^[A-Za-z0-9]+$/.test(user_name)) {
     //     console.error("用户名只能是数字和字母组成")
@@ -49,18 +42,16 @@ const verifyUser = async(ctx, next) => {
     try {
         if (user_name == 'admin') {
             console.log("admin账号已存在", { user_name })
-            return ctx.app.emit('error',userAlreadyExited, ctx)
+            return ctx.app.emit('error', throwError(errorCode, "admin账号已存在"), ctx);
         }
         const res = await getOneUserInfo({ user_name });
         if (res) {
             console.log("用户名已存在", ctx.request.body);
-            ctx.app.emit('error', userAlreadyExited, ctx);
-            return;
+            return ctx.app.emit('error', throwError(errorCode, "用户名已存在"), ctx);
         }
     } catch (err) {
         console.error("获取用户信息错误", err);
-        ctx.app.emit('error', userRegisterError, ctx);
-        return;
+        return ctx.app.emit('error', throwError(errorCode, "获取用户信息错误"), ctx);
     }
     await next();
 }
@@ -92,17 +83,17 @@ const verifyLogin = async(ctx, next) => {
             // 用户不存在
             if (!res) {
                 console.log("当前用户不存在", ctx.request.body);
-                return ctx.app.emit('error', userDoesNotExist, ctx);
+                return ctx.app.emit('error', throwError(errorCode, "当前用户不存在"), ctx);
             }
             // 2. 判断密码是否匹配
             if (!bcrypt.compareSync(password, res.password)) {
-                return ctx.app.emit('error', invalidPassword, ctx);
+                return ctx.app.emit('error', throwError(errorCode, "密码不对"), ctx);
             }
         }
 
     } catch (err) {
         console.error("用户登录失败", err);
-        return ctx.app.emit('error', userLoginError, ctx);
+        return ctx.app.emit('error', throwError(errorCode, "用户登录失败"), ctx);
     }
 
     await next();
@@ -138,20 +129,19 @@ const verifyUpdatePassword = async (ctx, next) => {
             const { password, password1, password2 } = ctx.require.body
             if (password1 != password2) {
                 console.log("两次输入密码不一致！请重新输入")
-                return ctx.app.emit('error', twoPasswordError, ctx);
+                return ctx.app.emit('error', throwError(errorCode, "两次输入密码不一致"), ctx);
             }
             const res = await getOneUserInfo({ user_name })
             if (!bcrypt.compareSync(password, res.password)) {
                 console.log("密码不匹配")
-                ctx.app.emit('error', invalidPassword, ctx);
-                return;
+                return ctx.app.emit('error', throwError(errorCode, "密码不匹配"), ctx);
             } else {
                 return ctx.app.emit("admin密码只可以通过配置文件env修改")
             }
         }
     } catch (err) {
         console.error(err)
-        return ctx.app.emit('error',updatePasswordError,ctx)
+        return ctx.app.emit('error', throwError(errorCode, "修改密码失败"), ctx);
     }
 }
 

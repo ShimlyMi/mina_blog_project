@@ -10,7 +10,7 @@ export const addComment = (data) => {
 };
 
 /** 回复评论 */
-export const applyComment = (data) => {
+export const replyComment = (data) => {
     return new Promise((resolve) => {
         http.post("/api/comment/reply", data).then((res) => {
             resolve(res);

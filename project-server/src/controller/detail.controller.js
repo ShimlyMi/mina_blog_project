@@ -1,15 +1,29 @@
-const { getWebDetail, updateDetailById } = require("../service/detail.service")
-const { ERRORCODE, throwError, result } = require("../constant/err.type")
+const { getWebDetail, updateDetail } = require("../service/detail.service")
+const { ERRORCODE, throwError, result, tipsResult } = require("../constant/err.type")
 const errorCode = ERRORCODE.CONFIG
 class DetailController {
     /** 修改设置 */
     async updateDetail(ctx) {
         try {
-            console.log("detailUpdate",ctx.request.body)
+            let config = await getConfig();
             // 如果背景图不一致，删除原来的
-            let res = await updateDetailById(ctx.request.body)
-            console.log("detailUpdate",res)
-            ctx.body = result("修改网站设置成功", res)
+            const { avatar_bg, blog_avatar } = ctx.request.body;
+            if (UPLOADTYPE == "online") {
+                if (avatar_bg && config.avatar_bg && avatar_bg != config.avatar_bg) {
+                    await Utils.deleteOnlineImgs([config.avatar_bg.split("/").pop()]);
+                }
+                if (blog_avatar && config.blog_avatar && blog_avatar != config.blog_avatar) {
+                    await Utils.deleteOnlineImgs([config.blog_avatar.split("/").pop()]);
+                }
+            }
+            // 如果背景图不一致，删除原来的
+            let res = await updateDetail(ctx.request.body)
+            if (res) {
+                console.log("detailUpdateRes",res)
+                ctx.body = result("修改网站设置成功", res)
+            } else {
+                ctx.body = tipsResult("")
+            }
 
         } catch (error) {
             console.error("修改网站设置失败")

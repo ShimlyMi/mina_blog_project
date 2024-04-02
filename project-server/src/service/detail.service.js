@@ -1,7 +1,7 @@
 const Config = require("../model/config/detail.model")
 class DetailService {
     // 修改网站设置
-    async updateDetailById(config) {
+    async updateDetail(config) {
         // const [ detail, created ] = await  Config.findOrCreate({
         //     where: { blog_name: "米娜的小屋" },
         //     defaults: {
@@ -15,7 +15,7 @@ class DetailService {
         // console.log("detail.个性签名",detail.personality_signature)
         // console.log("是否是刚刚创建的",created)
         const {id} = config
-        let one = await Config.findByPk(id)
+        let one = await Config.findByPk()
         let res
         if (one) {
             res = await Config.update(config, { where: id })

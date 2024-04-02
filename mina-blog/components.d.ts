@@ -14,7 +14,7 @@ declare module '@vue/runtime-core' {
     BlogHeader: typeof import('./src/components/Layout/header/blog-header.vue')['default']
     BlogMain: typeof import('./src/components/Layout/main/blog-main.vue')['default']
     BlogSearch: typeof import('./src/components/Search/blog-search.vue')['default']
-    ChildrenItem: typeof import('./src/components/Comment/item/ChildrenItem.vue')['default']
+    ChildrenItem: typeof import('./src/components/Comment/item/ChildrenItem-copy.vue')['default']
     Comment: typeof import('./src/components/Comment/Comment.vue')['default']
     CommentInput: typeof import('./src/components/Comment/item/CommentInput.vue')['default']
     Controls: typeof import('./src/components/Music/controls/index.vue')['default']

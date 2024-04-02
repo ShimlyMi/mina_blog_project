@@ -1,25 +1,19 @@
 <script setup>
-import { reactive, ref, watch, h } from "vue";
+import { ref, reactive, h, watch } from "vue";
+import { useUserStore } from "@/stores/userStore.js";
 import {
-  frontGetChildrenComment,
-  applyComment,
-  thumbUpComment,
-  cancelThumbUp,
-  deleteComment,
-} from "@/api/comment";
+  replyComment, frontGetChildrenComment,
+  thumbUpComment, cancelThumbUp, deleteComment
+} from "@/api/comment.js";
 import { ElNotification, ElMessageBox } from "element-plus";
-
 import Pagination from "@/components/Pagination/pagination.vue";
 import CommentInput from "./CommentInput.vue";
-import { useUserStore } from "@/stores/userStore.js";
 import Loading from "@/components/Loading/Loading.vue";
-import { addLike, cancelLike } from "@/api/like";
-import { getCurrentType } from "../tool";
+import { addLike, cancelLike } from "@/api/like.js";
+import { getCurrentType } from "../tool.js";
 
 const userStore = useUserStore();
-
-const emits = defineEmits(["parentApply", "changeShowApplyInput"]);
-
+const emits = defineEmits(["parentReply", "changeShowReplyInput"]);
 const props = defineProps({
   type: {
     type: String, // 评论类型 talk 说说 article 文章
@@ -33,7 +27,7 @@ const props = defineProps({
     type: Number, // 说说/文章id
     default: () => {},
   },
-  parentShowApply: {
+  parentShowReply: {
     type: Boolean,
     default: false,
   },
@@ -41,9 +35,8 @@ const props = defineProps({
   authorId: {
     type: Number,
     default: () => {},
-  },
+  }
 });
-
 const params = reactive({
   current: 1,
   size: 5,
@@ -55,8 +48,7 @@ const params = reactive({
 });
 const commentList = ref([]);
 const commentTotal = ref(0);
-
-const showApplyInput = ref(false); // 是否展示回复框
+const showReplyInput = ref(false); // 是否展示回复框
 const commentTo = reactive({
   to_name: "",
   to_avatar: "",
@@ -65,17 +57,14 @@ const commentTo = reactive({
 const primaryCommentTo = reactive({ ...commentTo });
 const commentText = ref(""); // 评论框内容
 const commentInputRef = ref();
-
-const isParentApply = ref(false);
-
+const isParentReply = ref(false);
 // 关闭当前打开的输入评论框
 const closeComment = () => {
-  emits("changeShowApplyInput", false);
-  isParentApply.value = false;
-  showApplyInput.value = false;
+  emits("changeShowReplyInput", false);
+  isParentReply.value = false;
+  showReplyInput.value = false;
   Object.assign(commentTo, primaryCommentTo);
 };
-
 // 获取子级评论
 const getComment = async (type) => {
   params.loading = true;
@@ -98,7 +87,6 @@ const getComment = async (type) => {
   }
   params.loading = false;
 };
-
 // 点赞
 const like = async (item, index) => {
   let res;
@@ -130,25 +118,25 @@ const like = async (item, index) => {
   }
 };
 
-const apply = (item, type) => {
+const reply = (item, type) => {
   if (type == "parent") {
     // 回复评论 回复主评论
-    isParentApply.value = true;
-    emits("changeShowApplyInput", true);
+    isParentReply.value = true;
+    emits("changeShowReplyInput", true);
   } else {
     // 回复子评论
-    isParentApply.value = false;
-    emits("changeShowApplyInput", false);
+    isParentReply.value = false;
+    emits("changeShowReplyInput", false);
   }
 
   // 保存被回复人的信息 回复会用到
   commentTo.parent_id = props.parent_id;
-  commentTo.from_id = item.from_id;
-  commentTo.from_avatar = item.from_avatar;
-  commentTo.from_name = item.from_name;
+  commentTo.to_id = item.from_id;
+  commentTo.to_avatar = item.from_avatar;
+  commentTo.to_name = item.from_name;
 
   commentText.value = "";
-  showApplyInput.value = true;
+  showReplyInput.value = true;
 };
 
 const deleteOwnComment = (id) => {
@@ -163,7 +151,7 @@ const deleteOwnComment = (id) => {
         title: "提示",
         message: h("div", { style: "color: #7ec050; font-weight: 600;" }, "删除成功"),
       });
-      getComment();
+      await getComment();
     } else {
       ElNotification({
         offset: 60,
@@ -173,7 +161,6 @@ const deleteOwnComment = (id) => {
     }
   });
 };
-
 const pagination = (page) => {
   params.current = page.current;
   getComment();
@@ -188,9 +175,9 @@ const publish = async () => {
     });
     return;
   }
-  if (isParentApply.value) {
+  if (isParentReply.value) {
     commentTo.content = commentText.value;
-    emits("parentApply", commentTo);
+    emits("parentReply", commentTo);
     closeComment();
     return;
   }
@@ -199,7 +186,7 @@ const publish = async () => {
     from_avatar: userStore.getUserInfo.avatar,
     from_name: userStore.getUserInfo.nick_name,
     to_id: commentTo.from_id,
-    to_avatar: commentTo.from_avatar,
+    to_avatar: commentTo.to_avatar,
     to_name: commentTo.from_name,
     content: commentText.value,
     parent_id: commentTo.parent_id,
@@ -209,7 +196,7 @@ const publish = async () => {
   };
   data.type = getCurrentType(props.type);
 
-  const res = await applyComment(data);
+  const res = await replyComment(data);
   if (res.code == 0) {
     commentText.value = "";
     ElNotification({
@@ -219,7 +206,7 @@ const publish = async () => {
     });
     closeComment();
     params.current = 1;
-    getComment();
+    await getComment();
     if (commentInputRef.value) {
       commentInputRef.value.clear();
     }
@@ -233,24 +220,24 @@ const publish = async () => {
 };
 
 watch(
-  () => props.parent_id,
-  (newV) => {
-    Object.assign(params, {
-      for_id: props.id,
-      type: props.type,
-      parent_id: newV,
-    });
-    getComment();
-  },
-  {
-    immediate: true,
-  }
+    () => props.parent_id,
+    (newV) => {
+      Object.assign(params, {
+        for_id: props.id,
+        type: props.type,
+        parent_id: newV,
+      });
+      getComment();
+    },
+    {
+      immediate: true,
+    }
 );
 
 defineExpose({
   getComment,
   closeComment,
-  apply,
+  reply,
 });
 </script>
 
@@ -258,9 +245,9 @@ defineExpose({
   <div class="comment-children">
     <div v-if="commentList.length > 0" class="animate__animated animate__fadeIn">
       <div
-        class="!mt-[0.5rem] flex justify-start items-start"
-        v-for="(comment, index) in commentList"
-        :key="index"
+          class="!mt-[0.5rem] flex justify-start items-start"
+          v-for="(comment, index) in commentList"
+          :key="index"
       >
         <div class="!w-[30px] flex justify-start">
           <el-avatar :src="comment.from_avatar" :size="24" shape="circle"></el-avatar>
@@ -269,7 +256,7 @@ defineExpose({
           <div>
             <span class="!mr-[0.5rem]">{{ comment.from_name }}</span>
             <span v-if="comment.from_id == 1" class="up">UP</span>
-            <span class="!mr-[1rem] content-apply">回复</span>
+            <span class="!mr-[1rem] content-reply">回复</span>
             <span class="to-name">@</span>
             <span class="!mr-[3px] to-name"> {{ comment.to_name }}: </span>
             <span class="content" v-html="comment.content"></span>
@@ -277,43 +264,43 @@ defineExpose({
           <div class="!mt-[0.5rem]">
             <span class="!mr-[1rem] ip">{{ `IP: ${comment.ipAddress}` }}</span>
             <span
-              :class="[
+                :class="[
                 'thumbs',
                 '!mr-[1rem]',
                 'iconfont',
                 'icon-icon1',
                 comment.is_like ? 'like-active' : '',
               ]"
-              @click="like(comment, index)"
+                @click="like(comment, index)"
             >
               <span class="!ml-[0.5rem]">{{ comment.thumbs_up }}</span>
             </span>
             <!-- 子评论和主评论共用一个文本框 这里有点绕 -->
             <span
-              class="!mr-[1rem] apply cursor-pointer"
-              v-if="
-                userStore.getUserInfo.id != comment.from_id && !showApplyInput && !isParentApply
+                class="!mr-[1rem] reply cursor-pointer"
+                v-if="
+                userStore.getUserInfo.id != comment.from_id && !showReplyInput && !isParentReply
               "
-              @click="apply(comment, 'children')"
-              >回复</span
+                @click="reply(comment, 'children')"
+            >回复</span
             >
             <span
-              class="!mr-[1rem] apply cursor-pointer"
-              v-if="userStore.getUserInfo.id != comment.from_id && showApplyInput && isParentApply"
-              @click="apply(comment, 'children')"
-              >回复</span
+                class="!mr-[1rem] reply cursor-pointer"
+                v-if="userStore.getUserInfo.id != comment.from_id && showReplyInput && isParentReply"
+                @click="reply(comment, 'children')"
+            >回复</span
             >
             <span
-              class="!mr-[1rem] close cursor-pointer"
-              v-if="showApplyInput && !isParentApply"
-              @click="closeComment"
-              >关闭</span
+                class="!mr-[1rem] close cursor-pointer"
+                v-if="showReplyInput && !isParentReply"
+                @click="closeComment"
+            >关闭</span
             >
             <span
-              class="!mr-[1rem] delete cursor-pointer"
-              v-if="userStore.getUserInfo.id == comment.from_id || userStore.getUserInfo.role == 1"
-              @click="deleteOwnComment(comment.id)"
-              >删除</span
+                class="!mr-[1rem] delete cursor-pointer"
+                v-if="userStore.getUserInfo.id == comment.from_id || userStore.getUserInfo.role == 1"
+                @click="deleteOwnComment(comment.id)"
+            >删除</span
             >
           </div>
           <div class="!mt-[0.5rem]">{{ comment.createdAt }}</div>
@@ -321,25 +308,25 @@ defineExpose({
       </div>
     </div>
     <Loading :size="24" v-if="params.loading" />
-    <template v-if="showApplyInput">
+    <template v-if="showReplyInput">
       <div class="w-[100%] flex justify-start items-center">
         <CommentInput
-          ref="commentInputRef"
-          v-model:inputText="commentText"
-          :placeholder="commentTo.from_name"
-          :show-publish-button="false"
-          @publish="publish"
+            ref="commentInputRef"
+            v-model:inputText="commentText"
+            :placeholder="commentTo.from_name"
+            :show-publish-button="false"
+            @publish="publish"
         />
       </div>
     </template>
     <Pagination
-      class="animate__animated animate__fadeIn"
-      v-if="commentTotal > 0"
-      :size="params.size"
-      :current="params.current"
-      layout="prev, pager, next"
-      :total="commentTotal"
-      @pagination="pagination"
+        class="animate__animated animate__fadeIn"
+        v-if="commentTotal > 0"
+        :size="params.size"
+        :current="params.current"
+        layout="prev, pager, next"
+        :total="commentTotal"
+        @pagination="pagination"
     />
   </div>
 </template>
@@ -358,16 +345,16 @@ defineExpose({
   word-break: keep-all;
   font-size: 1rem;
 }
-.apply {
+.reply {
   word-break: keep-all;
   font-size: 1rem;
   color: var(--md-active);
 }
-.apply:hover {
+.reply:hover {
   color: var(--primary);
 }
 
-.content-apply {
+.content-reply {
   font-size: 0.8rem;
 }
 .to-name {

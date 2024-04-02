@@ -2,7 +2,7 @@
 import { reactive, ref, watch, h } from "vue";
 import {
   frontGetParentComment,
-  applyComment,
+  replyComment,
   thumbUpComment,
   cancelThumbUp,
   deleteComment,
@@ -65,7 +65,7 @@ const getComment = async (type) => {
   if (res && res.code == 0) {
     const { list, total } = res.result;
     list.forEach((l) => {
-      l.showApplyInput = false;
+      l.showReplyInput = false;
     });
     commentList.value = params.current == 1 ? list : commentList.value.concat(list);
     commentTotal.value = total - 0;
@@ -84,7 +84,7 @@ const showMore = () => {
   getComment();
 };
 
-const currentApplyIndex = ref(0);
+const currentReplyIndex = ref(0);
 
 // 点赞
 const like = async (item, index) => {
@@ -117,20 +117,20 @@ const like = async (item, index) => {
   }
 };
 
-const apply = (item, index) => {
-  commentList.value[index].showApplyInput = true;
-  currentApplyIndex.value = index;
-  childrenRef.value[index].apply(item, "parent");
+const reply = (item, index) => {
+  commentList.value[index].showReplyInput = true;
+  currentReplyIndex.value = index;
+  childrenRef.value[index].reply(item, "parent");
 };
 
 const close = (index) => {
-  commentList.value[index].showApplyInput = false;
-  currentApplyIndex.value = 0;
+  commentList.value[index].showReplyInput = false;
+  currentReplyIndex.value = 0;
   childrenRef.value[index].closeComment();
 };
 
-const changeShowApplyInput = (val, index) => {
-  commentList.value[index].showApplyInput = val;
+const changeshowReplyInput = (val, index) => {
+  commentList.value[index].showReplyInput = val;
 };
 
 // 关闭打开的输入框
@@ -154,7 +154,7 @@ const deleteOwnComment = (id) => {
         title: "提示",
         message: h("div", { style: "color: #7ec050; font-weight: 600;" }, "删除成功"),
       });
-      getComment("clear");
+      await getComment("clear");
     } else {
       ElNotification({
         offset: 60,
@@ -193,7 +193,7 @@ const publish = async (item) => {
       break;
   }
 
-  const res = await applyComment(data);
+  const res = await replyComment(data);
   if (res.code == 0) {
     ElNotification({
       offset: 60,
@@ -201,8 +201,8 @@ const publish = async (item) => {
       message: h("div", { style: "color: #7ec050; font-weight: 600;" }, "评论成功"),
     });
     params.current = 1;
-    childrenRef.value[currentApplyIndex.value].getComment("clear");
-    currentApplyIndex.value = 0;
+    await childrenRef.value[currentReplyIndex.value].getComment("clear");
+    currentReplyIndex.value = 0;
   } else {
     ElNotification({
       offset: 60,
@@ -293,9 +293,9 @@ defineExpose({
                 <span class="!ml-[0.5rem]">{{ comment.thumbs_up }}</span>
               </span>
               <span
-                v-if="!comment.showApplyInput"
-                class="!mr-[1rem] apply cursor-pointer"
-                @click="apply(comment, index)"
+                v-if="!comment.showReplyInput"
+                class="!mr-[1rem] reply cursor-pointer"
+                @click="reply(comment, index)"
                 >回复</span
               >
               <span v-else class="!mr-[1rem] close cursor-pointer" @click="close(index)">关闭</span>
@@ -316,8 +316,8 @@ defineExpose({
               :id="id"
               :parent_id="comment.id"
               :author-id="authorId"
-              @parentApply="publish"
-              @changeShowApplyInput="(val) => changeShowApplyInput(val, index)"
+              @parentreply="publish"
+              @changeshowReplyInput="(val) => changeshowReplyInput(val, index)"
             />
           </div>
         </div>
@@ -347,12 +347,12 @@ defineExpose({
   word-break: keep-all;
   font-size: 1rem;
 }
-.apply {
+.reply {
   word-break: keep-all;
   font-size: 1rem;
   color: var(--md-active);
 }
-.apply:hover {
+.reply:hover {
   color: var(--primary);
 }
 
@@ -365,7 +365,7 @@ defineExpose({
   }
 }
 
-.content-apply {
+.content-reply {
   font-size: 0.8rem;
 }
 

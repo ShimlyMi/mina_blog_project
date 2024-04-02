@@ -12,7 +12,7 @@ export const getTalkList = (param) => {
 /** 点赞说说 */
 export const talkLike = (id) => {
     return new Promise((resolve) => {
-        http.post("/api/talk/like/" + id, {}).then((res) => {
+        http.post("/api/talk/addLike/" + id, {}).then((res) => {
             resolve(res);
         });
     });
