@@ -129,7 +129,7 @@ const close = (index) => {
   childrenRef.value[index].closeComment();
 };
 
-const changeshowReplyInput = (val, index) => {
+const changeShowReplyInput = (val, index) => {
   commentList.value[index].showReplyInput = val;
 };
 
@@ -278,36 +278,36 @@ defineExpose({
                 </template>
               </TextOverflow>
             </div>
-            <div class="!mt-[0.5rem]">
-              <span class="!mr-[1rem] ip">{{ `IP: ${comment.ipAddress}` }}</span>
-              <span
-                :class="[
-                  'thumbs',
-                  '!mr-[1rem]',
-                  'iconfont',
-                  'icon-icon1',
-                  comment.is_like ? 'like-active' : '',
-                ]"
-                @click="like(comment, index)"
-              >
-                <span class="!ml-[0.5rem]">{{ comment.thumbs_up }}</span>
-              </span>
-              <span
-                v-if="!comment.showReplyInput"
-                class="!mr-[1rem] reply cursor-pointer"
-                @click="reply(comment, index)"
-                >回复</span
-              >
-              <span v-else class="!mr-[1rem] close cursor-pointer" @click="close(index)">关闭</span>
-              <span
-                class="!mr-[1rem] delete cursor-pointer"
-                v-if="
-                  userStore.getUserInfo.id == comment.from_id || userStore.getUserInfo.role == 1
-                "
-                @click="deleteOwnComment(comment.id)"
-                >删除</span
-              >
-            </div>
+<!--            <div class="!mt-[0.5rem]">-->
+<!--              <span class="!mr-[1rem] ip">{{ `IP: ${comment.ipAddress}` }}</span>-->
+<!--              <span-->
+<!--                :class="[-->
+<!--                  'thumbs',-->
+<!--                  '!mr-[1rem]',-->
+<!--                  'iconfont',-->
+<!--                  'icon-icon1',-->
+<!--                  comment.is_like ? 'like-active' : '',-->
+<!--                ]"-->
+<!--                @click="like(comment, index)"-->
+<!--              >-->
+<!--                <span class="!ml-[0.5rem]">{{ comment.thumbs_up }}</span>-->
+<!--              </span>-->
+<!--              <span-->
+<!--                v-if="!comment.showReplyInput"-->
+<!--                class="!mr-[1rem] reply cursor-pointer"-->
+<!--                @click="reply(comment, index)"-->
+<!--                >回复</span-->
+<!--              >-->
+<!--              <span v-else class="!mr-[1rem] close cursor-pointer" @click="close(index)">关闭</span>-->
+<!--              <span-->
+<!--                class="!mr-[1rem] delete cursor-pointer"-->
+<!--                v-if="-->
+<!--                  userStore.getUserInfo.id == comment.from_id || userStore.getUserInfo.role == 1-->
+<!--                "-->
+<!--                @click="deleteOwnComment(comment.id)"-->
+<!--                >删除</span-->
+<!--              >-->
+<!--            </div>-->
             <div class="!mt-[0.5rem]">{{ comment.createdAt }}</div>
             <ChildrenItem
               class="!mt-[1.5rem]"
@@ -317,7 +317,7 @@ defineExpose({
               :parent_id="comment.id"
               :author-id="authorId"
               @parentreply="publish"
-              @changeshowReplyInput="(val) => changeshowReplyInput(val, index)"
+              @changeShowReplyInput="(val) => changeShowReplyInput(val, index)"
             />
           </div>
         </div>

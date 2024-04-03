@@ -151,8 +151,8 @@ class CommentService {
 
         const promiseList = rows.map(async (row) => {
             let res;
-            console.log("row.defaultValue",row.defaultValue)
-            if (row.defaultValue.from_id) {
+            // console.log("row.dataValues",row.dataValues)
+            if (row.dataValues.from_id) {
                 res = await getOneUserInfo({ id: row.from_id });
             }
             return res;
@@ -224,7 +224,7 @@ class CommentService {
         const toIdPromiseList = rows.map(async (row) => {
             let res;
             if (row.dataValues.to_id) {
-                res = await getOneUserInfo({ id: to_id });
+                res = await getOneUserInfo({ id: row.to_id });
             }
             return res;
         });
