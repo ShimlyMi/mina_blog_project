@@ -74,7 +74,7 @@ const logout = () => {
 <style lang="scss" scoped>
 @include b(header) {
   .sub-avatar {
-    padding: 5px 0 0 0;
+    padding: 5px 0 0 10px;
     display: flex;
     align-items: center;
   }
