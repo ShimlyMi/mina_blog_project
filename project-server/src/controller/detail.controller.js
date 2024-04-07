@@ -1,20 +1,29 @@
 const { getWebDetail, updateDetail } = require("../service/detail.service")
 const { ERRORCODE, throwError, result, tipsResult } = require("../constant/err.type")
+const fs = require("fs");
 const errorCode = ERRORCODE.CONFIG
 class DetailController {
+    // 删除服务器下的照片
+    async deleteOnlineImgs(imgList) {
+        Array.isArray(imgList) &&
+        imgList.length &&
+        imgList.forEach((v) => {
+            if (v) {
+                let filePath = path.join(__dirname, "./upload/online/" + v).replace("/controller/utils", "");
+                if (fs.existsSync(filePath)) {
+                    fs.unlinkSync(filePath);
+                }
+            }
+        });
+    }
     /** 修改设置 */
     async updateDetail(ctx) {
         try {
-            let config = await getConfig();
+            let config = await getWebDetail();
             // 如果背景图不一致，删除原来的
             const { avatar_bg, blog_avatar } = ctx.request.body;
-            if (UPLOADTYPE == "online") {
-                if (avatar_bg && config.avatar_bg && avatar_bg != config.avatar_bg) {
-                    await Utils.deleteOnlineImgs([config.avatar_bg.split("/").pop()]);
-                }
-                if (blog_avatar && config.blog_avatar && blog_avatar != config.blog_avatar) {
-                    await Utils.deleteOnlineImgs([config.blog_avatar.split("/").pop()]);
-                }
+            if (avatar_bg && config.avatar_bg && avatar_bg != config.avatar_bg) {
+
             }
             // 如果背景图不一致，删除原来的
             let res = await updateDetail(ctx.request.body)

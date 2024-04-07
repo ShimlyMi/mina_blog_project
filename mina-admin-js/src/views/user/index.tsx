@@ -18,7 +18,7 @@ export function useColumns() {
   /** 加载 */
   const loading = ref(false);
   /** 表格大小 */
-  const tableSize = ref("small");
+  const tableSize = ref("default");
   /** 列数 */
   const columns: TableColumnList = [
     {
@@ -28,7 +28,7 @@ export function useColumns() {
     {
       label: "序号",
       type: "index",
-      width: 55
+      width: 80
     },
     {
       label: "用户名",
@@ -128,11 +128,11 @@ export function useColumns() {
   /** 分页获取用户列表 */
   async function getPageUserList() {
     const res = await getUserList(param);
-    if (res.code == 0) {
+    if (res.code === 0) {
       dataList.value = res.result.list;
       pagination.total = res.result.total;
       loading.value = false;
-      // console.log(dataList.value);
+      message("查询成功", { type: "success" });
     } else {
       loading.value = false;
       message("请求失败", { type: "error" });

@@ -4,8 +4,8 @@
  */
 const Router = require('koa-router');
 
-const { getDetail, updateDetail } = require("../controller/detail.controller")
-// const { updateDetailById } = require("../service/detail.service")
+// const { getDetail, updateDetail } = require("../controller/detail.controller")
+const { getDetail, updateDetail } = require("../controller/utils.controller")
 const {auth, needAdminPermission} = require("../middleware/auth.middleware")
 
 const router = new Router({ prefix: '/config' });

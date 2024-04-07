@@ -28,7 +28,12 @@ const {
       <el-card class="site-card">
         <template #header>
           <div v-if="isEditSiteInfo">
-            <el-button type="info" plain @click="cancel">取消</el-button>
+            <el-button
+              type="info"
+              plain
+              @click="cancel('site', siteInfoFromRef)"
+              >取消</el-button
+            >
             <el-button
               type="danger"
               plain

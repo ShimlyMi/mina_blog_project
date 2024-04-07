@@ -105,14 +105,11 @@ class UserService {
         const whereOpt = {}
 
         if (typeof  role === "number") {
-            console.log("查询role成功",role)
+            role && Object.assign(whereOpt, { role: {[Op.eq]: role} })
         }
-        role && Object.assign(whereOpt, { role: {[Op.eq]: role} })
         nick_name && Object.assign(whereOpt, { nick_name: { [Op.like]: `%${nick_name}%` } })
-
-
         const { count, rows } = await User.findAndCountAll(
-            { offset, limit, attributes: { exclude: ["password"], where: whereOpt } })
+            { offset, limit, attributes: { exclude: ["password"] }, where: whereOpt })
         return { current, size, total: count, list: rows }
     }
 

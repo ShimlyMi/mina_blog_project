@@ -1,7 +1,6 @@
 const Config = require("../model/config/detail.model")
 class DetailService {
-    // 修改网站设置
-    async updateDetail(config) {
+    async create() {
         // const [ detail, created ] = await  Config.findOrCreate({
         //     where: { blog_name: "米娜的小屋" },
         //     defaults: {
@@ -14,16 +13,24 @@ class DetailService {
         // console.log("detail.blog_name",detail.blog_name)
         // console.log("detail.个性签名",detail.personality_signature)
         // console.log("是否是刚刚创建的",created)
-        const {id} = config
-        let one = await Config.findByPk()
-        let res
+    }
+    // 修改网站设置
+    async updateDetail(config) {
+        const {id} = config;
+        let one = await Config.findByPk(id);
+        // console.log("one", one)
+        let res;
         if (one) {
-            res = await Config.update(config, { where: id })
+            res = await Config.update(config, {
+                where: {
+                    id,
+                },
+            });
         } else {
-            res = await Config.create(config)
-            console.log(res.toJSON())
+            res = await Config.create(config);
         }
-        return !!res
+
+        return !!res;
     }
     // 获取网站设置
     async getWebDetail() {

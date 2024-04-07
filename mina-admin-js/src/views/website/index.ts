@@ -47,7 +47,7 @@ export function useWebsite() {
       if (valid) {
         switch (type) {
           case "site":
-            await updateConfigDetail();
+            await updateSiteConfig();
             isEditSiteInfo.value = false;
             break;
           default:
