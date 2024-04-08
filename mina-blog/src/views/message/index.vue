@@ -161,13 +161,314 @@ const handleDeleteMessage = (item) => {
     }
   })
 };
+const getHotMessageTag = async () => {
+  tabList.value = [];
+  const res = await getMessageTag();
+  if (res.code == 0) {
+    tabList.value = Array.isArray(res.result) ? res.result.map((v,i) => {
+      return { key: i + 1, label: v.tag };
+    }) : [];
+    tabList.value.unshift({ key: 0, label: "全部" });
+  }
+};
+const mouseDown = () => {
+  showSearch.value = true;
+};
+const mouseLeave = () => {
+  showSearch.value = false;
+};
+const changeSearch = (val) => {
+  param.message = val;
+  pageGetMessageList();
+};
 
+onMounted(async () => {
+  removeLocalItem("message-refresh");
+  await getHotMessageTag();
+  await pageGetMessageList();
+});
+onActivated(async () => {
+  if (getLocalItem("message-refresh")) {
+    Object.assign(param, primaryParam);
+    await getHotMessageTag();
+    await pageGetMessageList();
+    removeLocalItem("message-refresh");
+  }
+});
+onBeforeMount(() => {
+  observe && observe.unobserve(box);
+  observe = null;
+});
 </script>
 
 <template>
-
+<div class="message !min-h-[60vh]">
+  <div class="publish-pc">
+    <el-popover placement="top-start" :width="110" trigger="hover" content="快点我发表留言">
+      <template #reference>
+        <svg-icon name="publish" :width="4" :height="4" @click="addMessage" />
+      </template>
+    </el-popover>
+  </div>
+  <div class="publish-mobile">
+    <el-popover placement="top-start" :width="110" trigger="hover" content="快点我发表留言">
+      <template #reference>
+        <svg-icon name="publish" :width="3" :height="3" @click="addMessage" />
+      </template>
+    </el-popover>
+  </div>
+  <div class="message-header">
+    <div class="message-title">留言板</div>
+    <div class="flex items-center !h-[5rem]">
+      <TypeWriter size="1.2rem" :typeList="['生活原本沉闷，但跑起来就会有风!']"></TypeWriter>
+    </div>
+  </div>
+</div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
+.message {
+  .row-height {
+    min-height: 22rem;
+  }
+  &-header {
+    padding-top: 130px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .message-title {
+    font-size: 2.4rem;
+    font-weight: 600;
+    color: #000;
+  }
+  .type-writer {
+    color: #000;
+  }
 
+  .space {
+    color: #000;
+  }
+
+  &-body {
+    min-height: 35rem;
+    .search-tab {
+      width: 100%;
+      min-height: 3rem;
+      background-color: rgba(0, 0, 0, 0.2);
+      margin-bottom: 1rem;
+      border-radius: 2rem;
+    }
+    .tab {
+      width: 100%;
+      min-height: 3rem;
+      padding: 0.5rem;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      cursor: pointer;
+      flex-wrap: wrap;
+      font-size: 1.2rem;
+      font-weight: 600;
+
+      li {
+        margin-right: 1rem;
+      }
+
+      .tab-li {
+        height: 2rem;
+        line-height: 2rem;
+        text-align: center;
+        padding: 0 0.6rem;
+        border-radius: 1rem;
+      }
+      .active-tab {
+        color: #fff;
+        background-color: var(--primary);
+      }
+    }
+
+    .message-card {
+      position: relative;
+      height: 22rem;
+    }
+
+    .img-loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 5rem;
+      height: 3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .nick-name {
+      color: #fff;
+      margin-left: 1rem;
+      letter-spacing: 1px;
+      padding: 3px 8px;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+    }
+
+    .left {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      padding: 3px 8px;
+    }
+
+    .time {
+      font-size: 12px;
+      color: #fff;
+      letter-spacing: 1px;
+      margin-right: 10px;
+    }
+
+    .message-comment {
+      font-size: 12px;
+      color: #fff;
+      letter-spacing: 1px;
+      padding: 3px 8px;
+    }
+
+    .option-top {
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 8px;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .option {
+      color: #fff;
+      padding: 1px 8px;
+      border-radius: 8px;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+    .top-header {
+      height: 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .top {
+      height: 19rem;
+      padding: 8px;
+      overflow: auto;
+      white-space: pre-line;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+    .index-tag {
+      font-size: 12px;
+      color: #fff;
+    }
+
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 3rem;
+      padding: 8px;
+    }
+  }
+
+  .apply-tag {
+    text-align: center;
+    color: var(--font-color);
+    font-size: 16px;
+  }
+}
+.observer {
+  text-align: center;
+  font-size: 1rem;
+  color: #000;
+  margin-top: 3px;
+  letter-spacing: 1px;
+}
+.btn {
+  margin-left: 3px;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.scale {
+  transition: all 0.3s;
+}
+.scale:hover {
+  transform: scale(1.2);
+}
+
+.loading {
+  width: 100%;
+  height: 22rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// pc
+@media screen and (min-width: 768px) {
+  .center-top {
+    .left-avatar {
+      width: 48px;
+      height: 48px;
+    }
+  }
+
+  .publish-pc {
+    position: fixed;
+    top: 150px;
+    right: 50px;
+    z-index: 3001;
+    cursor: pointer;
+    border: none;
+  }
+
+  .publish-mobile {
+    display: none;
+  }
+}
+
+.search {
+  height: 28px;
+  width: 220px;
+  :deep(.el-input__wrapper) {
+    border-radius: 20px;
+  }
+}
+
+// mobile
+@media screen and (max-width: 768px) {
+  .center-top {
+    .left-avatar {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .publish-mobile {
+    position: fixed;
+    top: 150px;
+    right: 10px;
+    z-index: 3001;
+    cursor: pointer;
+    border: none;
+  }
+
+  .publish-pc {
+    display: none;
+  }
+}
 </style>
