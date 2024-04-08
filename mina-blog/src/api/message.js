@@ -1,0 +1,65 @@
+import http from "@/config/request.js";
+
+/** 获取留言列表 */
+export const getMessageList = (data) => {
+    return new Promise((resolve) => {
+        http.post("/api/message/getMessageList", data).then((res) => {
+            resolve(res);
+        });
+    });
+};
+
+/** 新增留言 */
+export const addMessage = (data) => {
+    return new Promise((resolve) => {
+        http.post("/api/message/add", data).then((res) => {
+            resolve(res);
+        });
+    });
+};
+
+/** 编辑留言 */
+export const updateMessage = (data) => {
+    return new Promise((resolve) => {
+        http.post("/api/message/update", data).then((res) => {
+            resolve(res);
+        });
+    });
+};
+
+/** 点赞留言 */
+export const likeMessage = (id) => {
+    return new Promise((resolve) => {
+        http.post("/api/message/like" + id, {}).then((res) => {
+            resolve(res);
+        });
+    });
+};
+
+
+/** 点取消赞留言 */
+export const cancelLikeMessage = (id) => {
+    return new Promise((resolve) => {
+        http.post("/api/message/cancelLike" + id, {}).then((res) => {
+            resolve(res);
+        });
+    });
+};
+
+/** 删除留言 */
+export const deleteMessage = (id) => {
+    return new Promise((resolve) => {
+        http.post("/api/message/delete", { idList: [id] }).then((res) => {
+            resolve(res);
+        });
+    });
+};
+
+/** 获取热门标签 */
+export const getMessageTag = () => {
+    return new Promise((resolve) => {
+        http.post("/api/message/getHotTagList", {}).then((res) => {
+            resolve(res);
+        });
+    });
+};

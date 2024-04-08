@@ -33,6 +33,41 @@ const router = createRouter({
           meta: {
             title: "说说"
           }
+        },
+        {
+          path: '/message',
+          name: 'Message',
+
+          meta: {
+            title: "留言板"
+          },
+          children: [
+            {
+              path: 'list',
+              name: 'Message',
+              component: () => import("@/views/message/index.vue"),
+              meta: {
+                title: "留言",
+                keepAlive: true
+              }
+            },
+            {
+              path: 'publish',
+              name: 'Publish',
+              component: () => import("@/views/message/publish.vue"),
+              meta: {
+                title: "编辑/新增留言"
+              }
+            },
+            {
+              path: 'detail',
+              name: 'Detail',
+              component: () => import("@/views/message/detail.vue"),
+              meta: {
+                title: "留言详情"
+              }
+            }
+          ]
         }
       ]
     },

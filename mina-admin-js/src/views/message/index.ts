@@ -1,8 +1,8 @@
-import {onMounted, reactive, ref} from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { LoadingConfig, PaginationProps } from "@pureadmin/table";
 import { message } from "@/utils/message";
-import {getMessageList, deleteMessage} from "@/api/message";
-import { ElMessageBox} from "element-plus";
+import { getMessageList, deleteMessage } from "@/api/message";
+import { ElMessageBox } from "element-plus";
 
 export function useColumns() {
   const param = reactive<any>({
@@ -14,7 +14,7 @@ export function useColumns() {
   const primaryParam = reactive({ ...param });
   const dataList = ref([]);
   const loading = ref(false);
-  const tableSize = ref("small");
+  const tableSize = ref("default");
   const selectList = ref<any>([]);
   const columns: TableColumnList = [
     {

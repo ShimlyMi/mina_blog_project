@@ -145,6 +145,9 @@ export function isMobile() {
         /(phone|pad|iPhone|iPod|ios|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i;
     return reg.test(navigator.userAgent);
 }
+export function filterMessage(text) {
+    return text.replace(/&gt;/g, ">").replace(/&lt;/g, "<");
+}
 
 export function randomFontColor() {
     return `rgb(${Math.round(Math.random() * 255)},${Math.round(Math.random() * 255)},${Math.round(

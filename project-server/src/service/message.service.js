@@ -66,7 +66,7 @@ class MessageService {
         const limit = size * 1;
         const whereOpt = {};
         tag && Object.assign(whereOpt, { tag });
-        message && Object.assign(whereOpt, { createdAt: { [Op.like]: `%${message}%` } });
+        message && Object.assign(whereOpt, { message: { [Op.like]: `%${message}%` } });
         time && Object.assign(whereOpt, { createdAt: { [Op.between]: time } });
         const { rows, count } = await Message.findAndCountAll({
             limit, offset, where: whereOpt, order: [["createdAt", "DESC"]]

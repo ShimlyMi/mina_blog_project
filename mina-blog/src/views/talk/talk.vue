@@ -242,6 +242,7 @@ onBeforeMount(() => {
 
   .nick-name {
     color: var(--font-color);
+    font-weight: bold;
   }
 
   .mt-10 {
@@ -319,7 +320,7 @@ onBeforeMount(() => {
       align-items: flex-start;
 
       .content {
-        margin-top: 23px;
+        margin-top: 15px;
       }
     }
 
