@@ -37,7 +37,6 @@ const router = createRouter({
         {
           path: '/message',
           name: 'Message',
-
           meta: {
             title: "留言板"
           },

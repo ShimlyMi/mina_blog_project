@@ -1,7 +1,7 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 
-// 利用jsap来进行盒子的动画
+// 利用jsp来进行盒子的动画
 /**
  *
  * @param {*} list 盒子类名

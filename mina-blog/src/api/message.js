@@ -30,17 +30,17 @@ export const updateMessage = (data) => {
 /** 点赞留言 */
 export const likeMessage = (id) => {
     return new Promise((resolve) => {
-        http.post("/api/message/like" + id, {}).then((res) => {
+        http.put("/api/message/like/" + id, {}).then((res) => {
             resolve(res);
         });
     });
 };
 
 
-/** 点取消赞留言 */
+/** 取消赞留言 */
 export const cancelLikeMessage = (id) => {
     return new Promise((resolve) => {
-        http.post("/api/message/cancelLike" + id, {}).then((res) => {
+        http.put("/api/message/cancelLike/" + id, {}).then((res) => {
             resolve(res);
         });
     });
@@ -49,7 +49,7 @@ export const cancelLikeMessage = (id) => {
 /** 删除留言 */
 export const deleteMessage = (id) => {
     return new Promise((resolve) => {
-        http.post("/api/message/delete", { idList: [id] }).then((res) => {
+        http.put("/api/message/delete", { idList: [id] }).then((res) => {
             resolve(res);
         });
     });
@@ -58,7 +58,7 @@ export const deleteMessage = (id) => {
 /** 获取热门标签 */
 export const getMessageTag = () => {
     return new Promise((resolve) => {
-        http.post("/api/message/getHotTagList", {}).then((res) => {
+        http.get("/api/message/getHotTagList", {}).then((res) => {
             resolve(res);
         });
     });

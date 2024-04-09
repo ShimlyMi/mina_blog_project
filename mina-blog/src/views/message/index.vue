@@ -1,5 +1,5 @@
 <script setup name="Message">
-import { ref, reactive, onMounted, onBeforeMount, h } from "vue";
+import { ref, reactive, onMounted, onBeforeMount, h, onActivated, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { Edit, Delete, Search } from "@element-plus/icons-vue";
@@ -11,6 +11,8 @@ import { addLike, cancelLike } from "@/api/like.js";
 import svgIcon from "@/components/SvgIcon/index.vue";
 import { returnTime, setLocalItem, removeLocalItem, getLocalItem, containHTML, filterMessage } from "@/utils/tool.js";
 import { useUserStore } from "@/stores/userStore.js";
+
+
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -66,6 +68,7 @@ const pageGetMessageList = async () => {
     loading.value = true;
   }
   let res = await getMessageList(param);
+  // console.log(res)
   if (res.code == 0) {
     const { list } = res.result;
     messageList.value = param.current == 1 ? res.result.list : messageList.value.concat(res.result.list);
@@ -109,14 +112,14 @@ const like = async (item, index) => {
     if (res.code == 0) {
       // 记录 留言点赞
       if (getUserInfo.value.id) {
-        await cancelLike({ for_id: item.id, type: 3, user_id: getUserInfo.value.id });
+        await addLike({ for_id: item.id, type: 3, user_id: getUserInfo.value.id });
       }
       messageList.value[index].like_times++;
       messageList.value[index].is_like = true;
       ElNotification({
         offset: 60,
         title: '提示',
-        message: h("div", { style: "color: #7ec050; font-weight: 600;" }, "已经取消点赞啦~")
+        message: h("div", { style: "color: #7ec050; font-weight: 600;" }, "感谢你的点赞哦~")
       });
     }
   }
@@ -221,6 +224,119 @@ onBeforeMount(() => {
     <div class="message-title">留言板</div>
     <div class="flex items-center !h-[5rem]">
       <TypeWriter size="1.2rem" :typeList="['生活原本沉闷，但跑起来就会有风!']"></TypeWriter>
+    </div>
+  </div>
+  <div class="message-body center_box">
+    <div class="search-tab" @mousedown="mouseDown" @mouseleave="mouseLeave">
+      <ul class="tab">
+        <li v-for="item in tabList" :key="item.key" @click="changeTab(item.key, item.label)">
+          <div :class="[item.key == activeTab ? 'active-tab' : '', 'tab-li']">{{ item.label }}</div>
+        </li>
+        <Transition
+            :duration="{enter: 0, leave: 500}"
+            enter-active-class="animate_animated animate_fadeIn"
+            leave-active-class="animate_animated animate_fadeOut"
+        >
+          <div v-if="showSearch" class="flex justify-center items-center">
+            <el-input
+                :prefix-icon="Search"
+                class="search"
+                v-model="searchTag"
+                placeholder="搜索留言内容"
+                @change="changeSearch"
+                clearable
+            />
+          </div>
+        </Transition>
+      </ul>
+    </div>
+    <el-skeleton :loading="loading" style="height: 100%" animated>
+      <template #template>
+        <div class="loading">
+          <div class="coffee_cup"></div>
+        </div>
+      </template>
+      <el-row class="row-height" :gutter="16">
+        <el-col
+            :class="'message' + index"
+            :xs="24"
+            :sm="12"
+            v-for="(message, index) in messageList"
+            :key="index"
+        >
+          <el-card class="card-hover">
+            <div
+              :style="{ backgroundColor: message.bg_color }"
+              class="message-card animate__animated animate__fadeIn"
+            >
+              <div class="img-loading" v-if="message.bg_url" v-image="message.bg_url"></div>
+              <div
+                class="top"
+                :style="{ backgroundImage: message.bg_url ? `url(${message.bg_url}` : '' }"
+              >
+                <div class="top-header">
+                  <div class="flex items-center cursor-pointer">
+                    <el-avatar class="left-avatar" :src="message.avatar">{{ message.nick_name }}</el-avatar>
+                    <span class="nick-name">{{ message.nick_name }}</span>
+                  </div>
+                  <div
+                    class="flex items-center cursor-pointer option-top"
+                    v-if="(getUserInfo.id && getUserInfo.id == message.user_id)  || getUserInfo.role == 1"
+                  >
+                    <el-icon @click="handleEditMessage(message)"><Edit /></el-icon>
+                    <el-icon class="!ml-[10px]" @click="handleDeleteMessage(message)"><Delete /></el-icon>
+                  </div>
+                </div>
+                <div
+                  v-if="containHTML(filterMessage(message.message))"
+                  v-html="filterMessage(message.message)"
+                  :style="{
+                    color: message.color,
+                    fontSize: message.font_size + 'px',
+                    fontWeight: message.font_weight
+                   }"
+                ></div>
+                <div
+                  v-else
+                  :style="{
+                    color: message.color,
+                    fontSize: message.font_size + 'px',
+                    fontWeight: message.font_weight
+                  }"
+                >{{ message.message }}</div>
+                <div class="bottom">
+                  <div class="left flex items-center">
+                    <div class="time">{{ returnTime(message.createdAt) }}</div>
+                    <div class="message-comment cursor-pointer !mr-[10px]" @click="comment(message)">
+                      <span>评论</span>
+                      <span class="!ml-[5px]">{{ message.comment_total }}</span>
+                    </div>
+                    <div class="index-tag">#{{ message.tag }}</div>
+                  </div>
+                  <div class="flex justify-start items-center option">
+                    <div class="cursor-pointer scale flex items-center" @click="like(message, index)">
+                      <i class="iconfont icon-heart-filled-icon" :style="{ color: message.is_like ? '#e3a0a6' : '' }"></i>
+<!--                      <svg-icon :name="message.is_like ? 'redHeart' : 'greyHeart'" :width="1.5" />-->
+                      <span :style="{ color: message.is_like ? '#f5f5f5' : '#f0eeee' }" class="!ml-[5px]">
+                        {{ message.like_times || 0 }}</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+    </el-skeleton>
+    <div class="observer">
+      {{
+        total == 0
+            ? "这片土地需要你来开辟"
+            : messageList.length >= total
+                ? "暂无更多"
+                : "下拉加载更多"
+      }}
     </div>
   </div>
 </div>
@@ -394,7 +510,7 @@ onBeforeMount(() => {
   text-align: center;
   font-size: 1rem;
   color: #000;
-  margin-top: 3px;
+  margin-top: 10px;
   letter-spacing: 1px;
 }
 .btn {

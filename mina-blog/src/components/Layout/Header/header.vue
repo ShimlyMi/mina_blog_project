@@ -49,7 +49,7 @@ const logout = () => {
         <el-menu-item><i class="iconfont icon-liebiao"></i>分类</el-menu-item>
         <el-menu-item index="/album"><i class="iconfont icon-tupian1"></i>相册</el-menu-item>
         <el-menu-item index="/talk"><i class="iconfont icon-duihua"></i>说说</el-menu-item>
-        <el-menu-item index="/message"><i class="iconfont icon-dakaixinxi"></i>留言板</el-menu-item>
+        <el-menu-item index="/message/list"><i class="iconfont icon-dakaixinxi"></i>留言板</el-menu-item>
         <el-menu-item><i class="iconfont icon-lianjie2"></i>友链</el-menu-item>
         <el-menu-item v-if="!getUserInfo.id" index="/login"><i class="iconfont icon-yonghu"></i>登录</el-menu-item>
         <div v-else class="user">

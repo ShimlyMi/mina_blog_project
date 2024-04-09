@@ -39,7 +39,7 @@ let configDetail = ref({});
 const getConfigDetail = async () => {
   rightSizeLoading.value = true;
   let res = await getConfig()
-  console.log(res)
+  // console.log(res)
   if (res.code === 0 && typeof res.result != "string") {
     configDetail.value = res.result;
     userStore.setBlogAvatar(res.result.blog_avatar);
