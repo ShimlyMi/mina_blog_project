@@ -304,25 +304,24 @@ onBeforeMount(() => {
                     fontWeight: message.font_weight
                   }"
                 >{{ message.message }}</div>
-                <div class="bottom">
-                  <div class="left flex items-center">
-                    <div class="time">{{ returnTime(message.createdAt) }}</div>
-                    <div class="message-comment cursor-pointer !mr-[10px]" @click="comment(message)">
-                      <span>评论</span>
-                      <span class="!ml-[5px]">{{ message.comment_total }}</span>
-                    </div>
-                    <div class="index-tag">#{{ message.tag }}</div>
+              </div>
+              <div class="bottom">
+                <div class="left flex items-center">
+                  <div class="time">{{ returnTime(message.createdAt) }}</div>
+                  <div class="message-comment cursor-pointer !mr-[10px]" @click="comment(message)">
+                    <span>评论</span>
+                    <span class="!ml-[5px]">{{ message.comment_total }}</span>
                   </div>
-                  <div class="flex justify-start items-center option">
-                    <div class="cursor-pointer scale flex items-center" @click="like(message, index)">
-                      <i class="iconfont icon-heart-filled-icon" :style="{ color: message.is_like ? '#e3a0a6' : '' }"></i>
-<!--                      <svg-icon :name="message.is_like ? 'redHeart' : 'greyHeart'" :width="1.5" />-->
-                      <span :style="{ color: message.is_like ? '#f5f5f5' : '#f0eeee' }" class="!ml-[5px]">
+                  <div class="index-tag">#{{ message.tag }}</div>
+                </div>
+                <div class="flex justify-start items-center option">
+                  <div class="cursor-pointer scale flex items-center" @click="like(message, index)">
+                    <i class="iconfont icon-heart-filled-icon" :style="{ color: message.is_like ? '#e3a0a6' : '' }"></i>
+                    <!--                      <svg-icon :name="message.is_like ? 'redHeart' : 'greyHeart'" :width="1.5" />-->
+                    <span :style="{ color: message.is_like ? '#f5f5f5' : '#f0eeee' }" class="!ml-[5px]">
                         {{ message.like_times || 0 }}</span>
-                    </div>
                   </div>
                 </div>
-
               </div>
             </div>
           </el-card>
@@ -408,7 +407,7 @@ onBeforeMount(() => {
 
     .message-card {
       position: relative;
-      height: 22rem;
+      height: 20rem;
     }
 
     .img-loading {
@@ -473,7 +472,7 @@ onBeforeMount(() => {
     }
 
     .top {
-      height: 19rem;
+      height: 17rem;
       padding: 8px;
       overflow: auto;
       white-space: pre-line;
