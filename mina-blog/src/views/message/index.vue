@@ -306,7 +306,7 @@ onBeforeMount(() => {
                 >{{ message.message }}</div>
               </div>
               <div class="bottom">
-                <div class="left flex items-center">
+                <div class="left flex items-center cursor-pointer">
                   <div class="time">{{ returnTime(message.createdAt) }}</div>
                   <div class="message-comment cursor-pointer !mr-[10px]" @click="comment(message)">
                     <span>评论</span>
@@ -317,7 +317,6 @@ onBeforeMount(() => {
                 <div class="flex justify-start items-center option">
                   <div class="cursor-pointer scale flex items-center" @click="like(message, index)">
                     <i class="iconfont icon-heart-filled-icon" :style="{ color: message.is_like ? '#e3a0a6' : '' }"></i>
-                    <!--                      <svg-icon :name="message.is_like ? 'redHeart' : 'greyHeart'" :width="1.5" />-->
                     <span :style="{ color: message.is_like ? '#f5f5f5' : '#f0eeee' }" class="!ml-[5px]">
                         {{ message.like_times || 0 }}</span>
                   </div>

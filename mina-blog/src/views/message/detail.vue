@@ -6,6 +6,7 @@ import { likeMessage, cancelLikeMessage } from "@/api/message.js";
 import { addLike, cancelLike } from "@/api/like.js";
 import { useUserStore } from "@/stores/userStore.js";
 import { ElNotification } from "element-plus";
+import Comment from "@/components/Comment/Comment.vue";
 
 const userStore = useUserStore();
 const { getUserInfo } = storeToRefs(userStore);
@@ -50,7 +51,7 @@ const like = async (item) => {
       ElNotification({
         offset: 60,
         title: "提示",
-        message: h("div", { style: "color: #7ec050; font-weight: 600;" }, "已经取消点赞啦~")
+        message: h("div", { style: "color: #7ec050; font-weight: 600;" }, "感谢你的点赞哦~")
       });
     }
   }
@@ -91,10 +92,26 @@ onMounted(() => {
           }">{{ message.message }}</div>
           </div>
           <div class="bottom">
-
+            <div class="left flex items-center cursor-pointer">
+              <div class="time">{{ returnTime(message.createdAt) }}</div>
+              <div class="index-tag">#{{ message.tag }}</div>
+            </div>
+            <div class="flex justify-start items-center option">
+              <i class="iconfont icon-heart-filled-icon" :style="{ color: message.is_like ? '#e3a0a6' : '' }" @click="like(message)"></i>
+              <span :style="{ color: message.is_like ? '#f5f5f5' : '#f0eeee' }" class="!ml-[5px]">
+                        {{ message.like_times || 0 }}</span>
+            </div>
           </div>
         </div>
       </el-card>
+      <Comment
+         v-if="message.id"
+         class="w-[100%] !mt-[1rem]"
+         type="message"
+         :expand="true"
+         :id="message.id"
+         :author-id="message.user_id"
+      />
     </div>
   </div>
 </template>
