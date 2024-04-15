@@ -61,7 +61,7 @@ const focusCommentInput = () => {
   }
   keepLastIndex(inputCommentRef.value);
 };
-const leaveMessage = async () => {
+const message = async () => {
   if (!form.message) {
     ElNotification({
       offset: 60,
@@ -268,7 +268,7 @@ onMounted(async () => {
           :disabled="loading"
           :loading="loading"
           class="leave-message"
-          @click="leaveMessage"
+          @click="message"
         >{{ loading ? "努力上传中......" : route.query.type == "edit" ? "保存" : "发布" }}</el-button>
       </div>
     </div>

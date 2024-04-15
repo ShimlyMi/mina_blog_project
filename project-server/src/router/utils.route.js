@@ -11,6 +11,6 @@ const { upload } = require("../controller/utils.controller");
 const router = new Router({ prefix: "/upload" });
 
 // 图片上传
-router.post("/", auth, upload);
+router.post("/img", auth, upload);
 
 module.exports = router;

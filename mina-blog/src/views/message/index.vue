@@ -214,7 +214,7 @@ onBeforeMount(() => {
     </div>
     <div class="flex items-center">
       <span class="cursor-pointer apply-button !mr-[20px]">可以留下你的足迹~</span>
-      <el-popover placement="top-start" :width="110" trigger="hover" content="快点我发表留言">-->
+      <el-popover placement="top-start" :width="110" trigger="hover" content="快点我发表留言">
         <template #reference>
           <svg-icon name="publish" :width="3" :height="3" @click="addMessage" />
         </template>

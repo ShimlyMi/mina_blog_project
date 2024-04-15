@@ -42,7 +42,7 @@ export const imgUpload = async data => {
   return new Promise<SiteResult>(resolve => {
     Axios({
       method: "post",
-      url: "/api/upload/",
+      url: "/api/upload/img",
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
