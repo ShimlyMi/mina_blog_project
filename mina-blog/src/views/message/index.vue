@@ -206,25 +206,34 @@ onBeforeMount(() => {
 
 <template>
 <div class="message !min-h-[60vh]">
-  <div class="publish-pc">
-    <el-popover placement="top-start" :width="110" trigger="hover" content="快点我发表留言">
-      <template #reference>
-        <svg-icon name="publish" :width="4" :height="4" @click="addMessage" />
-      </template>
-    </el-popover>
-  </div>
-  <div class="publish-mobile">
-    <el-popover placement="top-start" :width="110" trigger="hover" content="快点我发表留言">
-      <template #reference>
-        <svg-icon name="publish" :width="3" :height="3" @click="addMessage" />
-      </template>
-    </el-popover>
-  </div>
+
   <div class="message-header">
     <div class="message-title">留言板</div>
     <div class="flex items-center !h-[5rem]">
       <TypeWriter size="1.2rem" :typeList="['生活原本沉闷，但跑起来就会有风!']"></TypeWriter>
     </div>
+    <div class="flex items-center">
+      <span class="cursor-pointer apply-button !mr-[20px]">可以留下你的足迹~</span>
+      <el-popover placement="top-start" :width="110" trigger="hover" content="快点我发表留言">-->
+        <template #reference>
+          <svg-icon name="publish" :width="3" :height="3" @click="addMessage" />
+        </template>
+      </el-popover>
+    </div>
+<!--    <div class="publish-pc">-->
+<!--      <el-popover placement="top-start" :width="110" trigger="hover" content="快点我发表留言">-->
+<!--        <template #reference>-->
+<!--          <svg-icon name="publish" :width="4" :height="4" @click="addMessage" />-->
+<!--        </template>-->
+<!--      </el-popover>-->
+<!--    </div>-->
+<!--    <div class="publish-mobile">-->
+<!--      <el-popover placement="top-start" :width="110" trigger="hover" content="快点我发表留言">-->
+<!--        <template #reference>-->
+<!--          <svg-icon name="publish" :width="3" :height="3" @click="addMessage" />-->
+<!--        </template>-->
+<!--      </el-popover>-->
+<!--    </div>-->
   </div>
   <div class="message-body center_box">
     <div class="search-tab" @mousedown="mouseDown" @mouseleave="mouseLeave">
@@ -503,6 +512,35 @@ onBeforeMount(() => {
     color: var(--font-color);
     font-size: 16px;
   }
+}
+.apply-button {
+  position: relative;
+  display: inline-block;
+  padding: 5px 20px;
+  background-color: transparent;
+  box-sizing: border-box;
+  border-radius: 8px;
+  font-weight: 900;
+  font-size: 16px;
+  background-image: var(--button-linear-gradient);
+  color: var(--white);
+  transition: all .6s;
+  cursor: pointer;
+  border: none;
+  z-index: 1;
+}
+.apply-button:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  border-radius: 8px;
+  z-index: -1;
+  transition: opacity .6s ease-in-out;
+  background-image: var(--button-linear-gradient-h);
 }
 .observer {
   text-align: center;

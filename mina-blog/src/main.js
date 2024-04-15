@@ -1,8 +1,6 @@
 // import './assets/main.css';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-// 引入样式
-// import ElementPlus from 'element-plus';
 // 数据持久化
 import pinaPluginPersist from 'pinia-plugin-persist'
 // 引入样式
@@ -12,11 +10,12 @@ import 'element-plus/dist/index.css';
 import "element-plus/theme-chalk/dark/css-vars.css";
 // tailwind.css  https://www.tailwindcss.cn/docs
 import "./styles/tailwind.scss";
-
 import App from './App.vue';
 import router from './router';
 // 引入ep图标
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
+// svg
+import "virtual:svg-icons-register";
 // 指令
 import vCopy from "@/directives/copy.js";
 import image from "@/directives/imageLoading.js";

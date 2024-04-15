@@ -15,7 +15,7 @@
   --card-hover-box-shadow: 0 3px 6px 3px rgba(7, 17, 27, 0.15);
   --text-hover-color: rgba(207,108,201,1.000);
   /* COLORS */
-  --white: #fff;
+  --white: #fcfcfc;
   --gray: #333;
   --blue: #0367a6;
   --lightblue: #008997;
@@ -26,4 +26,6 @@
   /* SIZES */
   --max-width: 1000px;
   --max-height: 500px;
+  --button-linear-gradient-h: linear-gradient(300deg, #dfbeed 0%, #f096ce 100%);
+  --button-linear-gradient: linear-gradient(300deg, #dfbeed 0%, #f096ce 100%)
 }

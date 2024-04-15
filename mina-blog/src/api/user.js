@@ -62,7 +62,7 @@ export const imgUpload = async (data) => {
     formData.append("file", res);
     const userStore = useUserStore();
     return new Promise((resolve) => {
-        http.post("/api/upload/", formData, {
+        http.post("/api/upload", formData, {
             config: {
                 headers: {
                     "Content-Type": "multipart/form-data",
