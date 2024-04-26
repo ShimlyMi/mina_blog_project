@@ -76,6 +76,7 @@ onMounted(() => {
     padding: 10px;
     min-height: 12em;
     cursor: pointer;
+    margin-top: 25px;
   }
 
   @include e(box) {

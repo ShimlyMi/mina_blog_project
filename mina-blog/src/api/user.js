@@ -43,6 +43,7 @@ export const imgUpload = async (data) => {
     // 文件压缩 太大了上传不了
     let res;
     // 没有 raw.size 就表示已经压缩过了。 有的话小于 800 的 不用压缩
+    console.log("data",data)
     if (data.raw.size > 800) {
         const file = await conversion(data.raw);
         if (!file) {
@@ -60,9 +61,10 @@ export const imgUpload = async (data) => {
     }
     const formData = new FormData();
     formData.append("file", res);
+    console.log("formData", formData)
     const userStore = useUserStore();
     return new Promise((resolve) => {
-        http.post("/api/upload/img", formData, {
+        http.post("/api/upload/", formData, {
             config: {
                 headers: {
                     "Content-Type": "multipart/form-data",

@@ -13,12 +13,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" name="PanThumb">
 export default {
-  name: "PanThumb",
   props: {
     image: {
-      type: Array,
+      type: String,
       required: true
     },
     zIndex: {

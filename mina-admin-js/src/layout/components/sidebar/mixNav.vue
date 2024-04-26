@@ -96,37 +96,6 @@ watch(
       <!-- 通知 -->
       <Notice id="header-notice" />
       <!-- 国际化 -->
-      <!--
-      <el-dropdown id="header-translation" trigger="click">
-        <globalization
-          class="navbar-bg-hover w-[40px] h-[48px] p-[11px] cursor-pointer outline-none"
-        />
-        <template #dropdown>
-          <el-dropdown-menu class="translation">
-            <el-dropdown-item
-              :class="['dark:!text-white', getDropdownItemClass(locale, 'zh')]"
-              :style="getDropdownItemStyle(locale, 'zh')"
-              @click="translationCh"
-            >
-              <span v-show="locale === 'zh'" class="check-zh">
-                <IconifyIconOffline :icon="Check" />
-              </span>
-              简体中文
-            </el-dropdown-item>
-            <el-dropdown-item
-              :class="['dark:!text-white', getDropdownItemClass(locale, 'en')]"
-              :style="getDropdownItemStyle(locale, 'en')"
-              @click="translationEn"
-            >
-              <span v-show="locale === 'en'" class="check-en">
-                <IconifyIconOffline :icon="Check" />
-              </span>
-              English
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-      -->
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
         <div class="el-dropdown-link navbar-bg-hover select-none">

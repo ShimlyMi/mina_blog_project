@@ -83,10 +83,12 @@ const message = async () => {
   if (!form.id) {
     form.user_id = getUserInfo.value.id;
   }
+
   // 上传图片背景
   loading.value = true;
-  if (form.bgList.length && !form.bgList[0].id) {
+  if (form.bgList.length) {
     const img = await imgUpload(form.bgList[0]);
+    console.log("img",img)
     if (img.code == 0) {
       const { url } = img.result;
       form.bg_url = url;
@@ -235,9 +237,9 @@ onMounted(async () => {
             />
           </el-select>
         </div>
-        <div v-else-if="activeTab == 2">
+        <div v-else-if="activeTab === 2">
           <Upload
-            v-model:file-list="form.bgList"
+            v-model:fileList="form.bgList"
             :limit="1"
             :width="200"
             :height="140"

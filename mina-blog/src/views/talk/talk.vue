@@ -230,7 +230,7 @@ onBeforeMount(() => {
   }
 
   &-card {
-    margin-top: 10px;
+    margin-top: 25px;
 
     &__item {
       padding: 10px;

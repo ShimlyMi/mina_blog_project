@@ -46,7 +46,7 @@ export function useSite() {
       callback();
     }
   };
-  const password2V = (rule: any, value: any, callback: any) => {
+  const password2V = (xqrule: any, value: any, callback: any) => {
     if (value === "") {
       callback(new Error("请再次输入密码"));
     } else if (value.length < 6 || value.length > 18) {
@@ -72,6 +72,9 @@ export function useSite() {
   /** 编辑与保存 */
   const isEditMyInfo = ref(false);
   const isEditPassword = ref(false);
+
+  /** 弹框 */
+  const showImageUpload = ref(false);
 
   /** 保存按钮 */
   async function save(type, formRef) {
@@ -174,7 +177,7 @@ export function useSite() {
     const res = await updateUserInfo(myInfoForm);
     if (res.code == 0) {
       message("用户修改成功", { type: "success" });
-      initMyInfo();
+      await initMyInfo();
     }
   }
 
@@ -193,6 +196,7 @@ export function useSite() {
     passwordRules,
     isEditMyInfo,
     isEditPassword,
+    showImageUpload,
     edit,
     cancel,
     save

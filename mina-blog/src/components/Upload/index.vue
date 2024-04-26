@@ -46,7 +46,8 @@ const uploadChange = () => {
 };
 function handlePictureCardPreview(file) {
   // 图片预览
-  previewIndex.value = uploadFileList.value.findIndex((v) => v.uid == file.uid);
+  const index = uploadFileList.value.findIndex((v) => v.uid == file.uid);
+  previewIndex.value = index;
   dialogVisible.value = true;
 }
 
