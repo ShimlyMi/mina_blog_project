@@ -11,7 +11,7 @@
  Target Server Version : 80029
  File Encoding         : 65001
 
- Date: 10/04/2024 14:19:43
+ Date: 09/05/2024 10:44:24
 */
 
 SET NAMES utf8mb4;
@@ -32,13 +32,14 @@ CREATE TABLE `mi_album`  (
   `updatedAt` datetime(0) NOT NULL,
   `deletedAt` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of mi_album
 -- ----------------------------
 INSERT INTO `mi_album` VALUES (1, '测试相册', 'http://127.0.0.1:8888/ac1a6e61b9373c26e5f1cf700', '测试相册上传以及图片上传和回收站的情况', NULL, NULL, '2024-03-19 07:23:49', '2024-03-19 07:23:49', NULL);
 INSERT INTO `mi_album` VALUES (2, '测试相册2', 'http://127.0.0.1:8888/2a009a474d38ba09d252e1d00', '测试多个相册的排列', NULL, NULL, '2024-03-20 02:28:03', '2024-03-20 02:28:03', NULL);
+INSERT INTO `mi_album` VALUES (3, '测试相册3', 'http://127.0.0.1:8888/f56d6e7a0657cee8354612701', '前端上传图片失败，报500，再次测试添加图片', NULL, NULL, '2024-04-15 09:20:03', '2024-04-15 09:20:03', NULL);
 
 -- ----------------------------
 -- Table structure for mi_article
@@ -102,7 +103,7 @@ CREATE TABLE `mi_blog_config`  (
 -- ----------------------------
 -- Records of mi_blog_config
 -- ----------------------------
-INSERT INTO `mi_blog_config` VALUES (1, '米娜的小屋', 'http://127.0.0.1:8888/d534c7552f7a63793b1e00001', 'http://127.0.0.1:8888/0b2aafec8a22a1dd44f781600', '这个人很懒，什么也没写~', '', '', '', '', '', 0, '2024-03-29 08:46:06', '2024-04-07 07:44:04');
+INSERT INTO `mi_blog_config` VALUES (1, '米娜的小屋', 'http://127.0.0.1:8888/d534c7552f7a63793b1e00001', 'http://127.0.0.1:8888/f56d6e7a0657cee8354612700', '这个人很懒，什么也没写~', '', '', '', '', '', 0, '2024-03-29 08:46:06', '2024-04-15 09:08:09');
 
 -- ----------------------------
 -- Table structure for mi_comment
@@ -145,7 +146,7 @@ CREATE TABLE `mi_like`  (
   `createdAt` datetime(0) NULL DEFAULT NULL,
   `updatedAt` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of mi_like
@@ -154,7 +155,20 @@ INSERT INTO `mi_like` VALUES (1, 2, 19, 2, '2024-04-03 02:06:07', '2024-04-03 02
 INSERT INTO `mi_like` VALUES (2, 2, 19, 2, '2024-04-03 02:47:24', '2024-04-03 02:47:24');
 INSERT INTO `mi_like` VALUES (3, 2, 22, 2, '2024-04-07 08:27:50', '2024-04-07 08:27:50');
 INSERT INTO `mi_like` VALUES (4, 2, 28, 2, '2024-04-07 08:27:53', '2024-04-07 08:27:53');
-INSERT INTO `mi_like` VALUES (11, 3, 1, 2, '2024-04-10 02:00:15', '2024-04-10 02:00:15');
+INSERT INTO `mi_like` VALUES (13, 3, 1, 2, '2024-04-15 07:02:58', '2024-04-15 07:02:58');
+INSERT INTO `mi_like` VALUES (14, 2, 31, 7, '2024-04-24 07:48:04', '2024-04-24 07:48:04');
+INSERT INTO `mi_like` VALUES (15, 2, 30, 7, '2024-04-24 07:48:06', '2024-04-24 07:48:06');
+INSERT INTO `mi_like` VALUES (16, 2, 29, 7, '2024-04-24 07:48:09', '2024-04-24 07:48:09');
+INSERT INTO `mi_like` VALUES (17, 2, 28, 7, '2024-04-24 07:48:11', '2024-04-24 07:48:11');
+INSERT INTO `mi_like` VALUES (18, 2, 27, 7, '2024-04-24 07:48:12', '2024-04-24 07:48:12');
+INSERT INTO `mi_like` VALUES (19, 2, 26, 7, '2024-04-24 07:48:14', '2024-04-24 07:48:14');
+INSERT INTO `mi_like` VALUES (20, 2, 25, 7, '2024-04-24 07:48:16', '2024-04-24 07:48:16');
+INSERT INTO `mi_like` VALUES (21, 2, 24, 7, '2024-04-24 07:48:18', '2024-04-24 07:48:18');
+INSERT INTO `mi_like` VALUES (22, 2, 23, 7, '2024-04-24 07:48:20', '2024-04-24 07:48:20');
+INSERT INTO `mi_like` VALUES (23, 2, 22, 7, '2024-04-24 07:48:21', '2024-04-24 07:48:21');
+INSERT INTO `mi_like` VALUES (24, 2, 21, 7, '2024-04-24 07:48:23', '2024-04-24 07:48:23');
+INSERT INTO `mi_like` VALUES (25, 2, 20, 7, '2024-04-24 07:48:24', '2024-04-24 07:48:24');
+INSERT INTO `mi_like` VALUES (26, 2, 19, 7, '2024-04-24 07:48:27', '2024-04-24 07:48:27');
 
 -- ----------------------------
 -- Table structure for mi_message
@@ -175,12 +189,13 @@ CREATE TABLE `mi_message`  (
   `createdAt` datetime(0) NULL DEFAULT NULL,
   `updatedAt` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of mi_message
 -- ----------------------------
-INSERT INTO `mi_message` VALUES (1, '你好，第一条留言测试', '#676767', 12, 500, NULL, NULL, 2, '米娜', '测试', 0, '2024-03-26 00:00:00', '2024-04-10 02:05:32');
+INSERT INTO `mi_message` VALUES (2, '测试留言', '#676767', 16, 500, 'transparent', '', 2, '米娜', '测试', 2, '2024-04-15 07:41:43', '2024-04-25 02:06:48');
+INSERT INTO `mi_message` VALUES (3, '留个言，没图片', '#676767', 16, 500, 'transparent', '', NULL, '游客yuc8p', '测试', 0, '2024-04-25 02:35:54', '2024-04-25 02:35:54');
 
 -- ----------------------------
 -- Table structure for mi_notify
@@ -195,12 +210,14 @@ CREATE TABLE `mi_notify`  (
   `createdAt` datetime(0) NULL DEFAULT NULL,
   `updatedAt` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of mi_notify
 -- ----------------------------
 INSERT INTO `mi_notify` VALUES (1, '您的说说收到了来自于 星星v44d2xvf 的评论: 测试评论成功!', 2, 2, 1, '2024-04-03 01:55:50', '2024-04-03 01:55:50');
+INSERT INTO `mi_notify` VALUES (2, '您收到了来自于 米娜 的留言: 测试留言!', 1, 3, 1, '2024-04-15 07:41:43', '2024-04-15 07:41:43');
+INSERT INTO `mi_notify` VALUES (3, '您收到了来自于 游客yuc8p 的留言: 留个言，没图片!', 1, 3, 1, '2024-04-25 02:35:54', '2024-04-25 02:35:54');
 
 -- ----------------------------
 -- Table structure for mi_photo
@@ -216,19 +233,31 @@ CREATE TABLE `mi_photo`  (
   `createdAt` datetime(0) NOT NULL,
   `updatedAt` datetime(0) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of mi_photo
 -- ----------------------------
 INSERT INTO `mi_photo` VALUES (3, 1, 'http://127.0.0.1:8888/ac1a6e61b9373c26e5f1cf703', 1, NULL, NULL, '2024-03-19 07:24:07', '2024-03-19 07:24:07');
 INSERT INTO `mi_photo` VALUES (4, 1, 'http://127.0.0.1:8888/87af9b5290dc7a0f08c4fba01', 1, NULL, NULL, '2024-03-20 02:14:10', '2024-03-20 02:14:10');
-INSERT INTO `mi_photo` VALUES (5, 1, 'http://127.0.0.1:8888/87af9b5290dc7a0f08c4fba00', 2, NULL, NULL, '2024-03-20 02:14:10', '2024-03-21 01:42:08');
+INSERT INTO `mi_photo` VALUES (5, 1, 'http://127.0.0.1:8888/87af9b5290dc7a0f08c4fba00', 1, NULL, NULL, '2024-03-20 02:14:10', '2024-04-24 03:42:34');
 INSERT INTO `mi_photo` VALUES (6, 2, 'http://127.0.0.1:8888/2a009a474d38ba09d252e1d03', 1, NULL, NULL, '2024-03-20 02:28:28', '2024-03-20 02:28:28');
 INSERT INTO `mi_photo` VALUES (7, 2, 'http://127.0.0.1:8888/2a009a474d38ba09d252e1d01', 1, NULL, NULL, '2024-03-20 02:28:28', '2024-03-20 02:28:28');
 INSERT INTO `mi_photo` VALUES (8, 2, 'http://127.0.0.1:8888/2a009a474d38ba09d252e1d05', 1, NULL, NULL, '2024-03-20 02:28:28', '2024-03-20 02:28:28');
 INSERT INTO `mi_photo` VALUES (9, 2, 'http://127.0.0.1:8888/2a009a474d38ba09d252e1d04', 1, NULL, NULL, '2024-03-20 02:28:28', '2024-03-20 02:28:28');
 INSERT INTO `mi_photo` VALUES (10, 2, 'http://127.0.0.1:8888/2a009a474d38ba09d252e1d02', 1, NULL, NULL, '2024-03-20 02:28:28', '2024-03-20 02:28:28');
+INSERT INTO `mi_photo` VALUES (13, 3, 'http://127.0.0.1:8888/f56d6e7a0657cee8354612709', 1, NULL, NULL, '2024-04-15 09:21:39', '2024-04-15 09:21:39');
+INSERT INTO `mi_photo` VALUES (14, 3, 'http://127.0.0.1:8888/f56d6e7a0657cee8354612703', 1, NULL, NULL, '2024-04-15 09:21:39', '2024-04-15 09:21:39');
+INSERT INTO `mi_photo` VALUES (15, 3, 'http://127.0.0.1:8888/f56d6e7a0657cee835461270a', 1, NULL, NULL, '2024-04-15 09:21:39', '2024-04-15 09:21:39');
+INSERT INTO `mi_photo` VALUES (16, 3, 'http://127.0.0.1:8888/f56d6e7a0657cee8354612708', 1, NULL, NULL, '2024-04-15 09:21:39', '2024-04-15 09:21:39');
+INSERT INTO `mi_photo` VALUES (17, 3, 'http://127.0.0.1:8888/f56d6e7a0657cee8354612702', 1, NULL, NULL, '2024-04-15 09:21:39', '2024-04-15 09:21:39');
+INSERT INTO `mi_photo` VALUES (18, 3, 'http://127.0.0.1:8888/f56d6e7a0657cee8354612704', 1, NULL, NULL, '2024-04-15 09:21:39', '2024-04-15 09:21:39');
+INSERT INTO `mi_photo` VALUES (19, 3, 'http://127.0.0.1:8888/f56d6e7a0657cee8354612705', 1, NULL, NULL, '2024-04-15 09:21:39', '2024-04-15 09:21:39');
+INSERT INTO `mi_photo` VALUES (20, 3, 'http://127.0.0.1:8888/f56d6e7a0657cee8354612706', 1, NULL, NULL, '2024-04-15 09:21:39', '2024-04-15 09:21:39');
+INSERT INTO `mi_photo` VALUES (21, 3, 'http://127.0.0.1:8888/f56d6e7a0657cee8354612707', 1, NULL, NULL, '2024-04-15 09:21:39', '2024-04-15 09:21:39');
+INSERT INTO `mi_photo` VALUES (22, 3, 'http://127.0.0.1:8888/f56d6e7a0657cee835461270b', 1, NULL, NULL, '2024-04-15 09:21:52', '2024-04-15 09:21:52');
+INSERT INTO `mi_photo` VALUES (23, 3, 'http://127.0.0.1:8888/f56d6e7a0657cee835461270c', 1, NULL, NULL, '2024-04-15 09:21:52', '2024-04-15 09:21:52');
+INSERT INTO `mi_photo` VALUES (24, 3, 'http://127.0.0.1:8888/f56d6e7a0657cee835461270d', 1, NULL, NULL, '2024-04-15 09:21:52', '2024-04-15 09:21:52');
 
 -- ----------------------------
 -- Table structure for mi_talk
@@ -245,7 +274,7 @@ CREATE TABLE `mi_talk`  (
   `updatedAt` datetime(0) NULL DEFAULT NULL,
   `deletedAt` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of mi_talk
@@ -268,18 +297,19 @@ INSERT INTO `mi_talk` VALUES (15, 'fghdgh', 0, 3, 2, 0, '2024-03-12 08:42:37', '
 INSERT INTO `mi_talk` VALUES (16, 'fdsfgsd', 0, 3, 2, 0, '2024-03-12 08:44:19', '2024-03-13 02:56:59', '2024-03-13 02:57:02');
 INSERT INTO `mi_talk` VALUES (17, 'hdfhh', 0, 3, 2, 0, '2024-03-12 08:49:46', '2024-03-13 02:56:32', '2024-03-13 02:56:53');
 INSERT INTO `mi_talk` VALUES (18, 'gfgfd', 0, 3, 2, 0, '2024-03-12 08:52:17', '2024-03-13 02:56:34', '2024-03-13 02:56:55');
-INSERT INTO `mi_talk` VALUES (19, '图片回显不了', 2, 1, 2, 2, '2024-03-13 02:49:11', '2024-04-08 01:44:21', NULL);
-INSERT INTO `mi_talk` VALUES (20, '可以上传', 2, 1, 2, 0, '2024-03-13 02:50:43', '2024-04-08 01:44:24', NULL);
-INSERT INTO `mi_talk` VALUES (21, '只能显示用户名，不能显示昵称？', 2, 3, 1, 0, '2024-03-13 03:58:28', '2024-03-13 03:59:13', NULL);
-INSERT INTO `mi_talk` VALUES (22, '只能显示用户名，不能显示昵称', 2, 1, 2, 1, '2024-03-13 03:59:58', '2024-04-08 01:44:26', NULL);
-INSERT INTO `mi_talk` VALUES (23, '能显示昵称和头像，但是只能是当前登录人的', 2, 1, 2, 0, '2024-03-14 06:35:31', '2024-03-14 06:35:31', NULL);
-INSERT INTO `mi_talk` VALUES (24, '很奇怪，好像说说昵称的显示不是当前登录人了', 2, 1, 2, 0, '2024-03-14 06:50:19', '2024-03-14 06:50:19', NULL);
-INSERT INTO `mi_talk` VALUES (25, '现在是 时间显示有点问题', 2, 1, 2, 0, '2024-03-14 06:51:10', '2024-03-14 06:51:10', NULL);
-INSERT INTO `mi_talk` VALUES (26, '发布有点问题，不是success， 而是 info', 2, 1, 2, 0, '2024-03-14 06:53:12', '2024-03-14 06:53:12', NULL);
-INSERT INTO `mi_talk` VALUES (27, '再测试一次发布说说', 2, 1, 2, 0, '2024-03-14 06:54:40', '2024-03-14 06:54:40', NULL);
-INSERT INTO `mi_talk` VALUES (28, '发布说说正常', 2, 1, 2, 1, '2024-03-14 08:16:40', '2024-04-07 08:27:53', NULL);
-INSERT INTO `mi_talk` VALUES (29, '发现了一些小bug，基本上都是自己粗心写错了，导致各种问题的出现，好在细心检查之后，成功解决了！', 2, 1, 2, 0, '2024-04-07 08:29:31', '2024-04-08 01:44:41', NULL);
-INSERT INTO `mi_talk` VALUES (30, '出现一个新问题，置顶的说说没有置顶，只是修改了数据', 2, 1, 2, 0, '2024-04-07 08:31:36', '2024-04-07 08:31:36', NULL);
+INSERT INTO `mi_talk` VALUES (19, '图片回显不了', 2, 1, 2, 3, '2024-03-13 02:49:11', '2024-04-24 07:48:26', NULL);
+INSERT INTO `mi_talk` VALUES (20, '可以上传', 2, 1, 2, 1, '2024-03-13 02:50:43', '2024-04-24 07:48:24', NULL);
+INSERT INTO `mi_talk` VALUES (21, '只能显示用户名，不能显示昵称？', 2, 3, 1, 1, '2024-03-13 03:58:28', '2024-04-24 07:48:23', NULL);
+INSERT INTO `mi_talk` VALUES (22, '只能显示用户名，不能显示昵称', 2, 1, 2, 2, '2024-03-13 03:59:58', '2024-04-24 07:48:20', NULL);
+INSERT INTO `mi_talk` VALUES (23, '能显示昵称和头像，但是只能是当前登录人的', 2, 1, 2, 1, '2024-03-14 06:35:31', '2024-04-24 07:48:19', NULL);
+INSERT INTO `mi_talk` VALUES (24, '很奇怪，好像说说昵称的显示不是当前登录人了', 2, 1, 2, 1, '2024-03-14 06:50:19', '2024-04-24 07:48:17', NULL);
+INSERT INTO `mi_talk` VALUES (25, '现在是 时间显示有点问题', 2, 1, 2, 1, '2024-03-14 06:51:10', '2024-04-24 07:48:15', NULL);
+INSERT INTO `mi_talk` VALUES (26, '发布有点问题，不是success， 而是 info', 2, 1, 2, 1, '2024-03-14 06:53:12', '2024-04-24 07:48:14', NULL);
+INSERT INTO `mi_talk` VALUES (27, '再测试一次发布说说', 2, 1, 2, 1, '2024-03-14 06:54:40', '2024-04-24 07:48:12', NULL);
+INSERT INTO `mi_talk` VALUES (28, '发布说说正常', 2, 1, 2, 2, '2024-03-14 08:16:40', '2024-04-24 07:48:10', NULL);
+INSERT INTO `mi_talk` VALUES (29, '发现了一些小bug，基本上都是自己粗心写错了，导致各种问题的出现，好在细心检查之后，成功解决了！', 2, 1, 2, 1, '2024-04-07 08:29:31', '2024-04-24 07:48:08', NULL);
+INSERT INTO `mi_talk` VALUES (30, '出现一个新问题，置顶的说说没有置顶，只是修改了数据', 2, 1, 2, 1, '2024-04-07 08:31:36', '2024-04-24 07:48:06', NULL);
+INSERT INTO `mi_talk` VALUES (31, '前台留言模块上传图片不了，报500错误了', 2, 1, 2, 1, '2024-04-24 07:47:50', '2024-04-24 07:48:04', NULL);
 
 -- ----------------------------
 -- Table structure for mi_talk_photo
@@ -292,7 +322,7 @@ CREATE TABLE `mi_talk_photo`  (
   `createdAt` datetime(0) NULL DEFAULT NULL,
   `updatedAt` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of mi_talk_photo
@@ -310,6 +340,7 @@ INSERT INTO `mi_talk_photo` VALUES (24, 19, 'http://127.0.0.1:8888/9f792e15b0a5e
 INSERT INTO `mi_talk_photo` VALUES (25, 28, 'http://127.0.0.1:8888/9f792e15b0a5e6377968e5105', '2024-03-14 08:16:40', '2024-03-14 08:16:40');
 INSERT INTO `mi_talk_photo` VALUES (26, 29, 'http://127.0.0.1:8888/4f545ae5fb670ce350d7b6d00', '2024-04-07 08:29:31', '2024-04-07 08:29:31');
 INSERT INTO `mi_talk_photo` VALUES (27, 30, 'http://127.0.0.1:8888/4f545ae5fb670ce350d7b6d01', '2024-04-07 08:31:36', '2024-04-07 08:31:36');
+INSERT INTO `mi_talk_photo` VALUES (28, 31, 'http://127.0.0.1:8888/b211b5e11aae0c61acb80cf03', '2024-04-24 07:47:50', '2024-04-24 07:47:50');
 
 -- ----------------------------
 -- Table structure for mi_users
@@ -331,12 +362,12 @@ CREATE TABLE `mi_users`  (
 -- ----------------------------
 -- Records of mi_users
 -- ----------------------------
-INSERT INTO `mi_users` VALUES (1, 'admin', '$2a$10$Dba033ranLrFueWOVLOY3.2Uc0yrvxA7EJkF6D3nZfd37rVpfMYla', 1, '超级管理员', 'http://127.0.0.1:8888/d534c7552f7a63793b1e00001', '2024-02-26 06:53:17', '2024-03-22 06:18:51');
+INSERT INTO `mi_users` VALUES (1, 'admin', '$2a$10$Dba033ranLrFueWOVLOY3.2Uc0yrvxA7EJkF6D3nZfd37rVpfMYla', 1, '超级管理员', 'http://127.0.0.1:8888/665d7417ccaa2b7287f6da700', '2024-02-26 06:53:17', '2024-04-25 02:03:33');
 INSERT INTO `mi_users` VALUES (2, 'mina', '$2a$10$QYdxSYuYeBvehVSx1Gb/COxP6.pYpMQuF4D9nA3zG3YgS74kKaI/e', 1, '米娜', 'http://127.0.0.1:8888/f26c1788bbd361d2161a85b00', '2024-02-26 06:55:51', '2024-03-22 02:51:40');
-INSERT INTO `mi_users` VALUES (3, 'popular', '$2a$10$IHiQpeGh9TSgQFrYwiFJcOaejRd6TVtD1HvQzC52VGTf8P82Zwxu6', 2, '普通用户', 'http://localhost:8848/src/assets/avatar.jpg', '2024-03-13 06:04:01', '2024-03-21 06:20:08');
-INSERT INTO `mi_users` VALUES (4, 'test', '$2a$10$pSvEKKNXjE3ekbzJXQOAA.IUZV3tdxIsfon6dR8.erg8eRE5Swdy2', 2, '测试用户', 'http://localhost:8848/src/assets/avatar.jpg', '2024-03-14 02:01:48', '2024-03-14 02:01:48');
-INSERT INTO `mi_users` VALUES (5, 'test2', '$2a$10$Lu1zH9xQqDoX73f/Vzkrue0JZGAPldaqUU3xOewCQef0WfQf1/A.q', 2, '测试用户2', 'http://localhost:8848/src/assets/avatar.jpg', '2024-03-14 02:04:09', '2024-03-14 02:04:09');
-INSERT INTO `mi_users` VALUES (6, 'hhhhhh', '$2a$10$biQXEKLW6az7Xz0uhcCV3uA2iNfd745WRfAO8VW.1xCrtk8uiUbsG', 2, '星星w5wiiaqh', 'http://localhost:8848/src/assets/avatar.jpg', '2024-03-21 03:38:18', '2024-03-21 03:38:21');
-INSERT INTO `mi_users` VALUES (7, 'cheshiming', '$2a$10$2Uz61LslyvlKD0AGkBWEDuvwhhVj//7V/ZJR0vTskyVvt11jrlB96', 2, '星星v44d2xvf', 'http://localhost:8848/src/assets/avatar.jpg', '2024-03-27 06:18:17', '2024-03-27 06:18:17');
+INSERT INTO `mi_users` VALUES (3, 'popular', '$2a$10$IHiQpeGh9TSgQFrYwiFJcOaejRd6TVtD1HvQzC52VGTf8P82Zwxu6', 2, '普通用户', 'http://127.0.0.1:8888/b211b5e11aae0c61acb80cf00', '2024-03-13 06:04:01', '2024-03-21 06:20:08');
+INSERT INTO `mi_users` VALUES (4, 'test', '$2a$10$pSvEKKNXjE3ekbzJXQOAA.IUZV3tdxIsfon6dR8.erg8eRE5Swdy2', 2, '测试用户', 'http://127.0.0.1:8888/b211b5e11aae0c61acb80cf00', '2024-03-14 02:01:48', '2024-03-14 02:01:48');
+INSERT INTO `mi_users` VALUES (5, 'test2', '$2a$10$Lu1zH9xQqDoX73f/Vzkrue0JZGAPldaqUU3xOewCQef0WfQf1/A.q', 2, '测试用户2', 'http://127.0.0.1:8888/b211b5e11aae0c61acb80cf00', '2024-03-14 02:04:09', '2024-03-14 02:04:09');
+INSERT INTO `mi_users` VALUES (6, 'hhhhhh', '$2a$10$biQXEKLW6az7Xz0uhcCV3uA2iNfd745WRfAO8VW.1xCrtk8uiUbsG', 2, '星星w5wiiaqh', 'http://127.0.0.1:8888/b211b5e11aae0c61acb80cf00', '2024-03-21 03:38:18', '2024-03-21 03:38:21');
+INSERT INTO `mi_users` VALUES (7, 'cheshiming', '$2a$10$2Uz61LslyvlKD0AGkBWEDuvwhhVj//7V/ZJR0vTskyVvt11jrlB96', 2, '星星v44d2xvf', 'http://127.0.0.1:8888/b211b5e11aae0c61acb80cf00', '2024-03-27 06:18:17', '2024-04-24 02:22:28');
 
 SET FOREIGN_KEY_CHECKS = 1;

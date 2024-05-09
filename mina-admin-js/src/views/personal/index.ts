@@ -75,6 +75,7 @@ export function useSite() {
 
   /** 弹框 */
   const showImageUpload = ref(false);
+  const dialogVisible = ref(false);
 
   /** 保存按钮 */
   async function save(type, formRef) {
@@ -127,6 +128,8 @@ export function useSite() {
         break;
     }
   }
+
+
 
   /** 初始化个人信息 */
   async function initMyInfo() {
@@ -196,6 +199,7 @@ export function useSite() {
     passwordRules,
     isEditMyInfo,
     isEditPassword,
+    dialogVisible,
     showImageUpload,
     edit,
     cancel,

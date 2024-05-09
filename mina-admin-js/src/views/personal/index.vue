@@ -5,11 +5,16 @@ import Upload from "@/components/Upload/index.vue";
 import { useSite } from "@/views/personal/index";
 import UploadFilled from "@iconify-icons/ep/upload-filled";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-const myInfoFormRef = ref();
 
+const myInfoFormRef = ref();
+const passwordFormRef = ref();
 /** 切换弹框 */
 const toggleShow = () => {
   showImageUpload.value = !showImageUpload.value;
+};
+
+const closeDialog = () => {
+  showImageUpload.value = false;
 };
 
 const {
@@ -28,11 +33,25 @@ const {
 
 <template>
   <div class="flex justify-between personal-card">
+    <!-- 个人信息管理 -->
     <el-card class="left">
       <template #header>
         <div class="header">
           个人信息管理
-          <el-button type="primary" plain @click="edit('info')">编辑</el-button>
+          <div v-if="isEditMyInfo">
+            <el-button
+              type="primary"
+              plain
+              @click="cancel('info', myInfoFormRef)"
+              >取消</el-button
+            >
+            <el-button type="primary" plain @click="save('info', myInfoFormRef)"
+              >保存</el-button
+            >
+          </div>
+          <el-button v-else type="primary" plain @click="edit('info')"
+            >编辑</el-button
+          >
         </div>
       </template>
       <el-form ref="myInfoFormRef" :model="myInfoForm" :rules="myInfoRules">
@@ -48,13 +67,24 @@ const {
             style="margin-left: 10px"
             @click="toggleShow"
           >
-            Change Avatar
+            修改头像
           </el-button>
         </el-form-item>
+        <el-form-item label="昵称" prop="nick_name">
+          <el-input
+            v-if="isEditMyInfo"
+            v-model="myInfoForm.nick_name"
+            placeholder="请输入昵称"
+            maxlength="20"
+            clearable
+            >{{ myInfoForm.nick_name }}</el-input
+          >
+          <span v-else>{{ myInfoForm.nick_name }}</span>
+        </el-form-item>
       </el-form>
-      <el-dialog v-model="showImageUpload" title="头像上传">
+      <el-dialog v-model="showImageUpload" :width="400" title="头像上传">
         <Upload
-          :file-list="myInfoForm.avatarList"
+          v-model:file-list="myInfoForm.avatarList"
           :limit="1"
           :width="150"
           :height="150"
@@ -62,15 +92,77 @@ const {
         />
         <template #footer>
           <div class="dialog-footer">
-            <el-button type="info" plain @click="cancel('info', myInfoFormRef)"
-              >取消</el-button
-            >
+            <el-button type="info" plain @click="closeDialog">取消</el-button>
             <el-button type="danger" plain @click="save('info', myInfoFormRef)"
               >保存</el-button
             >
           </div>
         </template>
       </el-dialog>
+    </el-card>
+
+    <!-- 密码管理 -->
+    <el-card class="right">
+      <template #header>
+        <div class="header">
+          密码管理
+          <div v-if="isEditPassword">
+            <el-button
+              type="primary"
+              plain
+              @click="cancel('password', myInfoFormRef)"
+              >取消</el-button
+            >
+            <el-button
+              type="primary"
+              plain
+              @click="save('password', myInfoFormRef)"
+              >保存</el-button
+            >
+          </div>
+          <el-button v-else type="primary" plain @click="edit('password')"
+            >编辑</el-button
+          >
+        </div>
+      </template>
+      <el-form
+        v-if="isEditPassword"
+        ref="passwordFormRef"
+        label-width="120"
+        :model="passwordForm"
+        :rule="passwordRules"
+      >
+        <el-form-item label="原密码" prop="password">
+          <el-input
+            v-model="passwordForm.password"
+            show-password
+            minlength="6"
+            maxlength="18"
+            placeholder="请输入原密码"
+            clearable
+          />
+        </el-form-item>
+        <el-form-item label="新密码" prop="password1">
+          <el-input
+            v-model="passwordForm.password1"
+            show-password
+            minlength="6"
+            maxlength="18"
+            placeholder="请输入新密码"
+            clearable
+          />
+        </el-form-item>
+        <el-form-item label="二次确认密码" prop="password2">
+          <el-input
+            v-model="passwordForm.password2"
+            show-password
+            minlength="6"
+            maxlength="18"
+            placeholder="请输入二次确认密码"
+            clearable
+          />
+        </el-form-item>
+      </el-form>
     </el-card>
   </div>
 </template>

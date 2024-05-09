@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import {ref} from "vue";
-import {noticesData} from "./data";
+import { ref } from "vue";
+import { noticesData } from "./data";
 import NoticeList from "./noticeList.vue";
 import Bell from "@iconify-icons/ep/bell";
 
@@ -16,7 +16,7 @@ notices.value.map(v => (noticesNum.value += v.list.length));
     <span class="dropdown-badge navbar-bg-hover select-none">
       <el-badge :max="99" :value="noticesNum">
         <span class="header-notice-icon">
-          <IconifyIconOffline :icon="Bell"/>
+          <IconifyIconOffline :icon="Bell" />
         </span>
       </el-badge>
     </span>
@@ -41,7 +41,7 @@ notices.value.map(v => (noticesNum.value += v.list.length));
               >
                 <el-scrollbar max-height="330px">
                   <div class="noticeList-container">
-                    <NoticeList :list="item.list"/>
+                    <NoticeList :list="item.list" />
                   </div>
                 </el-scrollbar>
               </el-tab-pane>
