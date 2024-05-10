@@ -19,6 +19,57 @@ const router = createRouter({
           }
         },
         {
+          path: '/timeline',
+          name: 'Timeline',
+          meta: {
+            title: "时间轴"
+          }
+        },
+        {
+          path: '/article',
+          name: 'Article',
+          meta: {
+            title: "文章"
+          },
+          children: [
+            {
+              path: 'list',
+              name: 'ArticleList',
+              meta: {
+                title: "文章列表"
+              },
+            },
+            {
+              path: 'forefront',
+              name: 'Forefront',
+              meta: {
+                title: "前端"
+              },
+            },
+            {
+              path: 'backend',
+              name: 'Backend',
+              meta: {
+                title: "后端"
+              },
+            },
+          ]
+        },
+        {
+          path: '/category',
+          name: 'Category',
+          meta: {
+            title: "分类"
+          },
+        },
+        {
+          path: '/minaHouse',
+          name: 'MinaHouse',
+          meta: {
+            title: "米娜小屋"
+          },
+        },
+        {
           path: '/album',
           name: 'Album',
           component: () => import("@/views/photo/album.vue"),
@@ -67,6 +118,13 @@ const router = createRouter({
               }
             }
           ]
+        },
+        {
+          path: '/friendLink',
+          name: 'FriendLink',
+          meta: {
+            title: "友链"
+          },
         }
       ]
     },

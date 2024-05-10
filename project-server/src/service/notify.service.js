@@ -15,7 +15,7 @@ class NotifyService {
      * @param {*} id
      * */
     async updateNotify(id) {
-        const res = await Notify.update({ isView: 2 }, { where: id })
+        const res = await Notify.update({ isView: 2 }, { where: { id } })
         return res[0] > 0
     }
 

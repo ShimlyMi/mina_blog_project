@@ -3,6 +3,7 @@ import { computed, } from 'vue';
 import {useRoute, useRouter,} from "vue-router";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/userStore.js";
+import MessageBox from "@/components/MessageBox/message-box.vue";
 
 
 const router = useRouter();
@@ -28,6 +29,7 @@ const logout = () => {
       <router-link to="/">
         <el-avatar :src="getBlogAvatar" class="el-avatar" />
       </router-link>
+      <MessageBox class="ml-[10px]" v-if="getUserInfo.id" :user-id="getUserInfo.id" type="pc" />
     </div>
     <div class="flex_r_around">
       <el-menu
@@ -38,19 +40,20 @@ const logout = () => {
           router
       >
         <el-menu-item index="/home"><i class="iconfont icon-shouye1"></i>主页</el-menu-item>
-        <el-menu-item><i class="iconfont icon-shizhongfill"></i>时间轴</el-menu-item>
-        <el-sub-menu>
+        <el-menu-item index="/timeline"><i class="iconfont icon-shizhong"></i>时间轴</el-menu-item>
+        <el-sub-menu index="/article/list">
           <template #title>
-            <i class="iconfont icon-yingyongzhongxin"></i>资源导航
+            <i class="iconfont icon-yingyongzhongxin"></i>文章
           </template>
-          <el-menu-item><i class="iconfont icon-qianduankaifa"></i>前端</el-menu-item>
-          <el-menu-item><i class="iconfont icon-houduankaifa"></i>后端</el-menu-item>
+          <el-menu-item index="/article/forefront"><i class="iconfont icon-qianduankaifa"></i>前端</el-menu-item>
+          <el-menu-item index="/article/backend"><i class="iconfont icon-houduankaifa"></i>后端</el-menu-item>
         </el-sub-menu>
-        <el-menu-item><i class="iconfont icon-liebiao"></i>分类</el-menu-item>
+        <el-menu-item index="category"><i class="iconfont icon-liebiao"></i>分类</el-menu-item>
+        <el-menu-item index="minaHouse"><i class="iconfont icon-shouye-zhihui"></i>小屋</el-menu-item>
         <el-menu-item index="/album"><i class="iconfont icon-tupian1"></i>相册</el-menu-item>
         <el-menu-item index="/talk"><i class="iconfont icon-duihua"></i>说说</el-menu-item>
         <el-menu-item index="/message/list"><i class="iconfont icon-dakaixinxi"></i>留言板</el-menu-item>
-        <el-menu-item><i class="iconfont icon-lianjie2"></i>友链</el-menu-item>
+        <el-menu-item index="/friendLink"><i class="iconfont icon-lianjie2"></i>友链</el-menu-item>
         <el-menu-item v-if="!getUserInfo.id" index="/login"><i class="iconfont icon-yonghu"></i>登录</el-menu-item>
         <div v-else class="user">
           <el-sub-menu index="/#">

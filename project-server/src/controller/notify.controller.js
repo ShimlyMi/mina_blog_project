@@ -14,7 +14,7 @@ class NotifyController {
     }
 
     /** 已阅消息通知 */
-    async updateNotify(ctx) {
+    async updateNotice(ctx) {
         try {
             let  res = await updateNotify(ctx.params.id);
             ctx.body = result("已阅消息通知成功", res)
