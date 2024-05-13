@@ -68,13 +68,14 @@ onMounted(async () => {
 <template>
   <div class="mi-home">
     <el-row>
-      <el-col :sm="18" :xs="24">
-        <!--      <HomeArticle :articleList="articleList" :articleTotal="articleTotal" :param="param" />-->
-      </el-col>
       <el-col :sm="6" :xs="6">
         <!-- 我的博客信息 -->
         <RightSide :loading="rightSizeLoading" :config-detail="configDetail" />
       </el-col>
+      <el-col :sm="18" :xs="24">
+        <!--      <HomeArticle :articleList="articleList" :articleTotal="articleTotal" :param="param" />-->
+      </el-col>
+
     </el-row>
   </div>
 </template>

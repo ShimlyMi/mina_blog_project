@@ -47,13 +47,13 @@ const handleClose = async () => {
   drawerShow.value = false;
 };
 
-const redMessage = async (id) => {
+const readMessage = async (id) => {
   await updateNotice(id);
 };
 
 const jump = async (item) => {
   // 消费message
-  item.isView == 1 && (await redMessage(item.id));
+  item.isView == 1 && (await readMessage(item.id));
 
   switch (item.type + "") {
     // 文章

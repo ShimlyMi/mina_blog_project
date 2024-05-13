@@ -1,6 +1,6 @@
 <script setup>
 import { computed, } from 'vue';
-import {useRoute, useRouter,} from "vue-router";
+import  {useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/userStore.js";
 import MessageBox from "@/components/MessageBox/message-box.vue";
@@ -27,7 +27,8 @@ const logout = () => {
   <div class="mi-header__menu flex_r_between">
     <div class="sub-avatar">
       <router-link to="/">
-        <el-avatar :src="getBlogAvatar" class="el-avatar" />
+        <img src="@/assets/logo.jpg" />
+<!--        <el-avatar :src="getBlogAvatar" class="el-avatar" />-->
       </router-link>
       <MessageBox class="ml-[10px]" v-if="getUserInfo.id" :user-id="getUserInfo.id" type="pc" />
     </div>
@@ -54,7 +55,13 @@ const logout = () => {
         <el-menu-item index="/talk"><i class="iconfont icon-duihua"></i>说说</el-menu-item>
         <el-menu-item index="/message/list"><i class="iconfont icon-dakaixinxi"></i>留言板</el-menu-item>
         <el-menu-item index="/friendLink"><i class="iconfont icon-lianjie2"></i>友链</el-menu-item>
-        <el-menu-item v-if="!getUserInfo.id" index="/login"><i class="iconfont icon-yonghu"></i>登录</el-menu-item>
+<!--        <el-menu-item v-if="!getUserInfo.id" index="/login"><i class="iconfont icon-yonghu"></i>登录</el-menu-item>-->
+        <el-sub-menu v-if="!getUserInfo.id" popper-class="login-sub-menu">
+          <template #title>
+            <el-avatar :src="getBlogAvatar" class="el-avatar" />
+          </template>
+          <el-menu-item index="/login"><i class="iconfont icon-yonghu"></i>登录</el-menu-item>
+        </el-sub-menu>
         <div v-else class="user">
           <el-sub-menu index="/#">
             <template #title>
@@ -77,7 +84,7 @@ const logout = () => {
 <style lang="scss" scoped>
 @include b(header) {
   .sub-avatar {
-    padding: 5px 0 0 10px;
+    padding: 0px 0 0 10px;
     display: flex;
     align-items: center;
   }

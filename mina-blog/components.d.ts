@@ -58,6 +58,7 @@ declare module 'vue' {
     ElUpload: typeof import('element-plus/es')['ElUpload']
     First: typeof import('./src/components/WelcomeComps/first.vue')['default']
     Footer: typeof import('./src/components/Layout/Footer/footer.vue')['default']
+    GaspCount: typeof import('./src/components/GaspCount/index.vue')['default']
     GsapCount: typeof import('./src/components/GsapCount/index.vue')['default']
     Header: typeof import('./src/components/Layout/Header/header.vue')['default']
     HomeArticle: typeof import('./src/components/HomeArticle/index.vue')['default']

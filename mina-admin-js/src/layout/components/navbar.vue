@@ -52,7 +52,7 @@ const { t } = useTranslationLang();
       <!-- 菜单搜索 -->
       <Search />
       <!-- 通知 -->
-      <Notice id="header-notice" />
+      <!--      <Notice id="header-notice" />-->
       <!-- 国际化 -->
 
       <!-- 退出登录 -->

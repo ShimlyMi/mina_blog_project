@@ -13,7 +13,7 @@ defineProps({
     type: Boolean,
     default: false
   },
-  tags: {
+  articleCount: {
     type: Array,
     default: () =>{}
   }

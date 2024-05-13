@@ -2,7 +2,10 @@
   font-family: "iconfont"; /* Project id 4074241 */
   src: url('iconfont.woff2?t=1703830662171') format('woff2'),
   url('iconfont.woff?t=1703830662171') format('woff'),
-  url('iconfont.ttf?t=1703830662171') format('truetype');
+  url('iconfont.ttf?t=1703830662171') format('truetype'),
+  url('https://at.alicdn.com/t/c/font_4544593_uo94cz83wuo.woff2?t=1715590959895') format('woff2'),
+  url('https://at.alicdn.com/t/c/font_4544593_uo94cz83wuo.woff?t=1715590959895') format('woff'),
+  url('https://at.alicdn.com/t/c/font_4544593_uo94cz83wuo.ttf?t=1715590959895') format('truetype');
 }
 
 .iconfont {
