@@ -60,11 +60,14 @@ defineProps({
         class="git-ee__item button-animated"
         @click="operate('openLink', configDetail.git_ee_link)"
     >
-      <el-icon><ChromeFilled /></el-icon>
+<!--      <el-icon><ChromeFilled /></el-icon>-->
+      <i class="iconfont">&#xe641;</i>
+<!--      <svg class="icon myIconStyle">-->
+<!--         <use xlink:href="#icon-shejiaotubiao-02"></use>-->
+<!--      </svg>-->
       <span class="git-ee__item-text">朋友圈</span>
     </span>
   </div>
-
 </template>
 
 <style lang="scss" scoped>

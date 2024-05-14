@@ -4,7 +4,9 @@ import { createPinia } from 'pinia';
 // 数据持久化
 import pinaPluginPersist from 'pinia-plugin-persist'
 // 引入样式
-import "./assets/css/iconfont/iconfont.css";
+import "./assets/css/iconfont2/iconfont.js";
+import "./assets/css/iconfont2/iconfont.css";
+import "./assets/css/iconfont.css";
 import 'normalize.css';
 import 'element-plus/dist/index.css';
 import "element-plus/theme-chalk/dark/css-vars.css";

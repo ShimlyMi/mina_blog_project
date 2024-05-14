@@ -75,7 +75,8 @@ class UtilsController {
                     blog_name: res.blog_name,
                     blog_avatar: res.blog_avatar,
                     avatar_bg: res.avatar_bg,
-                    personality_signature: res.personality_signature
+                    personality_signature: res.personality_signature,
+                    blog_notice: res.blog_notice
                 })
             } else {
                 ctx.body = result("请到博客后台查看完整的详细信息", "")
