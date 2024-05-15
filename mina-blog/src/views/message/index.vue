@@ -60,16 +60,16 @@ const pageGetMessageList = async () => {
 </script>
 
 <template>
-<div class="message">
-  <div class="message-header">
-
+<div class="message !min-h-[60vh]">
+  <div class="message-container">
+    <img src="../../assets/rosie.jpg" alt="">
   </div>
 </div>
 </template>
 
 <style lang="scss" scoped>
 .message {
-  background-image: url("../../assets/rosie.jpg");
+  //background-image: url("../../assets/rosie.jpg");
   height: 100%;
   .row-height {
     min-height: 22rem;

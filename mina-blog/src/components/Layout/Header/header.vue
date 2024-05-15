@@ -27,7 +27,7 @@ const logout = () => {
   <div class="mi-header__menu flex_r_between">
     <div class="sub-avatar">
       <router-link to="/">
-        <img src="@/assets/logo.jpg" />
+        <img src="@/assets/logo.png" />
 <!--        <el-avatar :src="getBlogAvatar" class="el-avatar" />-->
       </router-link>
       <MessageBox class="ml-[10px]" v-if="getUserInfo.id" :user-id="getUserInfo.id" type="pc" />
