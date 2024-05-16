@@ -56,10 +56,10 @@ export const deleteMessage = (id) => {
 };
 
 /** 获取热门标签 */
-export const getMessageTag = () => {
-    return new Promise((resolve) => {
-        http.get("/api/message/getHotTagList", {}).then((res) => {
-            resolve(res);
-        });
-    });
-};
+// export const getMessageTag = () => {
+//     return new Promise((resolve) => {
+//         http.get("/api/message/getHotTagList", {}).then((res) => {
+//             resolve(res);
+//         });
+//     });
+// };

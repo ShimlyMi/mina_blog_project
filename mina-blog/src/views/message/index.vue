@@ -1,294 +1,260 @@
 <script setup name="Message">
 import { ref, reactive, onMounted, onBeforeMount, h, onActivated, nextTick } from "vue";
-import { useRouter } from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import { storeToRefs } from "pinia";
 import { Edit, Delete, Search } from "@element-plus/icons-vue";
 import { ElNotification, ElMessageBox } from "element-plus";
 import { gsapTransXScale } from "@/utils/transform.js";
 import TypeWriter from "@/components/TypeWriter/type-writer.vue";
-import { getMessageList, likeMessage, cancelLikeMessage, deleteMessage, getMessageTag } from "@/api/message.js";
+import {
+  getMessageList,
+  likeMessage,
+  cancelLikeMessage,
+  deleteMessage,
+  updateMessage,
+  addMessage
+} from "@/api/message.js";
 import { addLike, cancelLike } from "@/api/like.js";
 import svgIcon from "@/components/SvgIcon/index.vue";
 import { returnTime, setLocalItem, removeLocalItem, getLocalItem, containHTML, filterMessage } from "@/utils/tool.js";
 import { useUserStore } from "@/stores/userStore.js";
 
 const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
-const { getUserInfo } = storeToRefs(userStore);
+const { getUserInfo, getBlogAvatar } = storeToRefs(userStore);
 const messageList = ref([]);
-const total = ref(0);
-const loading = ref(false);
-let observe;
-let box;
+
 const param = reactive({
   current: 1,
-  size: 4,
+  size: 10,
   tag: "",
   message: "",
   user_id: getUserInfo.value.id
 });
 const primaryParam = reactive({...param});
 
-const pageGetMessageList = async () => {
-  if (param.current == 1) {
-    loading.value = true;
+// 发布留言
+const form = reactive({
+  id: 0,
+  message: "",
+  user_id: 0,
+  nick_name: ''
+});
+const primaryForm = Object.assign({ ...form });
+const inputCommentRef = ref("");
+
+const line = ref(0);
+
+function keepLastIndex(dom) {
+  let range;
+  if (window.getSelection) {
+    // IE 11/10/9 firefox safari
+    dom.focus(); // 解决 ff 不获取焦点无法定位的问题
+    range = window.getSelection(); // 创建 range
+    range.selectAllChildren(dom); // range 选择obj下所有子内容
+    range.collapseToEnd(); // 光标移至最后
+  } else if (document.selection) {
+    range = document.selection.createRange(); // 创建选择对象
+    range.moveToElementText(dom); // range 定位到 obj
+    range.collapse(false); // 光标移至最后
+    range.select();
   }
-  let res = await getMessageList(param);
-  // console.log(res)
-  if (res.code == 0) {
-    const { list } = res.result;
-    messageList.value = param.current == 1 ? res.result.list : messageList.value.concat(res.result.list);
-    let classList = res.result.list.map((item, index) => {
-      return ".message" + (messageList.value.length - list.length + index);
-    });
-    total.value = res.result.total;
-    if (messageList.value.length < total.value) {
-      observeBox();
-    } else {
-      observe && observe.unobserve(box);
-      observe = null;
-    }
-    await nextTick(() => {
-      gsapTransXScale(classList, 0.85, 0.8);
-    });
-    loading.value = false;
+}
+// 当鼠标点入输入框做的事情  光标得在最后一位
+const focusCommentInput = () => {
+  if (inputCommentRef.value.innerHTML == "留下点什么再走吧~") {
+    inputCommentRef.value.innerHtml = "";
   }
+  keepLastIndex(inputCommentRef.value);
 };
 
+/** 获取留言列表 */
+const pageGetMessageList = async () => {
+  let res = await getMessageList(param);
+  if (res.code == 0) {
+    const { list } = res.result;
+    messageList.value = param.current == 1 ? list : messageList.value.concat(list);
+  }
+}
 
+const messgae = async () => {
+  if (!form.message) {
+    ElNotification({
+      offset: 60,
+      title: "温馨提示",
+      message: h("div", { style: "color: #e6c081; font-weight: 600;" }, "留言内容不能为空"),
+    });
+    return;
+  }
+  // 新增
+  if (!form.id) {
+    form.user_id = getUserInfo.value.id;
+  }
 
+  let res;
+  if (form.id) {
+    res = await updateMessage(form);
+  } else {
+    res = await addMessage(form);
+  }
+  if (res && res.code == 0) {
+    ElNotification({
+      offset: 60,
+      title: "提示",
+      message: h("div", { style: "color: #7ec050; font-weight: 600;" }, "留言成功"),
+    });
+    Object.assign(form, primaryForm);
+    removeLocalItem("blog-massage-item");
+    setLocalItem("message-refresh", true);
+  } else {
+    ElNotification({
+      offset: 60,
+      title: "错误提示",
+      message: h("div", { style: "color: #f56c6c; font-weight: 600;" }, res.message),
+    });
+  }
+}
+
+onMounted(async () => {
+  removeLocalItem("message-refresh");
+  await pageGetMessageList();
+});
+onActivated(async () => {
+  if (getLocalItem("message-refresh")) {
+    Object.assign(param, primaryParam);
+    await pageGetMessageList();
+    removeLocalItem("message-refresh");
+  }
+});
 </script>
 
 <template>
-<div class="message !min-h-[60vh]">
-  <div class="message-container">
-    <img src="../../assets/rosie.jpg" alt="">
+<div class="message">
+  <!-- 留言弹幕 -->
+  <div class="bullet-wrap">
+    <div class="bullet-item" v-for="item in messageList" :key="item.id">
+      <div v-if="!item.user_id" class="no-user-message">
+        <el-avatar class="left-avatar" :src="getBlogAvatar">{{ item.nick_name }}</el-avatar>
+        <span class="user-message">{{ item.message }}</span>
+      </div>
+      <template v-else>
+        <el-avatar class="left-avatar" :src="item.avatar">{{ item.nick_name }}</el-avatar>
+        <span class="user-message">{{ item.message }}</span>
+      </template>
+    </div>
+  </div>
+  <div class="message-body">
+<!--    <img src="../../assets/rosie.jpg" alt="">-->
+    <div class="comment clearfix">
+      <el-input
+          v-model="form.message"
+          class="publish"
+          placeholder="留下什么再走吧~"
+          clearable
+          maxlength="12"
+          type="text"
+      />
+    </div>
+    <div class="p-btn">
+      <el-button
+          class="leave-message"
+          @click="messgae"
+      >发射</el-button>
+    </div>
   </div>
 </div>
 </template>
 
 <style lang="scss" scoped>
 .message {
-  //background-image: url("../../assets/rosie.jpg");
-  height: 100%;
-  .row-height {
-    min-height: 22rem;
+  height: 100vh;
+  background: url("../../assets/rosie.jpg") no-repeat fixed;
+  background-size: cover;
+  overflow: hidden;
 
+  .bullet-wrap {
+    height: 100%;
+    position: relative;
+    margin-top: 60px;
   }
-  &-header {
-    padding-top: 130px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  .message-title {
-    font-size: 2.4rem;
-    font-weight: 600;
-    color: #000;
-  }
-  .type-writer {
-    color: #000;
-  }
-
-  .space {
-    color: #000;
-  }
-
-  &-body {
-    min-height: 35rem;
-    .search-tab {
-      width: 100%;
-      min-height: 3rem;
-      background-color: rgba(0, 0, 0, 0.2);
-      margin-bottom: 1rem;
-      border-radius: 2rem;
-    }
-    .tab {
-      width: 100%;
-      min-height: 3rem;
-      padding: 0.5rem;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      cursor: pointer;
-      flex-wrap: wrap;
-      font-size: 1.2rem;
-      font-weight: 600;
-
-      li {
-        margin-right: 1rem;
-      }
-
-      .tab-li {
-        height: 2rem;
-        line-height: 2rem;
-        text-align: center;
-        padding: 0 0.6rem;
-        border-radius: 1rem;
-      }
-      .active-tab {
-        color: #fff;
-        background-color: var(--primary);
-      }
-    }
-
-    .message-card {
-      position: relative;
-      height: 20rem;
-    }
-
-    .img-loading {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 5rem;
-      height: 3rem;
+  .bullet-item {
+    position: absolute;
+    min-width: 50px;
+    text-align: center;
+    border: 2px #fff solid;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 14px;
+    animation: rightToLeft 10s linear both;
+    .no-user-message {
       display: flex;
       justify-content: center;
       align-items: center;
+      padding: 5px 10px;
     }
-
-    .nick-name {
+    .left-avatar {
+      width: 30px;
+      height: 30px;
+    }
+    .user-message {
       color: #fff;
-      margin-left: 1rem;
+      margin-left: 0.3rem;
       letter-spacing: 1px;
-      padding: 3px 8px;
-      background-color: rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
-    }
-
-    .left {
-      background-color: rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
-      padding: 3px 8px;
-    }
-
-    .time {
-      font-size: 12px;
-      color: #fff;
-      letter-spacing: 1px;
-      margin-right: 10px;
-    }
-
-    .message-comment {
-      font-size: 12px;
-      color: #fff;
-      letter-spacing: 1px;
-      padding: 3px 8px;
-    }
-
-    .option-top {
-      color: #fff;
-      padding: 3px 8px;
-      border-radius: 8px;
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-
-    .option {
-      color: #fff;
-      padding: 1px 8px;
-      border-radius: 8px;
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-    .top-header {
-      height: 4rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .top {
-      height: 17rem;
-      padding: 8px;
-      overflow: auto;
-      white-space: pre-line;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      background-position: center center;
-      background-size: cover;
-      background-repeat: no-repeat;
-      &::-webkit-scrollbar {
-        display: none;
-      }
-    }
-    .index-tag {
-      font-size: 12px;
-      color: #fff;
-    }
-
-    .bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 3rem;
-      padding: 8px;
+      font-size: 16px;
     }
   }
 
-  .apply-tag {
-    text-align: center;
-    color: var(--font-color);
-    font-size: 16px;
+  &-body {
+    display: flex;
+    overflow: hidden;
+    .comment, p-btn {
+      height: 100vh;
+      position: relative;
+
+    }
+    .publish {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .p-btn {
+      position: fixed;
+      top: 50%;
+      left: calc(50% + 150px);
+      transform: translate(-50%, -50%);
+    }
+
+    .leave-message {
+      width: 50px;
+      height: 35px;
+      border-radius: 10px;
+      color: #fff;
+      margin-left: 10px;
+      background-color: transparent;
+    }
   }
 }
-.apply-button {
-  position: relative;
-  display: inline-block;
-  padding: 5px 20px;
-  background-color: transparent;
-  box-sizing: border-box;
-  border-radius: 8px;
-  font-weight: 900;
-  font-size: 16px;
-  background-image: var(--button-linear-gradient);
-  color: var(--white);
-  transition: all .6s;
-  cursor: pointer;
-  border: none;
-  z-index: 1;
+
+:deep(.el-input) {
+  --el-input-bg-color: transparentize(0);
+  --el-input-border-color: #fff;
+  --el-input-text-color: #fff;
 }
-.apply-button:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0;
-  border-radius: 8px;
-  z-index: -1;
-  transition: opacity .6s ease-in-out;
-  background-image: var(--button-linear-gradient-h);
-}
-.observer {
-  text-align: center;
-  font-size: 1rem;
-  color: #000;
-  margin-top: 10px;
-  letter-spacing: 1px;
-}
-.btn {
-  margin-left: 3px;
-  color: var(--primary);
-  cursor: pointer;
+:deep(.el-input__inner) {
+  &::placeholder{
+    color: #fff;
+  }
 }
 
-.scale {
-  transition: all 0.3s;
-}
-.scale:hover {
-  transform: scale(1.2);
-}
-
-.loading {
-  width: 100%;
-  height: 22rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+@keyframes rightToLeft {
+  0% {
+    transform: translate(100vw);
+  }
+  100% {
+    transform: translate(-100%);
+  }
 }
 
 // pc
@@ -314,9 +280,9 @@ const pageGetMessageList = async () => {
   }
 }
 
-.search {
-  height: 28px;
-  width: 220px;
+.publish {
+  height: 35px;
+  width: 250px;
   :deep(.el-input__wrapper) {
     border-radius: 20px;
   }

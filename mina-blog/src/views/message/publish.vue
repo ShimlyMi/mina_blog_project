@@ -8,7 +8,7 @@ import { getLocalItem, setLocalItem, removeLocalItem, debounce } from "@/utils/t
 import { fontSizeList, fontWeightList, opTabList, predefineColors } from "./useMessage.js";
 import { imgUpload } from "@/api/user.js";
 import Upload from "@/components/Upload/index.vue";
-import { addMessage, updateMessage, getMessageTag } from "@/api/message.js";
+import { addMessage, updateMessage } from "@/api/message.js";
 import TypeWriter from "@/components/TypeWriter/type-writer.vue";
 
 const router = useRouter();

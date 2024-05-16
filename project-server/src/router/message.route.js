@@ -5,7 +5,7 @@
 const Router = require("koa-router");
 const router = new Router({ prefix: "/message" });
 const {
-    addMessage, cancelLikeMessage, deleteMessage, getMessageList, getMessageTag, likeMessage, updateMessage
+    addMessage, cancelLikeMessage, deleteMessage, getMessageList, likeMessage, updateMessage
 } = require("../controller/message.controller")
 
 // 新增留言
@@ -21,7 +21,7 @@ router.put("/cancelLike/:id", cancelLikeMessage);
 // 分页获取留言
 router.post("/getMessageList", getMessageList);
 // 获取热门标签
-router.get("/getHotTagList", getMessageTag);
+// router.get("/getHotTagList", getMessageTag);
 
 module.exports = router
 

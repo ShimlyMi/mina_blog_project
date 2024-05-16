@@ -10,29 +10,29 @@ const Message = seq.define("mi_message", {
         require: true,
         comment: "留言内容"
     },
-    color: {
-        type: DataTypes.STRING, // STRING 默认 255
-        comment: "字体颜色",
-        defaultValue: '#676767'
-    },
-    font_size: {
-        type: DataTypes.INTEGER,
-        comment: "字体大小",
-        defaultValue: 12
-    },
-    font_weight: {
-        type: DataTypes.INTEGER,
-        comment: "字体宽度",
-        defaultValue: 500
-    },
-    bg_color: {
-        type: DataTypes.STRING,
-        comment: "背景颜色"
-    },
-    bg_url: {
-        type: DataTypes.STRING,
-        comment: "背景图片"
-    },
+    // color: {
+    //     type: DataTypes.STRING, // STRING 默认 255
+    //     comment: "字体颜色",
+    //     defaultValue: '#676767'
+    // },
+    // font_size: {
+    //     type: DataTypes.INTEGER,
+    //     comment: "字体大小",
+    //     defaultValue: 12
+    // },
+    // font_weight: {
+    //     type: DataTypes.INTEGER,
+    //     comment: "字体宽度",
+    //     defaultValue: 500
+    // },
+    // bg_color: {
+    //     type: DataTypes.STRING,
+    //     comment: "背景颜色"
+    // },
+    // bg_url: {
+    //     type: DataTypes.STRING,
+    //     comment: "背景图片"
+    // },
     user_id: {
         type: DataTypes.INTEGER,
         comment: "留言用户的id"
@@ -41,10 +41,10 @@ const Message = seq.define("mi_message", {
         type: DataTypes.STRING,
         comment: "游客用户的昵称"
     },
-    tag: {
-        type: DataTypes.STRING,
-        comment: "标签"
-    },
+    // tag: {
+    //     type: DataTypes.STRING,
+    //     comment: "标签"
+    // },
     like_times: {
         type: DataTypes.INTEGER,
         comment: "点赞次数",

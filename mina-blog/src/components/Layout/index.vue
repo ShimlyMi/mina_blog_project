@@ -15,5 +15,6 @@ import Main from "./Main/main.vue"
 <style lang="scss" scoped>
 @include b(mi-layout) {
   @include bfc;
+  overflow: hidden;
 }
 </style>
