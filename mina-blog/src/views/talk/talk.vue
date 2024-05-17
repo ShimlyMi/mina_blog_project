@@ -194,9 +194,9 @@ onBeforeMount(() => {
                 <div class="time">{{ returnTime(talk.createdAt) }}前</div>
                 <div>
                   <i
-                      :class="['iconfont', 'icon-dianzan', talk.is_like ? 'is-like' : '']"
+                      :class="['iconfont', talk.is_like ? 'is-like' : '']"
                       @click="like(talk, index)"
-                  ></i>
+                  >&#xe871;</i>
                   <span :class="[talk.is_like ? 'is-like' : '', '!ml-[5px]']">{{ talk.like_times }}</span>
                 </div>
               </div>
