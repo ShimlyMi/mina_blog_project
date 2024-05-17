@@ -171,6 +171,37 @@ const constantRouterMap = [] // 默认的路由规则，比如登录页（非权
 const whiteList = ['/login', '/register']
 
 router.beforeEach(async(to, from, next) => {
+  let timer;
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') {
+      clearTimeout(timer);
+      const leave = [
+          'Σ(ŎдŎ|||)ﾉﾉ不要走嘛~',
+          '(。•́︿•̀。)记得回来看看~',
+          '(๑ŐдŐ)b怎么走了呀',
+          '( ͡° ͜ʖ ͡°)✧我在这等你回来哦~',
+          '<(｀^´)快点回来',
+          '(づ ●─● )づ你别走呀',
+      ];
+      document.title = leave[Math.ceil(Math.random() * 5)];
+    }
+    if (document.visibilityState === 'visible') {
+      clearTimeout(timer);
+      const back = [
+         '٩(๑^o^๑)۶你回来辣~',
+         '٩(*´◒`*)۶欢迎回来~',
+         '(◦`~´◦)终于回来了！！',
+          '( ﹡ˆoˆ﹡ )欢迎回来',
+          '(◦`~´◦)舍得回来了！！',
+          '（●＾o＾●）欢迎回来~'
+      ];
+      document.title = back[Math.ceil(Math.random() * 5)];
+      timer = setTimeout(() => {
+        document.title = to.meta.title
+        console.log(to.meta.title)
+      }, 3000)
+    }
+  })
   next();
 });
 export default router

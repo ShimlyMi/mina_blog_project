@@ -24,6 +24,7 @@
     "mysql2": "^3.6.3",
     "request": "^2.88.2",
     "sequelize": "^6.35.0",
+    "ws": "^8.17.0",
     "xz-ipnet": "^1.0.2"
   },
   "devDependencies": {

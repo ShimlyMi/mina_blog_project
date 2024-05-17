@@ -56,6 +56,9 @@ dependencies:
   vue-svg-icon:
     specifier: ^1.2.9
     version: 1.2.9
+  ws:
+    specifier: ^8.17.0
+    version: 8.17.0
 
 devDependencies:
   '@rushstack/eslint-patch':
@@ -5929,6 +5932,19 @@ packages:
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
     dev: true
+
+  /ws@8.17.0:
+    resolution: {integrity: sha512-uJq6108EgZMAl20KagGkzCKfMEjxmKvZHG7Tlq0Z6nOky7YF7aq4mOx6xK8TJ/i1LeK4Qus7INktacctDgY8Ow==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+    dev: false
 
   /xml-loader@1.1.0:
     resolution: {integrity: sha512-fvt5MMZYYkhYu93kSkVACNa0la1Gj+tM1AvH3gIOyY97ZeAxn4xDadXANVdsq2ACqwIVY1AD2Hz3odCT0MI0Gg==}
