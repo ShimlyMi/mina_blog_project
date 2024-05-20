@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     ArticleSkeleton: typeof import('./src/components/HomeArticle/components/article-skeleton.vue')['default']
     AudioControls: typeof import('./src/components/Music/controls/components/audio-controls.vue')['default']
+    Baberrage: typeof import('./src/components/Baberrage/index.vue')['default']
     BackTop: typeof import('./src/components/BackTop/index.vue')['default']
     BlogFooter: typeof import('./src/components/Layout/footer/blog-footer.vue')['default']
     BlogHeader: typeof import('./src/components/Layout/header/blog-header.vue')['default']
