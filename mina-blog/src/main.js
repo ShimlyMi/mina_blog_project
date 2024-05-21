@@ -1,6 +1,8 @@
 // import './assets/main.css';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+// 弹幕插件
+import { vueBaberrage } from 'vue-baberrage';
 // 数据持久化
 import pinaPluginPersist from 'pinia-plugin-persist'
 // 引入样式
@@ -31,4 +33,4 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 app.directive("copy", vCopy);
 app.directive("image", image);
-app.use(router).use(createPinia().use(pinaPluginPersist)).mount('#app');
+app.use(router).use(createPinia().use(pinaPluginPersist)).use(vueBaberrage).mount('#app');

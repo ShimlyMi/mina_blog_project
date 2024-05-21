@@ -104,7 +104,7 @@ const router = createRouter({
             {
               path: 'publish',
               name: 'Publish',
-              component: () => import("@/views/message/publish.vue"),
+              component: () => import("@/views/message/copy/publish.vue"),
               meta: {
                 title: "编辑/新增留言"
               }
@@ -112,7 +112,7 @@ const router = createRouter({
             {
               path: 'detail',
               name: 'Detail',
-              component: () => import("@/views/message/detail.vue"),
+              component: () => import("@/views/message/copy/detail.vue"),
               meta: {
                 title: "留言详情"
               }
