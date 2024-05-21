@@ -5,6 +5,8 @@ import { createPinia } from 'pinia';
 import { vueBaberrage } from 'vue-baberrage';
 // 数据持久化
 import pinaPluginPersist from 'pinia-plugin-persist'
+// 弹幕插件
+import { vueBaberrage } from 'vue-baberrage';
 // 引入样式
 import "./assets/css/iconfont/iconfont.css"
 import "./assets/css/iconfont2/iconfont.js";
