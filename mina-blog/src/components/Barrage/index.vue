@@ -1,72 +1,77 @@
 <script setup>
 import { ref, watch } from "vue";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/stores/userStore.js";
 
+const userStore = useUserStore();
+const { getBlogAvatar } = storeToRefs(userStore);
 const barrage = ref();
 
 const props = defineProps({
-  avatar: {
-    type: String,
-    default: ""
-  },
-  nick_name: {
-    type: String,
-    default: ""
-  },
-  message: {
-    type: String,
-    default: ""
-  },
   barrageList: {
     type: Array,
     default: () => {},
   },
-  loop: { // 弹幕是否循环
-    type: Boolean,
-    default: false
+  avatar: {
+    type: String,
+    default: "",
   },
-  isShow: { // 是否显示弹幕
-    type: Boolean,
-    default: true
+  nick_name: {
+    type: String,
+    default: "",
   },
-  lanesCount: {  // 泳道
+  message: {
+    type: String,
+    default: "",
+  },
+  isShow: {
+    type: Boolean,
+    default: true,
+  },
+  loop: {
+    type: Boolean,
+    default: false,
+  },
+  lanesCount: {
     type: Number,
-    default: 10
-  }
-})
+    default: 10,
+  },
+  maxWordCount: {
+    type: Number,
+    default: 12
+  },
+  throttleGap: {
+    type: Number,
+    default: 2000
+  },
 
+});
 watch(
     () => props.barrageList,
     {
       immediate: true,
       deep: true,
     }
-);
-</script>
+)
 
+</script>
 <template>
-<vue-babarrage
-  ref="barrage"
-  :lanesCount="lanesCount"
-  :loop="loop"
-  :isShow="isShow"
-  :barrageList="barrageList"
->
-  <template slot="props">
-    <el-avatar class="left-avatar" :src="avatar">{{ nick_name }}</el-avatar>
-    <span class="user-message">{{ message }}</span>
-  </template>
-</vue-babarrage>
+    <vue-barrage
+        :lanesCount="lanesCount"
+        :isShow= "isShow"
+        :barrageList = "barrageList"
+        :loop = "loop"
+        :maxWordCount = "maxWordCount"
+    >
+        <template slot="props">
+          <el-avatar class="left-avatar" :src="avatar">{{ nick_name }}</el-avatar>
+          <span class="user-massage">{{ message }}</span>
+        </template>
+    </vue-barrage>
 </template>
 
-<style scoped lang="scss">
-.left-avatar {
-  width: 30px;
-  height: 30px;
-}
-.user-message {
-  color: #fff;
-  margin-left: 0.3rem;
-  letter-spacing: 1px;
-  font-size: 16px;
-}
+
+
+<style scoped>
+
 </style>

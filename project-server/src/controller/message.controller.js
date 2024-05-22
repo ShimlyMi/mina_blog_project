@@ -17,7 +17,7 @@ class MessageController {
             }
             const res = await addMessage({ user_id, message, nick_name, avatar, ...rest })
             // 发送消息推送
-            if (user_id != 1) {
+            if (user_id !== 1) {
                 await addNotify({
                     user_id: 1,
                     type: 3,

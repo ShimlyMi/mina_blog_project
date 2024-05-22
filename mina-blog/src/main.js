@@ -1,6 +1,8 @@
 // import './assets/main.css';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+// 弹幕插件
+import { vueBaberrage } from 'vue-baberrage';
 // 数据持久化
 import pinaPluginPersist from 'pinia-plugin-persist'
 // 弹幕插件

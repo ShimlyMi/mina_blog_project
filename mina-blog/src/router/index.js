@@ -101,22 +101,22 @@ const router = createRouter({
                 keepAlive: true
               }
             },
-            // {
-            //   path: 'publish',
-            //   name: 'Publish',
-            //   component: () => import("@/views/message/copy/publish.vue"),
-            //   meta: {
-            //     title: "编辑/新增留言"
-            //   }
-            // },
-            // {
-            //   path: 'detail',
-            //   name: 'Detail',
-            //   component: () => import("@/views/message/copy/detail.vue"),
-            //   meta: {
-            //     title: "留言详情"
-            //   }
-            // }
+            {
+              path: 'publish',
+              name: 'Publish',
+              component: () => import("@/views/message/copy/publish.vue"),
+              meta: {
+                title: "编辑/新增留言"
+              }
+            },
+            {
+              path: 'detail',
+              name: 'Detail',
+              component: () => import("@/views/message/copy/detail.vue"),
+              meta: {
+                title: "留言详情"
+              }
+            }
           ]
         },
         {
@@ -197,8 +197,8 @@ router.beforeEach(async(to, from, next) => {
       ];
       document.title = back[Math.ceil(Math.random() * 5)];
       timer = setTimeout(() => {
-        document.title = `${to.meta.title} | 米娜小屋`
-        // console.log(to.meta.title)
+        document.title = to.meta.title
+        console.log(to.meta.title)
       }, 3000)
     }
   })
