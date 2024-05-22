@@ -1,41 +1,38 @@
 <script setup name="Message">
-import {h, reactive, ref, onMounted, onActivated} from "vue";
+import vueDanmaku from 'vue3-danmaku';
+import {ref, reactive, onMounted, onActivated, h} from "vue";
 import { storeToRefs } from "pinia";
+import {addMessage, getMessageList} from "@/api/message.js";
 import { useUserStore } from "@/stores/userStore.js";
-import { MESSAGE_TYPE } from "vue-baberrage";
-import { getMessageList, addMessage } from "@/api/message.js";
-
-import Barrage from "@/components/Barrage/index.vue";
-import {ElNotification} from "element-plus";
-import {getLocalItem, removeLocalItem, setLocalItem} from "@/utils/tool.js";
+import { getLocalItem, removeLocalItem, setLocalItem } from "@/utils/tool.js";
+import { ElNotification } from "element-plus";
 
 const userStore = useUserStore();
-const { getBlogAvatar, getUserInfo } = storeToRefs(userStore);
-
-const loading = ref(false);
-
+const { getUserInfo, getBlogAvatar } = storeToRefs(userStore);
 const param = reactive({
   current: 1,
   size: 10,
   message: "",
-  user_id: getUserInfo.value.id
+  user_id: getUserInfo.value.id,
 });
 const primaryParam = reactive({...param});
-
 const form = reactive({
   id: 0,
   message: "",
   user_id: 0,
-  type: MESSAGE_TYPE.NORMAL
-})
+  nick_name: "",
+  // type: MESSAGE_TYPE.NORMAL
+});
 const primaryForm = reactive({...form});
-const barrageList = ref([]);
+const danmus = ref([]);
+const danmakuRef = ref(null);
 
 const pageGetMessageList = async () => {
   let res = await getMessageList(param);
-  if (res.code === 0) {
-    const { list } = res.result;
-    barrageList.value = param.current === 1 ? list : barrageList.value.concat(list);
+  if (res && res.code === 0) {
+    // console.log("res.result.list",res.result.list);
+    danmus.value = res.result.list;
+    danmakuRef.value.play();
   }
 }
 
@@ -65,6 +62,7 @@ const message = async () => {
     Object.assign(form, primaryForm);
     removeLocalItem("blog-massage-item");
     setLocalItem("message-refresh", true);
+    await pageGetMessageList();
   } else {
     ElNotification({
       offset: 60,
@@ -78,6 +76,7 @@ onMounted(async () => {
   removeLocalItem("message-refresh");
   await pageGetMessageList();
 });
+
 onActivated(async () => {
   if (getLocalItem("message-refresh")) {
     Object.assign(param, primaryParam);
@@ -85,34 +84,39 @@ onActivated(async () => {
     removeLocalItem("message-refresh");
   }
 });
-
 </script>
 
 <template>
   <div class="message">
     <!-- 留言弹幕 -->
     <div class="bullet-wrap">
-      <div class="bullet-item">
-        <template v-if="!getUserInfo.id">
-          <Barrage
-              :avatar="getBlogAvatar"
-              :barrage-list="barrageList"
-              :loop="true"
-              :message="form.message"
-              :nick_name="getUserInfo.nick_name"
-          />
+      <vue-danmaku
+          use-slot
+          ref="danmakuRef"
+          class="danmaku"
+          v-model:danmus="danmus"
+          :random-channel="true"
+          :speeds="200"
+          autoplay
+          :top="50"
+          :right="50"
+          :isSuspend="true"
+      >
+        <template v-slot:dm="{ danmu }">
+          <div class="bullet-item"  v-if="!getUserInfo.id">
+            <div class="no-user-message">
+              <el-avatar class="left-avatar" :src="getBlogAvatar">{{ danmu.nick_name }}</el-avatar>
+              <span class="user-massage">{{ danmu.message }}</span>
+            </div>
+          </div>
+          <div class="bullet-item" v-else>
+            <el-avatar class="left-avatar" :src="getUserInfo.avatar">{{ getUserInfo.avatar }}</el-avatar>
+            <span class="user-massage">{{ danmu.message }}</span>
+          </div>
         </template>
-        <template v-else>
-          <Barrage
-              :avatar="getUserInfo.avatar"
-              :barrage-list="barrageList"
-              :loop="true"
-              :message="form.message"
-              :nick_name="getUserInfo.nick_name"
-          />
-        </template>
-      </div>
+      </vue-danmaku>
     </div>
+
     <div class="message-body">
       <!--    <img src="../../assets/rosie.jpg" alt="">-->
       <div class="comment clearfix">
@@ -138,14 +142,19 @@ onActivated(async () => {
 <style lang="scss" scoped>
 .message {
   height: 100vh;
-  //background: url("../../../assets/rosie.jpg") no-repeat fixed;
+  background: url("../../assets/rosie.jpg") no-repeat fixed;
   background-size: cover;
   overflow: hidden;
 
   .bullet-wrap {
     height: 100%;
+    width: 100%;
     position: relative;
     margin-top: 60px;
+  }
+  .danmaku {
+    height: calc(100vh - 60px);
+    width: 100vw;
   }
   .bullet-item {
     position: absolute;
@@ -211,6 +220,7 @@ onActivated(async () => {
   --el-input-border-color: #fff;
   --el-input-text-color: #fff;
 }
+
 :deep(.el-input__inner) {
   &::placeholder{
     color: #fff;
@@ -278,5 +288,9 @@ onActivated(async () => {
   .publish-pc {
     display: none;
   }
+}
+
+:deep(.vue-danmaku .danmus .dm.move) {
+  animation-duration: 10s!important;
 }
 </style>

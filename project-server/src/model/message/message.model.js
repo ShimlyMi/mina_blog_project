@@ -10,6 +10,16 @@ const Message = seq.define("mi_message", {
         require: true,
         comment: "留言内容"
     },
+    avatar: {
+        type: DataTypes.STRING,
+        defaultValue: 'http://127.0.0.1:8888/d534c7552f7a63793b1e00001.jpg',
+        comment: "用户头像"
+    },
+    lanes: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        comment: "弹幕泳道"
+    },
     // color: {
     //     type: DataTypes.STRING, // STRING 默认 255
     //     comment: "字体颜色",
@@ -68,6 +78,6 @@ const Message = seq.define("mi_message", {
     }
 );
 
-// Message.sync({ alter: true });
+Message.sync({ alter: true });
 
 module.exports = Message;

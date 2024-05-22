@@ -61,56 +61,57 @@ class MessageService {
     /**
      * 分页获取留言
      * */
-    async getMessageList({ current, size, message, time, user_id }) {
+    async getMessageList({ current, size, message, time, user_id, avatar }) {
         const offset = (current - 1) * size;
         const limit = size * 1;
         const whereOpt = {};
         message && Object.assign(whereOpt, { message: { [Op.like]: `%${message}%` } });
         time && Object.assign(whereOpt, { createdAt: { [Op.between]: time } });
+        avatar && Object.assign(whereOpt, { avatar })
         const { rows, count } = await Message.findAndCountAll({
             limit, offset, where: whereOpt, order: [["createdAt", "DESC"]]
         });
 
-        const fromIdPromiseList = rows.map(async (row) => {
-            let res;
-            if (row.user_id) {
-                res = await getOneUserInfo({ id: row.user_id })
-                return res;
-            } else {
-                return {
-                    nick_name: row.nick_name,
-                    avatar: ""
-                }
-            }
-        });
-        await Promise.all(fromIdPromiseList).then((result) => {
-            result.forEach((r,index) => {
-                if (r) {
-                    rows[index].dataValues.nick_name = r.nick_name
-                    rows[index].dataValues.avatar = r.avatar
-                }
-            })
-        })
-        if (user_id) {
-            const promiseLikeList = rows.map((row) => {
-                return getIsLikeByIdAndType({ for_id: row.id, type: 3, user_id })
-            })
-            await Promise.all(promiseLikeList).then((result) => {
-                result.forEach((r, index) => {
-                    rows[index].dataValues.is_like = r;
-                })
-            })
-        }
-
-        // 获取每一条评论的条数
-        const promiseCommentList = rows.map((row) => {
-            return getCommentTotal({ for_id: row.id, type: 3 });
-        })
-        await Promise.all(promiseCommentList).then((result) => {
-            result.forEach((r, index) => {
-                rows[index].dataValues.comment_total = r;
-            })
-        })
+        // const fromIdPromiseList = rows.map(async (row) => {
+        //     let res;
+        //     if (row.user_id) {
+        //         res = await getOneUserInfo({ id: row.user_id })
+        //         return res;
+        //     } else {
+        //         return {
+        //             nick_name: row.nick_name,
+        //             avatar: row.avatar
+        //         }
+        //     }
+        // });
+        // await Promise.all(fromIdPromiseList).then((result) => {
+        //     result.forEach((r,index) => {
+        //         if (r) {
+        //             rows[index].dataValues.nick_name = r.nick_name
+        //             rows[index].dataValues.avatar = r.avatar
+        //         }
+        //     })
+        // })
+        // if (user_id) {
+        //     const promiseLikeList = rows.map((row) => {
+        //         return getIsLikeByIdAndType({ for_id: row.id, type: 3, user_id })
+        //     })
+        //     await Promise.all(promiseLikeList).then((result) => {
+        //         result.forEach((r, index) => {
+        //             rows[index].dataValues.is_like = r;
+        //         })
+        //     })
+        // }
+        //
+        // // 获取每一条评论的条数
+        // const promiseCommentList = rows.map((row) => {
+        //     return getCommentTotal({ for_id: row.id, type: 3 });
+        // })
+        // await Promise.all(promiseCommentList).then((result) => {
+        //     result.forEach((r, index) => {
+        //         rows[index].dataValues.comment_total = r;
+        //     })
+        // })
         return {
             current, size, list: rows, total: count
         }

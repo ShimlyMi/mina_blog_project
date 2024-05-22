@@ -1,11 +1,5 @@
 <script setup>
 import { ref, watch } from "vue";
-import { storeToRefs } from "pinia";
-import { useUserStore } from "@/stores/userStore.js";
-
-const userStore = useUserStore();
-const { getBlogAvatar } = storeToRefs(userStore);
-const barrage = ref();
 
 const props = defineProps({
   barrageList: {
@@ -69,8 +63,6 @@ watch(
         </template>
     </vue-barrage>
 </template>
-
-
 
 <style scoped>
 

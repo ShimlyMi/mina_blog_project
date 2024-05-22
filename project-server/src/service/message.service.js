@@ -5,8 +5,8 @@ const {Op} = require("sequelize");
 
 class MessageService {
     /** 新增留言 */
-    async addMessage({message, user_id, nick_name}) {
-        const res = await Message.create({message, user_id, nick_name});
+    async addMessage({ message, user_id, nick_name, avatar}) {
+        const res = await Message.create({message, user_id, nick_name, avatar});
         return !!res;
     }
 
@@ -25,41 +25,18 @@ class MessageService {
     /**
      * 分页获取留言
      * */
-    async getMessageList({current, size, message, time, user_id}) {
+    async getMessageList({current, size, message, time, avatar}) {
         const offset = (current - 1) * size;
         const limit = size * 1;
         const whereOpt = {};
         message && Object.assign(whereOpt, {message: {[Op.like]: `%${message}%`}});
         time && Object.assign(whereOpt, {createdAt: {[Op.between]: time}});
-        const {rows, count} = await Message.findAndCountAll({
+        avatar && Object.assign(whereOpt, { avatar });
+        const { rows, count } = await Message.findAndCountAll({
             limit, offset, where: whereOpt, order: [["createdAt", "DESC"]]
         });
-
-        const fromIdPromiseList = rows.map(async (row) => {
-            let res;
-            if (row.user_id) {
-                res = await getOneUserInfo({id: row.user_id})
-                return res;
-            } else {
-                return {
-                    nick_name: row.nick_name,
-                    avatar: ""
-                }
-            }
-        });
-        await Promise.all(fromIdPromiseList).then((result) => {
-            result.forEach((r, index) => {
-                if (r) {
-                    rows[index].dataValues.nick_name = r.nick_name
-                    rows[index].dataValues.avatar = r.avatar
-                }
-            })
-        })
-        if (user_id) {
-            const promiseLikeList = rows.map((row) => {
-                return getIsLikeByIdAndType({for_id: row.id, type: 3, user_id})
-            })
-
+        return {
+            current, size, list: rows, total: count
         }
     }
 }

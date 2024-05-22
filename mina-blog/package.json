@@ -29,6 +29,7 @@
     "vue-baberrage": "^3.2.4",
     "vue-router": "^4.3.0",
     "vue-svg-icon": "^1.2.9",
+    "vue3-danmaku": "^1.6.0",
     "ws": "^8.17.0"
   },
   "devDependencies": {

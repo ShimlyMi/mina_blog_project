@@ -13,9 +13,8 @@ class MessageController {
             let { user_id, message, nick_name, avatar, ...rest } = ctx.request.body
             if (!user_id) {
                 nick_name = randomNickname("游客", 5);
-                avatar = 'http://http://127.0.0.1:8888/b211b5e11aae0c61acb80cf00.jpg'
             }
-            const res = await addMessage({ user_id, message, nick_name, avatar, ...rest })
+            const res = await addMessage({ user_id, message, nick_name, ...rest })
             // 发送消息推送
             if (user_id !== 1) {
                 await addNotify({
