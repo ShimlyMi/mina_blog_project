@@ -12,7 +12,6 @@ const Message = seq.define("mi_message", {
     },
     avatar: {
         type: DataTypes.STRING,
-        defaultValue: 'http://127.0.0.1:8888/d534c7552f7a63793b1e00001.jpg',
         comment: "用户头像"
     },
     lanes: {
@@ -78,6 +77,6 @@ const Message = seq.define("mi_message", {
     }
 );
 
-Message.sync({ alter: true });
+// Message.sync({ alter: true });
 
 module.exports = Message;

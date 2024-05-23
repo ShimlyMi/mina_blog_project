@@ -1,14 +1,15 @@
 <script setup name="Message">
 import vueDanmaku from 'vue3-danmaku';
-import {ref, reactive, onMounted, onActivated, h} from "vue";
+import { ref, reactive, onMounted, onActivated, h } from "vue";
 import { storeToRefs } from "pinia";
-import {addMessage, getMessageList} from "@/api/message.js";
+import { addMessage, getMessageList } from "@/api/message.js";
 import { useUserStore } from "@/stores/userStore.js";
 import { getLocalItem, removeLocalItem, setLocalItem } from "@/utils/tool.js";
 import { ElNotification } from "element-plus";
 
 const userStore = useUserStore();
-const { getUserInfo, getBlogAvatar } = storeToRefs(userStore);
+const { getUserInfo } = storeToRefs(userStore);
+
 const param = reactive({
   current: 1,
   size: 10,
@@ -21,20 +22,12 @@ const form = reactive({
   message: "",
   user_id: 0,
   nick_name: "",
+  avatar: "",
   // type: MESSAGE_TYPE.NORMAL
 });
 const primaryForm = reactive({...form});
 const danmus = ref([]);
 const danmakuRef = ref(null);
-
-const pageGetMessageList = async () => {
-  let res = await getMessageList(param);
-  if (res && res.code === 0) {
-    // console.log("res.result.list",res.result.list);
-    danmus.value = res.result.list;
-    danmakuRef.value.play();
-  }
-}
 
 const message = async () => {
   if (form.message.trim() === '') {
@@ -45,14 +38,18 @@ const message = async () => {
     });
     return false;
   }
-
+  console.log(getUserInfo.avatar)
+  // 新增
   let res;
   if (!form.id) {
-    res = await addMessage(form);
-  } else if (getUserInfo.id) {
-    form.user_id = getUserInfo.value.id;
+    form.user_id = 0;
+    if (form.user_id !== 0) {
+      form.avatar = getUserInfo.avatar;
+      form.nick_name = getUserInfo.nick_name;
+    }
     res = await addMessage(form);
   }
+
   if (res && res.code === 0) {
     ElNotification({
       offset: 60,
@@ -62,7 +59,6 @@ const message = async () => {
     Object.assign(form, primaryForm);
     removeLocalItem("blog-massage-item");
     setLocalItem("message-refresh", true);
-    await pageGetMessageList();
   } else {
     ElNotification({
       offset: 60,
@@ -71,7 +67,14 @@ const message = async () => {
     });
   }
 }
-
+const pageGetMessageList = async () => {
+  let res = await getMessageList(param);
+  if (res && res.code === 0) {
+    // console.log("res.result.list",res.result.list);
+    danmus.value = param.current == 1 ? res.result.list : danmus.value.concat(res.result.list);
+    danmakuRef.value.play();
+  }
+}
 onMounted(async () => {
   removeLocalItem("message-refresh");
   await pageGetMessageList();
@@ -103,15 +106,12 @@ onActivated(async () => {
           :isSuspend="true"
       >
         <template v-slot:dm="{ danmu }">
-          <div class="bullet-item"  v-if="!getUserInfo.id">
-            <div class="no-user-message">
-              <el-avatar class="left-avatar" :src="getBlogAvatar">{{ danmu.nick_name }}</el-avatar>
+          <div class="bullet-item" >
+            <div class="common-message">
+              <el-avatar class="left-avatar" :src="danmu.avatar">{{ danmu.nick_name }}</el-avatar>
+<!--              <el-avatar class="left-avatar" v-else :src="getUserInfo.avatar">{{ danmu.nick_name }}</el-avatar>-->
               <span class="user-massage">{{ danmu.message }}</span>
             </div>
-          </div>
-          <div class="bullet-item" v-else>
-            <el-avatar class="left-avatar" :src="getUserInfo.avatar">{{ getUserInfo.avatar }}</el-avatar>
-            <span class="user-massage">{{ danmu.message }}</span>
           </div>
         </template>
       </vue-danmaku>
@@ -164,8 +164,9 @@ onActivated(async () => {
     border-radius: 20px;
     color: #fff;
     font-size: 14px;
-    animation: rightToLeft 10s linear both;
-    .no-user-message {
+    //padding: 10px;
+    //animation: rightToLeft 10s linear both;
+    .common-message {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -174,10 +175,10 @@ onActivated(async () => {
     .left-avatar {
       width: 30px;
       height: 30px;
+      margin-right: 0.3rem;
     }
     .user-message {
       color: #fff;
-      margin-left: 0.3rem;
       letter-spacing: 1px;
       font-size: 16px;
     }
@@ -227,14 +228,14 @@ onActivated(async () => {
   }
 }
 
-@keyframes rightToLeft {
-  0% {
-    transform: translate(100vw);
-  }
-  100% {
-    transform: translate(-100%);
-  }
-}
+//@keyframes rightToLeft {
+//  0% {
+//    transform: translate(100vw);
+//  }
+//  100% {
+//    transform: translate(-100%);
+//  }
+//}
 
 // pc
 @media screen and (min-width: 768px) {
