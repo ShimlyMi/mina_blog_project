@@ -8,13 +8,13 @@ import { getLocalItem, removeLocalItem, setLocalItem } from "@/utils/tool.js";
 import { ElNotification } from "element-plus";
 
 const userStore = useUserStore();
-const { getUserInfo } = storeToRefs(userStore);
-
+const { getUserInfo, getBlogAvatar } = storeToRefs(userStore);
+const loading = ref(false);
 const param = reactive({
   current: 1,
   size: 10,
   message: "",
-  user_id: getUserInfo.value.id,
+  user_id: getUserInfo.id,
 });
 const primaryParam = reactive({...param});
 const form = reactive({
@@ -22,12 +22,13 @@ const form = reactive({
   message: "",
   user_id: 0,
   nick_name: "",
-  avatar: "",
   // type: MESSAGE_TYPE.NORMAL
 });
 const primaryForm = reactive({...form});
-const danmus = ref([]);
+const messageList = ref([]);
 const danmakuRef = ref(null);
+
+// const avatar = getLocalItem('avatar');
 
 const message = async () => {
   if (form.message.trim() === '') {
@@ -38,13 +39,12 @@ const message = async () => {
     });
     return false;
   }
-  console.log(getUserInfo.avatar)
+  // console.log(getUserInfo.avatar)
   // 新增
   let res;
   if (!form.id) {
     form.user_id = 0;
     if (form.user_id !== 0) {
-      form.avatar = getUserInfo.avatar;
       form.nick_name = getUserInfo.nick_name;
     }
     res = await addMessage(form);
@@ -57,6 +57,9 @@ const message = async () => {
       message: h("div", { style: "color: #7ec050; font-weight: 600;" }, "留言成功"),
     });
     Object.assign(form, primaryForm);
+    messageList.value.push(res.result.list);
+    await pageGetMessageList();
+    danmakuRef.value.play();
     removeLocalItem("blog-massage-item");
     setLocalItem("message-refresh", true);
   } else {
@@ -68,11 +71,14 @@ const message = async () => {
   }
 }
 const pageGetMessageList = async () => {
+  if (param.current === 1) {
+    loading.value = true;
+  }
   let res = await getMessageList(param);
   if (res && res.code === 0) {
-    // console.log("res.result.list",res.result.list);
-    danmus.value = param.current == 1 ? res.result.list : danmus.value.concat(res.result.list);
+    messageList.value = param.current === 1 ? res.result.list : messageList.value.concat(res.result.list);
     danmakuRef.value.play();
+    loading.value = false;
   }
 }
 onMounted(async () => {
@@ -97,18 +103,19 @@ onActivated(async () => {
           use-slot
           ref="danmakuRef"
           class="danmaku"
-          v-model:danmus="danmus"
+          v-model:danmus="messageList"
           :random-channel="true"
-          :speeds="200"
+
           autoplay
           :top="50"
+
           :right="50"
           :isSuspend="true"
       >
         <template v-slot:dm="{ danmu }">
           <div class="bullet-item" >
             <div class="common-message">
-              <el-avatar class="left-avatar" :src="danmu.avatar">{{ danmu.nick_name }}</el-avatar>
+              <el-avatar class="left-avatar" :src="danmu.user_id === 0 ? getBlogAvatar : getUserInfo.avatar">{{ danmu.nick_name }}</el-avatar>
 <!--              <el-avatar class="left-avatar" v-else :src="getUserInfo.avatar">{{ danmu.nick_name }}</el-avatar>-->
               <span class="user-massage">{{ danmu.message }}</span>
             </div>
@@ -157,8 +164,8 @@ onActivated(async () => {
     width: 100vw;
   }
   .bullet-item {
-    position: absolute;
-    min-width: 50px;
+    //position: absolute;
+    min-width: 30px;
     text-align: center;
     border: 2px #fff solid;
     border-radius: 20px;
@@ -170,11 +177,11 @@ onActivated(async () => {
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 5px 10px;
+      padding: 5px 0;
     }
     .left-avatar {
-      width: 30px;
-      height: 30px;
+      width: 25px;
+      height: 25px;
       margin-right: 0.3rem;
     }
     .user-message {
@@ -241,8 +248,8 @@ onActivated(async () => {
 @media screen and (min-width: 768px) {
   .center-top {
     .left-avatar {
-      width: 48px;
-      height: 48px;
+      width: 25px;
+      height: 25px;
     }
   }
 
@@ -272,8 +279,8 @@ onActivated(async () => {
 @media screen and (max-width: 768px) {
   .center-top {
     .left-avatar {
-      width: 40px;
-      height: 40px;
+      width: 25px;
+      height: 25px;
     }
   }
 

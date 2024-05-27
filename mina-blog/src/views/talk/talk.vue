@@ -53,6 +53,7 @@ const pageGetTalkList = async () => {
     total.value = res.result.total;
     loading.value = false;
   }
+  // console.log("talk",res)
 };
 
 /** 点赞 */

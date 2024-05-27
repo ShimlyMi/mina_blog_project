@@ -5,8 +5,8 @@ const {Op} = require("sequelize");
 
 class MessageService {
     /** 新增留言 */
-    async addMessage({ message, user_id, nick_name, avatar}) {
-        const res = await Message.create({message, user_id, nick_name, avatar});
+    async addMessage({ message, user_id, nick_name }) {
+        const res = await Message.create({ message, user_id, nick_name, });
         return !!res;
     }
 
@@ -25,13 +25,12 @@ class MessageService {
     /**
      * 分页获取留言
      * */
-    async getMessageList({current, size, message, time, avatar}) {
+    async getMessageList({current, size, message, time }) {
         const offset = (current - 1) * size;
         const limit = size * 1;
         const whereOpt = {};
         message && Object.assign(whereOpt, {message: {[Op.like]: `%${message}%`}});
         time && Object.assign(whereOpt, {createdAt: {[Op.between]: time}});
-        avatar && Object.assign(whereOpt, { avatar });
         const { rows, count } = await Message.findAndCountAll({
             limit, offset, where: whereOpt, order: [["createdAt", "DESC"]]
         });

@@ -210,16 +210,16 @@ class TalkService {
         })
 
         // 判断当前登录用户是否点赞了
-        // if (user_id) {
-        //     const promiseLikeList = rows.map((row) => {
-        //         return getIsLikeByIdAndType({ for_id: row.id, type: 2, user_id });
-        //     });
-        //     await Promise.all(promiseLikeList).then((result) => {
-        //         result.forEach((r, index) => {
-        //             rows[index].dataValues.is_like = r;
-        //         });
-        //     });
-        // }
+        if (user_id) {
+            const promiseLikeList = rows.map((row) => {
+                return getIsLikeByIdAndType({ for_id: row.id, type: 2, user_id });
+            });
+            await Promise.all(promiseLikeList).then((result) => {
+                result.forEach((r, index) => {
+                    rows[index].dataValues.is_like = r;
+                });
+            });
+        }
 
         return { current, size, list: rows, total: count }
     }

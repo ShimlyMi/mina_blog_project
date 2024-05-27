@@ -154,7 +154,7 @@ const router = createRouter({
 export function resetRouter() {
   //获取所有路由
   router.getRoutes().forEach((route) => {
-    const {name} = route;   //获取路由name
+    const  {name} = route;   //获取路由name
     if (name && !whiteList.includes(name)) {      //路由不属于白名单,则删除
       router.hasRoute(name) && router.removeRoute(name);
     }
@@ -197,8 +197,7 @@ router.beforeEach(async(to, from, next) => {
       ];
       document.title = back[Math.ceil(Math.random() * 5)];
       timer = setTimeout(() => {
-        document.title = to.meta.title
-        console.log(to.meta.title)
+        document.title = `米娜小屋欢迎你 | ${to.meta.title}`
       }, 3000)
     }
   })

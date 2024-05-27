@@ -1,5 +1,6 @@
 <script setup lang="ts" name="PanelGroup">
-
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import Views from "@iconify-icons/ri/eye-fill";
 </script>
 
 <template>
@@ -16,9 +17,11 @@
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-        <div class="card-panel-icon-wrapper" />
+        <div class="card-panel-icon-wrapper">
+          <i :icon="useRenderIcon(Views)" />
+        </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">访客</div>
+          <div class="card-panel-text">文章</div>
         </div>
       </div>
     </el-col>
@@ -26,7 +29,7 @@
       <div class="card-panel">
         <div class="card-panel-icon-wrapper" />
         <div class="card-panel-description">
-          <div class="card-panel-text">访客</div>
+          <div class="card-panel-text">标签</div>
         </div>
       </div>
     </el-col>
@@ -34,7 +37,7 @@
       <div class="card-panel">
         <div class="card-panel-icon-wrapper" />
         <div class="card-panel-description">
-          <div class="card-panel-text">访客</div>
+          <div class="card-panel-text">说说</div>
         </div>
       </div>
     </el-col>

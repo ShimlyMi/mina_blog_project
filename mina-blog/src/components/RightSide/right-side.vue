@@ -86,14 +86,14 @@ onMounted(() => {
   padding: 0;
 }
 
-.right-side {
+.right-side-space {
   width: 100%;
 
   .info-card {
-    height: 29rem;
+    height: 26rem;
   }
   .right-card {
-    padding: 1rem 1.8rem;
+    padding: 1rem 1.4rem;
     color: #676767;
     min-height: 10rem;
 
@@ -105,18 +105,17 @@ onMounted(() => {
         font-weight: 900;
       }
     }
-    .notice-text {
-      min-height: 6rem;
-      font-size: 1.1rem;
-      line-height: 1.2;
-      white-space: pre-line;
+  }
 
-      &__item {
-        display: inline-block;
-        font-weight: bold;
-        cursor: pointer;
-      }
-    }
+  .notice-text {
+    min-height: 6rem;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    white-space: pre-line;
+    //padding: 0 10px 10px 10px;
+    display: inline-block;
+    font-weight: bold;
+    cursor: pointer;
   }
 }
 </style>

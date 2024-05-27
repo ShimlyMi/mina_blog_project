@@ -11,7 +11,7 @@ const getAll = async () => {
   loading.value = true
   let res = await getAllAlbum()
   // console.log("album", res)
-  if (res && res.code == 0) {
+  if (res && res.code === 0) {
     albumList.value = res.result
     loading.value = false
   }
