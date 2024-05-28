@@ -1,14 +1,12 @@
-<script setup lang="ts" name="PanelGroup">
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import Views from "@iconify-icons/ri/eye-fill";
-</script>
+<script setup lang="ts" name="PanelGroup"></script>
 
 <template>
   <el-row :gutter="40" class="panel-group">
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon name="peoples" class="card-panel-icon" />
+          <!--          <svg-icon name="peoples" class="card-panel-icon" />-->
+          <IconifyIconOffline icon="views" class="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">访客</div>
@@ -17,8 +15,8 @@ import Views from "@iconify-icons/ri/eye-fill";
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-        <div class="card-panel-icon-wrapper">
-          <i :icon="useRenderIcon(Views)" />
+        <div class="card-panel-icon-wrapper icon-article">
+          <IconifyIconOffline icon="pencil" class="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">文章</div>
@@ -27,7 +25,9 @@ import Views from "@iconify-icons/ri/eye-fill";
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-        <div class="card-panel-icon-wrapper" />
+        <div class="card-panel-icon-wrapper icon-rank">
+          <IconifyIconOffline icon="discount" class="card-panel-icon" />
+        </div>
         <div class="card-panel-description">
           <div class="card-panel-text">标签</div>
         </div>
@@ -35,7 +35,9 @@ import Views from "@iconify-icons/ri/eye-fill";
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-        <div class="card-panel-icon-wrapper" />
+        <div class="card-panel-icon-wrapper icon-talk">
+          <IconifyIconOffline icon="chatDotRound" class="card-panel-icon" />
+        </div>
         <div class="card-panel-description">
           <div class="card-panel-text">说说</div>
         </div>
@@ -72,15 +74,15 @@ import Views from "@iconify-icons/ri/eye-fill";
         background: #40c9c6;
       }
 
-      .icon-message {
+      .icon-article {
         background: #36a3f7;
       }
 
-      .icon-money {
+      .icon-rank {
         background: #f4516c;
       }
 
-      .icon-shopping {
+      .icon-talk {
         background: #34bfa3;
       }
     }
@@ -89,15 +91,15 @@ import Views from "@iconify-icons/ri/eye-fill";
       color: #40c9c6;
     }
 
-    .icon-message {
+    .icon-article {
       color: #36a3f7;
     }
 
-    .icon-money {
+    .icon-rank {
       color: #f4516c;
     }
 
-    .icon-shopping {
+    .icon-talk {
       color: #34bfa3;
     }
 
@@ -117,8 +119,7 @@ import Views from "@iconify-icons/ri/eye-fill";
     .card-panel-description {
       float: right;
       font-weight: bold;
-      margin: 26px;
-      margin-left: 0px;
+      margin: 26px 26px 26px 0;
 
       .card-panel-text {
         line-height: 18px;

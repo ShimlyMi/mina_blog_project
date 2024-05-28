@@ -13,6 +13,10 @@ import PictureFilled from "@iconify-icons/ep/picture-filled";
 import UserFilled from "@iconify-icons/ep/user-filled";
 import Setting from "@iconify-icons/ri/settings-3-line";
 import Message from "@iconify-icons/ep/message";
+import Views from "@iconify-icons/ri/eye-fill";
+import ChatDotRound from "@iconify-icons/ep/chat-dot-round";
+import Pencil from "@iconify-icons/ri/pencil-fill";
+import Discount from "@iconify-icons/ep/discount";
 
 addIcon("homeFilled", HomeFilled);
 addIcon("informationLine", InformationLine);
@@ -22,3 +26,7 @@ addIcon("pictureFilled", PictureFilled);
 addIcon("user", UserFilled);
 addIcon("message", Message);
 addIcon("setting", Setting);
+addIcon("views", Views);
+addIcon("chatDotRound", ChatDotRound);
+addIcon("pencil", Pencil);
+addIcon("discount", Discount);
