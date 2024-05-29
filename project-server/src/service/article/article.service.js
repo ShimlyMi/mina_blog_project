@@ -99,6 +99,46 @@ class ArticleService {
             list: rows,
         }
     }
+
+    /**
+     * 根据文章内容搜索文章
+     */
+    async getArticleListByContent(content) {
+        let res = await Article.findAll({
+            where: {
+                article_content: {
+                    [Op.like]: `%${content}%`,
+                },
+                status: 1,
+            },
+            attributes: ["id", "article_title", "article_content", "view_times"],
+            limit: 8,
+            order: [["view_times", "DESC"]],
+        });
+        let result = [];
+        res.length &&
+        res.forEach((r) => {
+            let { id, article_content, article_title } = r.dataValues;
+            let index = article_content.search(content);
+            let previous = index;
+            let next = index + content.length + 12;
+            result.push({
+                id,
+                article_content: article_content.substring(previous, next),
+                article_title,
+            });
+        });
+
+        return result;
+    }
+
+    /** 获取文章总数 */
+    async getArticleCount() {
+        let res = await Article.count({
+            where: { status: 1 }
+        });
+        return res;
+    }
 }
 
 module.exports = new ArticleService();

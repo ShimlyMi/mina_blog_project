@@ -2,6 +2,7 @@ const Talk = require("../../model/talk/talk.model")
 
 const { publishTalkPhoto, deleteTalkPhoto, getPhotoByTalkId } = require("./talkPhoto.servide")
 const { getOneUserInfo } = require("../user.service")
+const Article = require("../../model/article/article.model");
 
 /**
  * 说说服务层
@@ -171,6 +172,13 @@ class TalkService {
             ...res.dataValues,
             talkImgList: imgs.length ? imgs.map((v) => v.url) : []
         }
+    }
+    /** 获取说说总数 */
+    async getTalkCount() {
+        let res = await Talk.count({
+            where: { status: 1 }
+        });
+        return res;
     }
 
     /**

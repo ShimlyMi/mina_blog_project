@@ -1,5 +1,28 @@
-<script setup lang="ts" name="PanelGroup"></script>
+<script setup lang="ts" name="PanelGroup">
+import { CountTo } from "vue3-count-to";
+import { ref, onMounted } from "vue";
 
+import { getStatistic } from "@/api/statistic";
+
+const staticData = ref({
+  articleCount: 0,
+  talkCount: 0,
+  tagCount: 0,
+  userCount: 0,
+  commitList: []
+});
+
+const getStatisticData = async () => {
+  const res = await getStatistic();
+  if (res.code === 0) {
+    Object.assign(staticData.value, res.result);
+  }
+};
+
+onMounted(async () => {
+  await getStatisticData();
+});
+</script>
 <template>
   <el-row :gutter="40" class="panel-group">
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
@@ -10,6 +33,12 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">访客</div>
+          <count-to
+            :startVal="0"
+            :endVal="staticData.userCount"
+            :duration="3600"
+            class="card-panel-num"
+          />
         </div>
       </div>
     </el-col>
@@ -20,6 +49,12 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">文章</div>
+          <count-to
+            :startVal="0"
+            :endVal="staticData.articleCount"
+            :duration="3600"
+            class="card-panel-num"
+          />
         </div>
       </div>
     </el-col>
@@ -30,6 +65,12 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">标签</div>
+          <count-to
+            :startVal="0"
+            :endVal="staticData.tagCount"
+            :duration="3600"
+            class="card-panel-num"
+          />
         </div>
       </div>
     </el-col>
@@ -40,6 +81,12 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">说说</div>
+          <count-to
+            :startVal="0"
+            :endVal="staticData.talkCount"
+            :duration="3600"
+            class="card-panel-num"
+          />
         </div>
       </div>
     </el-col>
@@ -105,7 +152,7 @@
 
     .card-panel-icon-wrapper {
       float: left;
-      margin: 14px 0 0 14px;
+      margin: 10px 0 0 10px;
       padding: 16px;
       transition: all 0.38s ease-out;
       border-radius: 6px;
@@ -113,7 +160,7 @@
 
     .card-panel-icon {
       float: left;
-      font-size: 48px;
+      font-size: 56px;
     }
 
     .card-panel-description {
