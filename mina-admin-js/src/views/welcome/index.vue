@@ -19,36 +19,16 @@ import PanelGroup from "./components/panel.vue";
       </el-col>
     </el-row>
     <el-row :gutter="8">
-      <el-col
-        :xs="{ span: 24 }"
-        :sm="{ span: 12 }"
-        :md="{ span: 12 }"
-        :lg="{ span: 6 }"
-        :xl="{ span: 6 }"
-        style="margin-bottom: 30px"
-      >
+      <el-col :xs="24" :sm="12" :lg="8" style="margin-bottom: 30px">
         <box-card />
       </el-col>
 
-      <el-col
-        :xs="{ span: 24 }"
-        :sm="{ span: 12 }"
-        :md="{ span: 12 }"
-        :lg="{ span: 6 }"
-        :xl="{ span: 6 }"
-        style="margin-bottom: 30px"
-      >
+      <el-col :xs="24" :sm="12" :lg="8" style="margin-bottom: 30px">
         11
       </el-col>
-      <el-col
-        :xs="{ span: 24 }"
-        :sm="{ span: 12 }"
-        :md="{ span: 12 }"
-        :lg="{ span: 6 }"
-        :xl="{ span: 6 }"
-        style="margin-bottom: 30px"
-      >
+      <el-col :xs="24" :sm="12" :lg="8">
         <bar-chart />
+        <div class="chart-wrapper" />
       </el-col>
     </el-row>
   </div>
@@ -139,4 +119,16 @@ import PanelGroup from "./components/panel.vue";
     }
   }
 }
+
+//.chart-wrapper {
+//  background: #fff;
+//  padding: 16px 16px 0;
+//  margin-bottom: 32px;
+//}
+//
+//@media (max-width: 1024px) {
+//  .chart-wrapper {
+//    padding: 8px;
+//  }
+//}
 </style>
