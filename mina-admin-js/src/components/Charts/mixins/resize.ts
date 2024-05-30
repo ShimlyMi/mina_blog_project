@@ -27,7 +27,6 @@ export default class extends Vue {
     this.destroyResizeEvent();
     this.destroySidebarResizeEvent();
   }
-
   private chartResizeHandler() {
     if (this.chart) {
       this.chart.resize();
@@ -53,7 +52,7 @@ export default class extends Vue {
   }
 
   private initSidebarResizeEvent() {
-    this.sidebarElm = document.getElementsByClassName("sidebar-container")[0];
+    this.sidebarElm = document.getElementsByClassName("sidebar-container");
     if (this.sidebarElm) {
       this.sidebarElm.addEventListener(
         "transitionend",

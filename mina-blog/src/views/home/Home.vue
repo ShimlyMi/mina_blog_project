@@ -1,7 +1,7 @@
 <script setup name="Home">
 import { ref, onMounted, reactive } from 'vue'
 import RightSide from "@/components/RightSide/right-side.vue";
-// import HomeArticle from "@/components/HomeArticle/index.vue";
+// import HomeArticle from "@/components/HomeArticle/Mallki.vue";
 import { getConfig } from "@/api/config.js";
 import {ElNotification} from "element-plus";
 import {useUserStore} from "@/stores/userStore.js";

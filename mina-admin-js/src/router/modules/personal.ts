@@ -1,5 +1,5 @@
 // import RouteConfigsTable from "../../../types/router";
-// const Layout = () => import("@/layout/index.vue");
+// const Layout = () => import("@/layout/Mallki.vue");
 export default {
   path: "/personal",
   name: "Personal",
@@ -14,7 +14,7 @@ export default {
   }
   // children: {
   //   path: "/management",
-  //   component: () => import("@/views/personal/index.vue"),
+  //   component: () => import("@/views/personal/Mallki.vue"),
   //   meta: {
   //     title: "个人中心",
   //     showLink: false

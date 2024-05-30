@@ -32,7 +32,7 @@ onMounted(async () => {
           <IconifyIconOffline icon="views" class="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">访客</div>
+          <div class="card-panel-text">用户</div>
           <count-to
             :startVal="0"
             :endVal="staticData.userCount"

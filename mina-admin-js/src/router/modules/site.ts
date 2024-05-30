@@ -26,7 +26,7 @@ export default {
     {
       path: "/website/background",
       name: "headerBg",
-      // component: () => import("@/views/message/index.vue"),
+      // component: () => import("@/views/message/Mallki.vue"),
       meta: {
         title: "背景管理"
       }
@@ -34,7 +34,7 @@ export default {
     {
       path: "/website/links",
       name: "Links",
-      // component: () => import("@/views/message/index.vue"),
+      // component: () => import("@/views/message/Mallki.vue"),
       meta: {
         title: "友链管理"
       }

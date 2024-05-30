@@ -1,136 +1,163 @@
-<template>
-  <div
-    :id="id"
-    :class="className"
-    :style="{height: height, width: width}"
-  />
-</template>
+<script setup lang="ts" name="BarChart">
+import { ref, onMounted, nextTick } from "vue";
+import echarts from "@/plugins/echarts";
 
-<script lang="ts">
-import * as echarts from 'echarts'
-import { Component, Prop } from 'vue-property-decorator'
-import { mixins } from 'vue-class-component'
-import ResizeMixin from './mixins/resize'
-
-@Component({
-  name: 'BarChart'
-})
-export default class extends mixins(ResizeMixin) {
-  @Prop({ default: 'chart' }) private className!: string
-  @Prop({ default: 'chart' }) private id!: string
-  @Prop({ default: '200px' }) private width!: string
-  @Prop({ default: '200px' }) private height!: string
-
-  mounted() {
-    this.$nextTick(() => {
-      this.initChart()
-    })
+const props = defineProps({
+  id: {
+    type: String,
+    default: "chart"
+  },
+  className: {
+    type: String,
+    default: "chart"
+  },
+  height: {
+    type: String,
+    default: "100%"
+  },
+  width: {
+    type: String,
+    default: "100%"
   }
+});
 
-  beforeDestroy() {
-    if (!this.chart) {
-      return
-    }
-    this.chart.dispose()
-    this.chart = null
+const chart = ref(null);
+const initChart = () => {
+  chart.value = echarts.init(document.getElementById(props.id));
+  const xAxisData: string[] = [];
+  const data: number[] = [];
+  const data2: number[] = [];
+  for (let i = 0; i < 50; i++) {
+    xAxisData.push(i.toString());
+    data.push((Math.sin(i / 5) * (i / 5 - 10) + i / 6) * 5);
+    data2.push((Math.sin(i / 5) * (i / 5 + 10) + i / 6) * 3);
   }
-
-  private initChart() {
-    this.chart = echarts.init(document.getElementById(this.id) as HTMLDivElement)
-    const xAxisData: string[] = []
-    const data: number[] = []
-    const data2: number[] = []
-    for (let i = 0; i < 50; i++) {
-      xAxisData.push(i.toString())
-      data.push((Math.sin(i / 5) * (i / 5 - 10) + i / 6) * 5)
-      data2.push((Math.sin(i / 5) * (i / 5 + 10) + i / 6) * 3)
-    }
-    this.chart.setOption({
-      backgroundColor: '#08263a',
-      grid: {
-        left: '5%',
-        right: '5%'
+  chart.value.setOption({
+    backgroundColor: "#08263a",
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        // 坐标轴指示器，坐标轴触发有效
+        type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
+      }
+    },
+    grid: {
+      left: "5%",
+      right: "5%"
+    },
+    xAxis: [
+      {
+        show: false,
+        data: xAxisData
       },
-      xAxis: [{
+      {
         show: false,
         data: xAxisData
-      }, {
-        show: false,
-        data: xAxisData
-      }],
-      visualMap: [{
+      }
+    ],
+    visualMap: [
+      {
         show: false,
         min: 0,
         max: 50,
         dimension: 0,
         inRange: {
-          color: ['#4a657a', '#308e92', '#b1cfa5', '#f5d69f', '#f5898b', '#ef5055']
+          color: [
+            "#4a657a",
+            "#308e92",
+            "#b1cfa5",
+            "#f5d69f",
+            "#f5898b",
+            "#ef5055"
+          ]
         }
-      }],
-      yAxis: [{
+      }
+    ],
+    yAxis: [
+      {
         axisLine: {
           show: false
         },
         axisLabel: {
-          color: '#43657a'
+          color: "#43657a"
         },
         splitLine: {
           show: true,
           lineStyle: {
-            color: '#08263f'
+            color: "#08263f"
           }
         },
         axisTick: {
           show: false
         }
-      }],
-      series: [{
-        name: 'back',
-        type: 'bar',
+      }
+    ],
+    series: [
+      {
+        name: "back",
+        type: "bar",
         data: data2,
         z: 1,
         itemStyle: {
           opacity: 0.4,
           barBorderRadius: 5,
           shadowBlur: 3,
-          shadowColor: '#111'
+          shadowColor: "#111"
         }
-      }, {
-        name: 'Simulate Shadow',
-        type: 'line',
+      },
+      {
+        name: "Simulate Shadow",
+        type: "line",
         data,
         z: 2,
         showSymbol: false,
         animationDelay: 0,
-        animationEasing: 'linear',
+        animationEasing: "linear",
         animationDuration: 1200,
         lineStyle: {
-          color: 'transparent'
+          color: "transparent"
         },
         areaStyle: {
-          color: '#08263a',
+          color: "#08263a",
           shadowBlur: 50,
-          shadowColor: '#000'
+          shadowColor: "#000"
         }
-      }, {
-        name: 'front',
-        type: 'bar',
+      },
+      {
+        name: "front",
+        type: "bar",
         data,
         xAxisIndex: 1,
         z: 3,
         itemStyle: {
           barBorderRadius: 5
         }
-      }],
-      animationEasing: 'elasticOut',
-      animationEasingUpdate: 'elasticOut',
-      animationDelay(idx: number) {
-        return idx * 20
-      },
-      animationDelayUpdate(idx: number) {
-        return idx * 20
       }
-    })
-  }
-}
+    ],
+    animationEasing: "elasticOut",
+    animationEasingUpdate: "elasticOut",
+    animationDelay(idx: number) {
+      return idx * 20;
+    },
+    animationDelayUpdate(idx: number) {
+      return idx * 20;
+    }
+  });
+};
+
+onMounted(() =>
+  nextTick(() => {
+    initChart();
+  })
+);
 </script>
+
+<template>
+  <div
+    :id="props.id"
+    :class="props.className"
+    :style="{ height: props.height, width: props.width }"
+  />
+</template>
+
+<style scoped lang="scss"></style>

@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import BarChart from "@/components/Charts/BarChart.vue";
+import BoxCard from "@/components/BoxCard/index.vue";
+
 defineOptions({
   name: "Welcome"
 });
@@ -10,39 +13,42 @@ import PanelGroup from "./components/panel.vue";
   <div class="home">
     <!--<template #header>首页</template>-->
     <panel-group />
-    <!--    <el-row :gutter="40" class="panel-group">-->
-    <!--      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">-->
-    <!--        <panel-group :label="'用户'" :value="staticData.userCount">-->
-    <!--          <div class="card-panel-icon-wrapper icon-people">-->
-    <!--            <IconifyIconOffline icon="views" class="card-panel-icon" />-->
-    <!--          </div>-->
-    <!--        </panel-group>-->
-    <!--      </el-col>-->
-    <!--      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">-->
-    <!--        <panel-group :label="'文章'" :value="staticData.articleCount">-->
-    <!--          <div class="card-panel-icon-wrapper icon-article">-->
-    <!--            <IconifyIconOffline icon="pencil" class="card-panel-icon" />-->
-    <!--          </div>-->
-    <!--        </panel-group>-->
-    <!--      </el-col>-->
-    <!--      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">-->
-    <!--        <panel-group :label="'标签'" :value="staticData.articleCount">-->
-    <!--          <div class="card-panel-icon-wrapper icon-rank">-->
-    <!--            <IconifyIconOffline icon="discount" class="card-panel-icon" />-->
-    <!--          </div>-->
-    <!--        </panel-group>-->
-    <!--      </el-col>-->
-    <!--      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">-->
-    <!--        <panel-group :label="'说说'" :value="staticData.talkCount">-->
-    <!--          <div class="card-panel-icon-wrapper icon-talk">-->
-    <!--            <IconifyIconOffline icon="chatDotRound" class="card-panel-icon" />-->
-    <!--          </div>-->
-    <!--        </panel-group>-->
-    <!--      </el-col>-->
-    <!--    </el-row>-->
     <el-row style="background: #fff; padding: 16px 16px 0; margin-bottom: 32px">
       <el-col :span="24">
         <Line />
+      </el-col>
+    </el-row>
+    <el-row :gutter="8">
+      <el-col
+        :xs="{ span: 24 }"
+        :sm="{ span: 12 }"
+        :md="{ span: 12 }"
+        :lg="{ span: 6 }"
+        :xl="{ span: 6 }"
+        style="margin-bottom: 30px"
+      >
+        <box-card />
+      </el-col>
+
+      <el-col
+        :xs="{ span: 24 }"
+        :sm="{ span: 12 }"
+        :md="{ span: 12 }"
+        :lg="{ span: 6 }"
+        :xl="{ span: 6 }"
+        style="margin-bottom: 30px"
+      >
+        11
+      </el-col>
+      <el-col
+        :xs="{ span: 24 }"
+        :sm="{ span: 12 }"
+        :md="{ span: 12 }"
+        :lg="{ span: 6 }"
+        :xl="{ span: 6 }"
+        style="margin-bottom: 30px"
+      >
+        <bar-chart />
       </el-col>
     </el-row>
   </div>
