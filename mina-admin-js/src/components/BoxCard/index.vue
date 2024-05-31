@@ -41,6 +41,7 @@ const { avatar } = useNav();
   }
 }
 </style>
+
 <style lang="scss" scoped>
 .box-card-component {
   .box-card-header {
@@ -66,10 +67,10 @@ const { avatar } = useNav();
   }
   .panThumb {
     z-index: 100;
-    height: 70px !important;
-    width: 70px !important;
+    height: 80px !important;
+    width: 80px !important;
     position: absolute !important;
-    top: -35px;
+    top: -45px;
     left: 45px;
     border: 5px solid #ffffff;
     background-color: #fff;
@@ -88,9 +89,9 @@ const { avatar } = useNav();
       display: none;
     }
     .panThumb {
-      height: 50px !important;
-      width: 50px !important;
-      top: -20px;
+      height: 70px !important;
+      width: 70px !important;
+      top: -35px;
       left: 20px !important;
     }
   }

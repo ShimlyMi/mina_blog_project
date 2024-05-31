@@ -6,7 +6,8 @@ import { useI18n } from "@/plugins/i18n";
 import { getServerConfig } from "./config";
 import { createApp, Directive } from "vue";
 import { MotionPlugin } from "@vueuse/motion";
-import { useEcharts } from "@/plugins/echarts";
+// import { useEcharts } from "@/plugins/echarts";
+import * as echarts from "echarts";
 import { injectResponsiveStorage } from "@/utils/responsive";
 
 import Table from "@pureadmin/table";
@@ -48,6 +49,8 @@ app.component("IconifyIconOffline", IconifyIconOffline);
 app.component("IconifyIconOnline", IconifyIconOnline);
 app.component("FontIcon", FontIcon);
 
+app.config.globalProperties.$echarts = echarts;
+
 // 全局注册按钮级别权限组件
 import { Auth } from "@/components/ReAuth";
 
@@ -62,7 +65,7 @@ getServerConfig(app).then(async config => {
     .use(MotionPlugin)
     .use(useI18n)
     .use(ElementPlus)
-    .use(useEcharts)
+    // .use(useEcharts)
     .use(Table);
   // .use(PureDescriptions);
   app.mount("#app");

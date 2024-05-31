@@ -19,6 +19,11 @@ export const updateConfigDetail = data => {
   return http.request<SiteResult>("post", "/api/config/update", { data });
 };
 
+/** 获取 gitee 提交记录 */
+// export const getCommitList = () => {
+//   return http.request<Array<Object>>("get", "");
+// };
+
 /** 图片上传接口 */
 export const imgUpload = async data => {
   // 文件压缩 太大了上传不了，我的服务器比较垃圾

@@ -36,7 +36,7 @@ onMounted(async () => {
           <count-to
             :startVal="0"
             :endVal="staticData.userCount"
-            :duration="3600"
+            :duration="5000"
             class="card-panel-num"
           />
         </div>
@@ -52,7 +52,7 @@ onMounted(async () => {
           <count-to
             :startVal="0"
             :endVal="staticData.articleCount"
-            :duration="3600"
+            :duration="5000"
             class="card-panel-num"
           />
         </div>
@@ -68,7 +68,7 @@ onMounted(async () => {
           <count-to
             :startVal="0"
             :endVal="staticData.tagCount"
-            :duration="3600"
+            :duration="5000"
             class="card-panel-num"
           />
         </div>
@@ -84,7 +84,7 @@ onMounted(async () => {
           <count-to
             :startVal="0"
             :endVal="staticData.talkCount"
-            :duration="3600"
+            :duration="5000"
             class="card-panel-num"
           />
         </div>

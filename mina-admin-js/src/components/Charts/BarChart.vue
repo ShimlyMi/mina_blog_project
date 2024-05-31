@@ -1,153 +1,129 @@
 <script setup lang="ts" name="BarChart">
-import { ref, onMounted, nextTick } from "vue";
-import echarts from "@/plugins/echarts";
+import { ref, computed, watch, type Ref } from "vue";
+import { EchartOptions, useDark, useECharts } from "@pureadmin/utils";
 
-const props = defineProps({
-  id: {
-    type: String,
-    default: "chart"
-  },
-  className: {
-    type: String,
-    default: "chart"
-  },
-  height: {
-    type: String,
-    default: "100%"
-  },
-  width: {
-    type: String,
-    default: "100%"
-  }
+// const props = defineProps({
+//   commitList: {
+//     type: Array,
+//     default: () => {}
+//   }
+// });
+
+const animationDuration = 6000;
+
+const { isDark } = useDark();
+
+const theme: EchartOptions["theme"] = computed(() => {
+  return isDark.value ? "dark" : "default";
 });
-
-const chart = ref(null);
-const initChart = () => {
-  chart.value = echarts.init(document.getElementById(props.id));
-  const xAxisData: string[] = [];
-  const data: number[] = [];
-  const data2: number[] = [];
-  for (let i = 0; i < 50; i++) {
-    xAxisData.push(i.toString());
-    data.push((Math.sin(i / 5) * (i / 5 - 10) + i / 6) * 5);
-    data2.push((Math.sin(i / 5) * (i / 5 + 10) + i / 6) * 3);
+const barChartRef = ref<HTMLDivElement | null>(null);
+const { setOptions } = useECharts(barChartRef as Ref<HTMLDivElement>, {
+  theme
+});
+const loading = ref(true);
+const xData = (() => {
+  const data: any[] = [];
+  for (let i = 1; i < 31; i++) {
+    data.push(`${i}日`);
   }
-  chart.value.setOption({
-    backgroundColor: "#fff",
+  return data;
+})();
+const init = () => {
+  setOptions({
     tooltip: {
-      trigger: "axis",
-      axisPointer: {
-        type: "cross",
-        crossStyle: {
-          color: "#999"
-        }
-      }
-    },
-    toolbox: {
-      feature: {
-        dataView: { show: true, readOnly: false },
-        magicType: { show: true, type: ["line", "bar"] },
-        restore: { show: true },
-        saveAsImage: { show: true }
-      }
+      trigger: "axis"
     },
     legend: {
-      data: ["Evaporation", "Precipitation", "Temperature"]
+      data: ["Rainfall", "Evaporation"]
     },
-    grid: {
-      top: 10,
-      left: "2%",
-      right: "2%",
-      bottom: "3%",
-      containLabel: true
-    },
+    // toolbox: {
+    //   show: true,
+    //   feature: {
+    //     dataView: { show: true, readOnly: false },
+    //     magicType: { show: true, type: ["line", "bar"] },
+    //     restore: { show: true },
+    //     saveAsImage: { show: true }
+    //   }
+    // },
+    calculable: true,
     xAxis: [
       {
         type: "category",
-        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        axisPointer: {
-          type: "shadow"
-        },
-        axisTick: {
-          alignWithLabel: true
-        }
+        // prettier-ignore
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
       }
     ],
     yAxis: [
       {
-        type: "value",
-        name: "Precipitation",
-        min: 0,
-        max: 250,
-        interval: 50,
-        axisTick: {
-          show: false
-        }
-      },
-      {
-        type: "value",
-        name: "Temperature",
-        min: 0,
-        max: 25,
-        interval: 5,
-        axisTick: {
-          show: false
-        }
+        type: "value"
       }
     ],
     series: [
       {
-        name: "Evaporation",
+        name: "Rainfall",
         type: "bar",
-        tooltip: {
-          valueFormatter: function (value) {
-            return (value as number) + " ml";
-          }
-        },
         data: [
           2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3
-        ]
+        ],
+        markPoint: {
+          data: [
+            { type: "max", name: "Max" },
+            { type: "min", name: "Min" }
+          ]
+        },
+        markLine: {
+          data: [{ type: "average", name: "Avg" }]
+        },
+        animationDuration
       },
       {
-        name: "Precipitation",
+        name: "Evaporation",
         type: "bar",
-        tooltip: {
-          valueFormatter: function (value) {
-            return (value as number) + " ml";
-          }
-        },
         data: [
           2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3
-        ]
-      },
-      {
-        name: "Temperature",
-        type: "line",
-        yAxisIndex: 1,
-        tooltip: {
-          valueFormatter: function (value) {
-            return (value as number) + " °C";
-          }
+        ],
+        markPoint: {
+          data: [
+            { name: "Max", value: 182.2, xAxis: 7, yAxis: 183 },
+            { name: "Min", value: 2.3, xAxis: 11, yAxis: 3 }
+          ]
         },
-        data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
+        markLine: {
+          data: [{ type: "average", name: "Avg" }]
+        },
+        animationDuration
       }
-    ]
+    ],
+    addTooltip: true
   });
 };
 
-onMounted(() =>
-  nextTick(() => {
-    initChart();
-  })
+watch(
+  // () => props.commitList,
+  // newV => {
+  //   if (newV.length > 0) {
+  //     loading.value = false;
+  //     init();
+  //   } else {
+  //     loading.value = true;
+  //   }
+  // },
+  () => init(),
+  {
+    deep: true,
+    immediate: true
+  }
 );
 </script>
 
 <template>
-  <div
-    :id="props.id"
-    :class="props.className"
-    :style="{ height: props.height, width: props.width }"
-  />
+  <el-card class="barChart-card">
+    <div ref="barChartRef" style="width: 100%; height: 57.1vh" />
+  </el-card>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+//.barChart-card {
+//  height: ;
+//}
+</style>

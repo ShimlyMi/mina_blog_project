@@ -1,34 +1,56 @@
 <script lang="ts" setup>
+import { ref } from "vue";
 import BarChart from "@/components/Charts/BarChart.vue";
 import BoxCard from "@/components/BoxCard/index.vue";
+import Line from "./components/figures.vue";
+import PanelGroup from "./components/panel.vue";
+// import { getCommitList } from "@/api/site";
 
 defineOptions({
   name: "Welcome"
 });
-import Line from "./components/figures.vue";
-import PanelGroup from "./components/panel.vue";
+
+// const statisticData = ref({
+//   commitList: []
+// });
 </script>
 
 <template>
   <div class="home">
     <!--<template #header>首页</template>-->
     <panel-group />
-    <el-row style="background: #fff; padding: 16px 16px 0; margin-bottom: 32px">
-      <el-col :span="24">
-        <Line />
-      </el-col>
-    </el-row>
+    <!--    <el-row style="background: #fff; padding: 16px 16px 0; margin-bottom: 32px">-->
+    <!--      <el-col :span="24">-->
+    <!--        <Line />-->
+    <!--      </el-col>-->
+    <!--    </el-row>-->
     <el-row :gutter="8">
-      <el-col :xs="24" :sm="12" :lg="8" style="margin-bottom: 30px">
+      <el-col
+        :xs="{ span: 24 }"
+        :sm="{ span: 24 }"
+        :md="{ span: 24 }"
+        :lg="{ span: 8 }"
+        :xl="{ span: 6 }"
+        style="margin-bottom: 30px"
+      >
         <box-card />
       </el-col>
 
-      <el-col :xs="24" :sm="12" :lg="8" style="margin-bottom: 30px">
-        11
-      </el-col>
-      <el-col :xs="24" :sm="12" :lg="8">
+      <!--      <el-col :xs="24" :sm="12" :lg="8" style="margin-bottom: 30px">-->
+      <!--        11-->
+      <!--      </el-col>-->
+      <el-col
+        :xs="{ span: 24 }"
+        :sm="{ span: 24 }"
+        :md="{ span: 24 }"
+        :lg="{ span: 16 }"
+        :xl="{ span: 16 }"
+      >
         <bar-chart />
-        <div class="chart-wrapper" />
+        <!--        <div class="chart-wrapper">-->
+        <!--                    <bar-chart height="57vh" />-->
+        <!--          <bar-chart />-->
+        <!--        </div>-->
       </el-col>
     </el-row>
   </div>
@@ -120,15 +142,15 @@ import PanelGroup from "./components/panel.vue";
   }
 }
 
-//.chart-wrapper {
-//  background: #fff;
-//  padding: 16px 16px 0;
-//  margin-bottom: 32px;
-//}
-//
-//@media (max-width: 1024px) {
-//  .chart-wrapper {
-//    padding: 8px;
-//  }
-//}
+.chart-wrapper {
+  //background: #fff;
+  //padding: 16px 16px 0;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 1024px) {
+  .chart-wrapper {
+    padding: 8px;
+  }
+}
 </style>
